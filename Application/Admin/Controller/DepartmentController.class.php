@@ -18,7 +18,8 @@ Class DepartmentController extends CommonController{
             echo json_encode(D("Department")->addDepartment());			
 
 		}else{
-			$info = $this->getDepartment();
+			//$info = $this->getDepartment();
+                        $info = D('Department')->getDepartmentarray($info);
 			$info['dsort'] = 0;
 			$info['dstatus'] = 1;
 			$this->assign('info',$info);
@@ -39,7 +40,8 @@ Class DepartmentController extends CommonController{
                 $this->error("不存在该部门", U('Department/index'));
             }
 			$this->assign('title','修改部门');
-            $this->assign("info", $this->getDepartment($info));
+            //$this->assign("info", $this->getDepartment($info));
+            $this->assign("info", D('Department')->getDepartmentarray($info));
             $this->display('edit');
         }
 		
