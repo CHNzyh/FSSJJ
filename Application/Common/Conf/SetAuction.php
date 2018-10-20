@@ -1,0 +1,1 @@
+<?php	return array ( 'Auction' => array ( 'stepsize' => '400', 'steptime' => '110', 'deferred' => '200', 'ratio_b' => '15', 'ratio_g' => '110', 'fixation' => '110', ), );?>

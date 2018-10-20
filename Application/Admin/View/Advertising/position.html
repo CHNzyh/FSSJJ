@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>广告管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='广告管理 > 广告位管理';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">广告位列表</div>
+                    </div>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td width="10%">广告位(ID)</td>
+                                <td width="25%">广告位标示</td>
+                                <td width="25%">广告位名称</td>
+                                <td width="10%">广告位宽度</td>
+                                <td width="10%">广告位高度</td>
+                                <td width="20%">操作</td>
+                            </tr>
+                        </thead>
+                        <volist id="vo" name="list">
+                            <tr align="center">
+                                <td>{$vo['id']}</td>
+                                <td>{$vo['tagname']}</td>
+                                <td>{$vo['name']}</td>
+                                <td>{$vo['width']}</td>
+                                <td>{$vo['height']}</td>
+                                <td>
+                                [ <a href="__URL__/edit_position?id={$vo.id}">编辑 </a> ] 
+                                [ <a link="{:U('Advertising/del_position/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.name}" class="del">删除 </a> ]
+                                </td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <td colspan="6" align="right" class="page">{$page}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                $(".del").click(function(){
+                    var delLink=$(this).attr("link");
+                    popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+                        if(action == 'ok'){
+                            top.window.location.href=delLink;
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,154 @@
+.hidden{ display: none;}
+/*上传图片模板*/
+.up_btn_box{position: relative;}
+.up_btn_box .up_explain{ background-color: #D9EDF7;border-color: #BCE8F1;color: #3A87AD;padding: 7px 35px 7px 14px;border-radius: 4px;position: absolute;top: 0px;left: 150px;line-height: 19px;}
+
+#uploadImageList{border-top: 1px solid #E4E4E4;margin-top: 10px;padding-top: 10px;}
+#uploadImageList li{float: left;margin: 5px;border: 1px solid #E4E4E4;display: block;text-align: right;position: relative;border-radius:3px;}
+#uploadImageList .li:hover{border: solid 1px #000;}
+#uploadImageList li #upMsg{position: absolute; line-height: 17px; padding: 5px; border: 1px solid rgb(228, 228, 228); top: -53px;}
+#uploadImageList li img{ margin:5px 5px 0;}
+#uploadImageList .imper {background-color: #F1F1F1;border-top: 1px solid #E4E4E4;height: 27px;line-height: 26px;padding: 0 5px;}
+#uploadImageList .imper a{background: url("../Img/upload_img_edit.png") no-repeat;width: 19px;height: 19px;margin: 3px 0px 0px 5px;overflow: hidden;display: block;float: right;}
+#uploadImageList .imper .delImg{background-position: 2px 0;}
+#uploadImageList .imper .bigImg{background-position: -24px 0;}
+#uploadImageList .imper .cutImg{ background-position: -49px 0;}
+#uploadImageList .imper .delImg:hover{background-position: 2px -2px;}
+#uploadImageList .imper .bigImg:hover{background-position: -24px -2px;}
+#uploadImageList .imper .cutImg:hover{ background-position: -49px -2px;}
+/*分页样式*/
+.page a,.page span{background-color: #f8f8f8;border: 1px solid #DDDDDD;line-height: 20px;margin: 0 -1px;padding: 4px 12px;text-decoration: none;color: #0088CC;}
+.page .num{margin: 0 -1px;}
+.page .current{color: #999999;background-color: #F5F5F5;cursor: default;}
+.page a:hover, .page a:focus{background-color: #F5F5F5; color:#005580;}
+/*按钮样式*/
+.up_btn {
+    cursor: pointer;
+    line-height: 15px;
+    padding: 7px 0;
+    top: 2px;
+}
+.up_btn .up_ico {
+    background: url("../Img/icon.gif") no-repeat scroll -158px -494px;
+    display: inline-block;
+    width: 15px;
+}
+.up_btn:hover .up_ico { background-position: -158px -495px;}
+.up_btn:active .up_ico { background-position: -158px -494px;}
+/*搜索框样式*/
+.Item div.search{ float: right; text-align: right; padding-right: 20px;}
+.seamsg{}
+.seamsg .keyword{ font-weight: bold; color: #266AAE;padding: 0 3px;}
+
+/*排序样式*/
+.ajax_order{ position: relative; width: 100px;}
+.ajax_order .input{ border-radius: 3px; display: block; margin: 0 auto; width: 35px;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;}
+.ajax_order a{
+background: url("../Img/icon.gif") no-repeat scroll 0 0;
+    display: block;
+    height: 20px;
+    overflow: hidden;
+    padding-left: 20px;
+    position: absolute;
+    width: 0; top: 5px;}
+.ajax_order .rising{ right: 0px; background-position: -88px -262px;}
+.ajax_order .drop{ left: 0px; background-position: -133px -262px;}
+.ajax_order .rising:hover{ background-position: -110px -260px;}
+.ajax_order .drop:hover{ background-position: -156px -260px;}
+.ajax_order .rising:active{ background-position: -110px -258px;}
+.ajax_order .drop:active{ background-position: -156px -258px;}
+
+/*操作表单元素float向左*/
+
+
+/*商品分类页复选框*/
+.formConfl .thead{ line-height: 25px;}
+.formConfl .fl{ margin-right: 5px;}
+.up_cate_ico .uploadify{ float: left; margin-bottom: 0px;}
+.up_cate_ico .uploadify-queue{left: 50%; position: absolute;top: 40%;}
+.up_cate_ico .uploadify-queue .uploadify-queue-item{ border: 1px solid #E4E4E4;}
+.cateIco{ float: left;}
+.notes{color: #999999; float: left; line-height: 28px;}
+
+.checkIco{ padding: 8px 5px 0 0; float: left;cursor: pointer; line-height: 11px;}
+.checkIco .fl{ margin-right: 3px;}
+.checkIco .hd_ico{background: url("../Img/checkbox.gif") no-repeat scroll 0 0; width: 13px; height: 13px;}
+.checkIco .act{ background-position: 0 -14px;}
+.up_cate_ico .catimg{border: 1px solid #E4E4E4; border-radius: 3px; line-height: 24px;height: 26px;text-align: center;width: 26px;}
+
+.delBtn{background: url("../Img/icon.gif") no-repeat scroll 5px -261px; width: 20px; height: 20px; margin-top: 5px; display: block;}
+.delBtn:hover{ background-position: -18px -258px;}
+.delBtn:active{background-position: -18px -257px;}
+
+/*商品属性框*/
+.filtbox{ background-color: #D9EDF7; border-radius: 3px; padding: 5px 10px;}
+.filtbox ul{border-bottom: 1px solid #c3e6f4; padding: 5px; position: relative;}
+.filtbox ul li{ float: left; margin-right: 5px; display: inline;}
+.filtbox ul li a{ color: #000; border-radius: 2px; cursor: pointer; padding: 5px 10px;}
+.filtbox ul:last-child{ border-bottom: none;}
+.filtbox ul li a:hover{ color:#1B75B6; text-decoration: underline; }
+.filtbox ul li a.current{background-color: #1B75B6; color: #fff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);}
+.filtbox ul.plus{ padding-right: 72px;}
+.filtbox ul.filtChild{border-bottom: 1px dashed #afddf0;}
+.filtbox .filtLi{ margin-left: 40px;}
+.filtbox.child{ margin-top: 5px;}
+
+.btnBox{ }
+.btnBox .delLinkBox{position: absolute; right: 0px; top: 5px;position: absolute;}
+.btnBox .delLinkBox a{ margin: 0px; padding: 0px;}
+/*关联扩展字段列表*/
+.extend{ background-color: #D9EDF7; border-radius: 3px; padding: 5px 10px;}
+.extend li{
+    float: left;
+    margin: 0 20px 0 0;
+    padding-right: 70px;
+    position: relative;}
+.extend li .delLinkBox{position: absolute; right: 0px;}
+/*地区标签样式*/
+.region select{ margin-right: 10px; float: left;}
+
+/*支付图标*/
+.payType .pay_ico{background: url("../../Img/pay_ico.gif") no-repeat scroll; width: 115px; height: 40px; display: block;}
+.payType .alipay{ background-position: 0px 0px;}
+.payType .tenpay{ background-position: 0px -41px;}
+.payType .palpay{ background-position: 0px -164px;}
+.payType .yeepay{ background-position: 0px -123px;}
+.payType .kuaiqian{ background-position: 0px -205px;}
+.payType .unionpay{ background-position: 0px -82px;}
+.payType .pay_con dt, .payType .pay_con dd{ float: left;}
+.payType .pay_con dt{ width: 70px; text-align: right;}
+.payType .pay_con dd{ color: #1b75b6; padding-left: 5px;}
+/*支付状态*/
+.pay_status{
+    padding-left: 20px;
+    position: relative;
+    text-align: left;
+    width: 50px;}
+.pay_status .ico{background: url("../Img/icon.gif") no-repeat scroll 0 0; display: block;
+    height: 15px;
+    left: 0;
+    position: absolute;
+    top: 5px;
+    width: 15px;}
+.pay_status .ico.on{background-position: -66px -261px;}
+.pay_status .ico.off{ background-position: -435px -364px;}
+
+.knack{ line-height: 25px; color: #999;}
+/*选项卡*/
+#tab{width:100%;}
+#tab_menu{ position: relative;z-index: 1;}
+#tab_menu li{ color: #666; background-color: #e4e4e4; float:left; border-radius: 3px 3px 0 0; text-align:center; cursor:pointer;border:1px solid #dddddd; border-bottom: none; list-style:none;padding:5px 10px; margin-right:4px;}
+#tab_box{border:1px solid #dddddd;position: relative; z-index: 0; top: -1px; clear:both; padding: 10px; background-color: #F5F5F5;}
+.hide{display:none;}
+#tab_menu li.hover{ background:#7FFFFF;}
+#tab_menu li.selected{ background:#F5F5F5; color:#000}
+/*地区select*/
+#region_box select{ margin-right: 5px;}
+/*上传按钮*/
+.up_but{position: relative; height: 22px; line-height: 22px; padding-left: 30px;}
+.up_but .up_but_ico{background: url("../Img/but_ico_up.gif") no-repeat scroll;  height: 23px;
+    left: 7px;
+    position: absolute;
+    top: 4px;
+    width: 23px; }

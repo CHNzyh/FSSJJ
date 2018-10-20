@@ -1,0 +1,296 @@
+﻿$(function(){
+    if(endStatus==0){
+        ajaxGetVal(10);
+    }
+    if(bidtype == 0){
+        $('#robotprice').attr('value',Number(nowPrice)+Number(steplin));
+    }
+    // 手动出价
+    $('#manual_but').click(function(){
+        var bidPric=$('#bidprice').val();
+        $('#bidprice').attr("disabled", 'disabled');
+        $.post(bidUrl,{'pid':bidpid,'bidType':'sd','bidPric':bidPric},function(data){
+            if (data.status) {
+                if(data.status==1){
+                    bidChange(data);
+                }else{
+                    $('#bidprice').removeAttr("disabled");
+                    popup.alert(data.msg);
+                }
+            } else {
+                alert(data.msg);
+            }
+        },'json'); 
+    });
+    // 手动和自动切换
+    $('#robot_but').click(function(){
+        $(this).parents('#manual').css('display','none');
+        $('#auto').css('display','block');
+        $("input[name='bidType']").attr("value", 'zd');
+    });
+    $('#cancel').click(function(){
+        $(this).parents('#auto').css('display','none');
+        $('#manual').css('display','block');
+        $("input[name='bidType']").attr("value", 'sd');
+        removeBidRobot();
+    });
+    // 启动和关闭自动出价器
+    $('#isbegin').click(function(){
+        if($(this).attr('class')=='startBtn'){
+            $(this).html('停止');
+            $(this).removeClass('startBtn');
+            $(this).addClass('stopBtn');
+            $("input[name='bidStatus']").attr("value", 'start');
+            $('#robotprice').attr("disabled", 'disabled'); 
+            robotPrice();
+        }else if($(this).attr('class')=='stopBtn'){
+            removeBidRobot();
+        }
+    });
+    // 内容选项卡
+    $('#extcon_menu').on('click','li',function(){
+          $(this).addClass("on").siblings().removeClass("on");
+          var div_index = $(this).index();
+
+          $("#extcon_content>div").eq(div_index).show().siblings().hide();
+
+    });
+    // 测试
+    $('#test').on('click','a',function(){
+        clearInterval(endDowntimer);
+    });
+
+});
+// 结束倒计时
+function endDown(etime,ntime,boxobj,day_elem,hour_elem,minute_elem,second_elem,msec_elem){
+    var now_time = new Date(ntime*1000);
+    var end_time = new Date(etime*1000);
+    var native_time = new Date().getTime(); //本地时间
+    var now_cha = now_time - native_time; //服务器和本地时间差
+    var native_end_time = end_time - now_cha; //本地结束时间
+    var sys_second = 0;
+    endDowntimer = setInterval(function(){
+        // 检查本地时间是否更改
+        if(Math.abs(native_time - new Date().getTime())>1000){
+            clearInterval(endDowntimer);
+            $.post(ajaxGetTime, {'pid':bidpid},function(data){
+                endDown(data.endtime,data.nowtime,boxobj,day_elem,hour_elem,minute_elem,second_elem,msec_elem);
+            });
+        }
+        sys_second = (native_end_time - new Date().getTime())/100; //本地结束剩余时间
+        if (sys_second > 0) {
+            sys_second -= 1;
+            var day = Math.floor((sys_second / 36000) / 24);
+            var hour = Math.floor((sys_second / 36000) % 24);
+            var minute = Math.floor((sys_second / 600) % 60);
+            var second = Math.floor((sys_second/10) % 60);
+            var msec = Math.floor(sys_second % 10); //毫秒
+            day_elem && $(day_elem).text(day);//计算天
+            $(hour_elem).text(hour<10?"0"+hour:hour);//计算小时
+            $(minute_elem).text(minute<10?"0"+minute:minute);//计算分
+            $(second_elem).text(second<10?"0"+second:second);// 计算秒
+            $(msec_elem).text(msec);// 计算秒的1/10
+            native_time = new Date().getTime();
+        } else { 
+            clearInterval(endDowntimer);
+            // 本地时间结束提交服务器验证是否结束
+            $.post(ajaxCheckSucc, {'pid':bidpid},function(data){
+                if(data.status==0){
+                    // startDown(data.end_time,data.now_time,".noStartTime",".noStartTime .day",".noStartTime .hour",".noStartTime .minute",".noStartTime .second",".noStartTime .msec");
+                    endDown(data.end_time,data.now_time,boxobj,day_elem,hour_elem,minute_elem,second_elem,msec_elem);
+                }else{
+                    if(data.status==1){
+                        $('#bidTimeStatus').remove();
+                        $(boxobj).html('');
+                        $(boxobj).addClass('end');
+                        var user = data.nickname;
+                        if(data.uid==userid){user ='您';}
+                        var msg = '恭喜'+user+'以'+data.money+'元，拍到《'+data.pname+'》';
+                    }else if (data.status==2){
+                        var msg = '《'+data.pname+'》未达到保留价，流拍！'
+                    }
+                    popup.success(msg,'结束提示',function(action){
+                　　　//success 返回两个 action 值，分别是 'ok' 和 'close'。
+                        if(action == 'ok'){
+                            window.top.location.reload();
+                        }
+                        if(action == 'close'){
+                            window.top.location.reload();
+                        }
+                    });
+                }
+            });
+        }
+    }, 100);
+}
+// 开始时间倒计时
+function startDown(etime,ntime,boxobj,day_elem,hour_elem,minute_elem,second_elem,msec_elem){
+    var now_time = new Date(ntime*1000);
+    var end_time = new Date(etime*1000);
+    var native_time = new Date().getTime(); //本地时间
+    var now_cha = now_time - native_time; //服务器和本地时间差
+    var native_end_time = end_time - now_cha; //本地结束时间
+    var sys_second = 0;
+    startDowntimer = setInterval(function(){
+        if(Math.abs(native_time - new Date().getTime())>1000){
+            clearInterval(startDowntimer);
+            $.post(ajaxGetTime, {'pid':bidpid},function(data){
+                startDown(data.endtime,data.nowtime,boxobj,day_elem,hour_elem,minute_elem,second_elem,msec_elem);
+            });
+        }
+        sys_second = (native_end_time - new Date().getTime())/100; //本地结束剩余时间
+        if (sys_second > 0) {
+            sys_second -= 1;
+            var day = Math.floor((sys_second / 36000) / 24);
+            var hour = Math.floor((sys_second / 36000) % 24);
+            var minute = Math.floor((sys_second / 600) % 60);
+            var second = Math.floor((sys_second/10) % 60);
+            var msec = Math.floor(sys_second % 10); //毫秒
+            day_elem && $(day_elem).text(day);//计算天
+            $(hour_elem).text(hour<10?"0"+hour:hour);//计算小时
+            $(minute_elem).text(minute<10?"0"+minute:minute);//计算分
+            $(second_elem).text(second<10?"0"+second:second);// 计算秒
+            $(msec_elem).text(msec);// 计算秒的1/10
+            native_time = new Date().getTime();
+        } else { 
+            $('.noStartBidTbox .th').html('拍卖已开始');
+            $(boxobj).html('');
+            $(boxobj).addClass('into');
+            window.top.location.reload();
+        }
+    }, 100);
+}
+
+// 异步获取出价
+function ajaxGetVal(second){
+    $.post(ajaxGetUrl, {'pid':bidpid,'second':second,'bidcount':bidCount},function(data){
+        if(data.status==1){
+            // 动态更新页面数据
+            if(data.bidinfo.uid!=userid){
+                bidChange(data.bidinfo);
+            }else{
+                // 如果用户打开多个该拍品页面都能及时改变数据
+                if($('#bid_record tr:eq(1)').attr('uid')!=userid){
+                   bidChange(data.bidinfo); 
+                }
+            }
+            // 根据返回时间继续请求
+            if(data.second!=0){
+                ajaxGetVal(data.second);
+            }else{
+                ajaxGetVal(10);
+            }
+            // 自动出价器
+            // 检查是否启动自动出价器
+            if($('#isbegin').attr('class')=='stopBtn'){
+                robotPrice(1);
+            }
+        }else{
+            ajaxGetVal(10);
+        }
+    });
+}
+// 机器人出价函数
+function robotPrice(how){
+    // 当前出价不是该用户才启动出价判断
+    if(nowUid !=userid){
+        var chazhi = $('#robotprice').val()-nowPrice;
+        // 判断当前价是否大于用户目标价
+        if(chazhi>0){
+            // 保证每次出价大于最低出价
+            // 如果差值小于两次步长且大于一次步长，出价为差值
+            var robotBid = 0;
+            if(chazhi<steplin*2 && chazhi>=steplin){
+                robotBid=chazhi;
+                // 如果出价大于两次步长
+            }else if(chazhi>=steplin*2){
+                robotBid=steplin;
+            }
+            // 如果小于当前价出价一次
+            $.post(bidUrl,{'pid':bidpid,'bidType':'zd','bidPric':robotBid},function(data){
+                if (data.status) {
+                    if(data.status==1){
+                        bidChange(data);
+                        if($('#robotprice').val()==nowPrice){
+                            removeBidRobot();
+                            popup.alert('已达到您设置的最高限额<div class="red1 fb f16">'+Number(nowPrice)+'</div>');
+                        }
+                    }else{
+                        popup.alert(data.msg);
+                    }
+                } else {
+                    alert(data.msg);
+                }
+            },'json');
+        }else{
+            removeBidRobot();
+            if(how==1){
+                popup.alert("自动出价器已结束出价!<br>您可以在出价记录中查看出价详情！");
+            }else{
+                popup.alert('您的自动出价器最高限额必须大于<div class="red1 fb pd05 f16">'+(Number(nowPrice)+Number(steplin)))+'</div>';
+            }
+            
+            
+        }
+    }
+    
+}
+// 更新页面信息
+function bidChange(data){
+    if(bidtype == 0){
+        bidCount=data.bidcount;
+        nowPrice = data.nowprice;
+        nowUid = data.uid;
+        $('#nowprice').html(data.nowprice+'<span class="unit">元</span>');
+        $('#bidprice').removeAttr("disabled");
+        $('#bidcount').html(data.bidcount);
+        $('.nobody').remove();
+        // 全部部分出价
+        var bid_item='<tr uid="'+data.uid+'"><td><span class="on_over" style="width: 60px;">'+data.nickname+'</span></td><td align="center">'+data.type+'</td><td align="right"><span class="red1 fb">'+data.money+'</span></td><td align="center">'+data.time+'</td></tr>';
+        var bid_itemall='<tr uid="'+data.uid+'"><td><span class="on_over" style="width: 60px;">'+data.nickname+'</span></td><td align="center">'+data.type+'</td><td align="right"><span class="red1 fb">'+data.money+'</span></td><td align="right"><span class="red1 fb">'+data.bided+'</span></td><td align="center">'+data.time+'</td></tr>';
+        $('#bid_record .th').after(bid_item);
+        if($('#bid_record tr').size()>11){
+            $('#bid_record tr:last-child').remove();
+        }
+        // 全部出价
+        $('#bid_jlall .th').after(bid_itemall);
+        // 我的出价
+        if(data.uid==userid){
+            var my_item='<tr uid="'+data.uid+'"><td align="center">'+data.type+'</td><td align="right"><span class="red1 fb">'+data.money+'</span></td><td align="center">'+data.time+'</td></tr>';
+            $('#my_record .th').after(my_item);
+            if($('#my_record tr').size()>11){
+                $('#my_record tr:last-child').remove();
+            }
+            $('#mycount').html(parseInt($('#mycount').html())+1);
+        } 
+    }else if(bidtype == 1){
+        bidCount=data.bidcount;
+        $('#bidcount').html(data.bidcount);
+        $('.nobody').remove();
+        // 全部部分出价
+        var bid_item='<tr uid="'+data.uid+'"><td><span class="on_over" style="width: 60px;">竞标保密</span></td><td align="center">'+data.type+'</td><td align="right"><span class="red1 fb">竞标保密</span></td><td align="center">'+data.time+'</td></tr>';
+        $('#bid_record .th').after(bid_item);
+        if($('#bid_record tr').size()>11){
+            $('#bid_record tr:last-child').remove();
+        }
+        // 全部出价
+        $('#bid_jlall .th').after(bid_item);
+        // 我的出价
+        if(data.uid==userid){
+            var my_item='<tr uid="'+data.uid+'"><td align="center">'+data.type+'</td><td align="right"><span class="red1 fb">'+data.money+'</span></td><td align="center">'+data.time+'</td></tr>';
+            $('#my_record .th').after(my_item);
+            if($('#my_record tr').size()>11){
+                $('#my_record tr:last-child').remove();
+            }
+            $('#mycount').html(parseInt($('#mycount').html())+1);
+        }
+    }
+}
+//-------- 取消出价器
+function removeBidRobot(){
+    $('#isbegin').html('启动');
+    $('#isbegin').removeClass('stopBtn');
+    $('#isbegin').addClass('startBtn');
+    $("input[name='bidStatus']").attr("value", 'wait');
+    $('#robotprice').removeAttr("disabled");
+}

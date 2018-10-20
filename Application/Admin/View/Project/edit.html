@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$title}-审计项目管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='审计项目管理 > '.$title ;
+        </php>
+    <include file="Common:intoHead" />
+
+    <js href="--PUBLIC--/Js/laydate.js"/>
+    <js href="--PUBLIC--/Js/jquery-validate.js"/>
+
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr clearfix">
+                        <div class="current">{$title}</div>
+                    </div>
+                    <form action="" method="post" name="projectedit" id="projectedit">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                              <th>项目名称：</th>
+                              <td><input name="pname" id="pname" type="text" class="input" size="40" value="{$info.pname}" />
+                              </td>
+                            </tr>
+                            <tr>
+                              <th>项目编码：</th>
+                              <td><input name="pcode" id="pcode" type="text" class="input" size="40" value="{$info.pcode}" />
+                              </td>
+                            </tr>
+                            <tr>
+                              <th>所属部门：</th>
+                              <td>{$dp.dname}
+                              <input type="hidden" name="dename" value="{$dp.dename}" />
+                              <input type="hidden" name="pdepaid" value="{$dp.id}" />
+                              &nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th width="120">审计单位：</th>
+                                <td>
+                                <input name="pcompany" type="text" class="input" size="40" value="{$info.pcompany}" readonly="readonly" />
+                                <input name="pcompany_id" type="hidden" value="{$info.pcompany_id}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th width="120">开始时间：</th>
+                                <td>
+
+                                <input class="laydate-icon" id="pbtime" style="width:200px; margin-right:10px;" name="pbtime" type="text" size="40" value="{$info.pbtime}" /></td>
+                            </tr>
+                            <tr>
+                              <th>结束时间：</th>
+                              <td><input class="laydate-icon" id="petime" style="width:200px;" name="petime" type="text" size="40" value="{$info.petime}" /></td>
+                            </tr>
+                            <tr>
+                              <th>项目组长：</th>
+                              <td>
+                              <volist name="user" id="vo" key="k">
+                              <input type="radio" name="pleader" id="r{$k}" value="{$vo.aid}" <eq name="vo.aid" value="$info.pleader">checked</eq> /><label style="cursor:pointer" for="r{$k}">&nbsp;{$vo.realname}</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                              </volist>
+
+                              </td>
+                            </tr>
+                            <tr>
+                              <th>项目组成员：</th>
+                              <td>
+                              <volist name="user" id="vo" key="k">
+                              <input type="checkbox" name="pcrew[]" id="c{$k}" value="{$vo.aid}" <eq name="vo.check" value="1">checked</eq>/><label style="cursor:pointer" for="c{$k}">&nbsp;{$vo.realname}</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                              </volist>
+                            </tr>
+                            <tr>
+                              <th>备注：</th>
+                              <td><textarea name="pcontent" rows="5" cols="57">{$info.pcontent}</textarea>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th>状态：</th>
+                                <td>
+                                    <select name="pstatus" style="width: 80px;">
+                                        <if condition="$info.pstatus eq 1">
+                                            <option value="1" selected>启用</option>
+                                            <option value="0">禁用</option>
+                                            <else/>
+                                            <option value="1">启用</option>
+                                            <option value="0" selected>禁用</option>
+                                        </if>
+                                    </select>
+                                    如果禁用了将无法编辑本项目</td>
+                            </tr>
+
+                        </table>
+                        <input type="hidden" name="id" id="id" value="{$info.id}"/>
+
+
+
+
+                    <div class="commonBtnArea">
+                    <input type="submit" value="提交" class="btn"/>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+
+<script type="text/javascript">
+
+
+//验证开始
+    $(function(){
+		$("#projectedit").validate({
+			//
+			submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form
+
+                commonAjaxSubmit();
+                },
+			rules : {
+				pname: {
+					required : true
+				},
+				pcode : {
+					required : true,
+					remote : {
+						url : '{:U('checkcode')}',
+						type : 'post',
+						dataType : 'json',
+						data : {
+							pcode : function () {
+								return $('#pcode').val();
+							},
+							id : function () {
+								return $('#id').val();
+							}
+
+						}
+					 }
+
+				},
+				pbtime : {
+					required : true
+				},
+				petime : {
+					required : true
+				},
+				pleader : {
+					required : true
+				}
+
+			},
+			messages : {
+				pname: {
+					required : '项目名称不能为空'
+				},
+				pcode : {
+					required : '项目代码不能为空',
+					remote : '该项目编号已经存在！'
+				},
+				pbtime : {
+					required : '开始时间不能为空'
+				},
+				petime : {
+					required : '结束时间不能为空'
+				},
+				pleader : {
+					required : '组长为必选项'
+				}
+			}
+		});
+
+	});
+
+
+//验证结束
+
+
+
+
+
+
+
+
+//    $(".submit").click(function(){
+//        if($.trim($("input[name='pname']").val())==''){
+//            popup.alert("企业名称不能为空！");
+//            return false;
+//        }
+//            commonAjaxSubmit();
+//    });
+
+var start = {
+    elem: '#pbtime',
+    format: 'YYYY/MM/DD',
+    min: '1900-01-01', //设定最小日期为当前日期
+    max: '2099-06-16', //最大日期
+    istime: false,
+    istoday: false,
+    choose: function(datas){
+         end.min = datas; //开始日选好后，重置结束日的最小日期
+         end.start = datas //将结束日的初始值设定为开始日
+    }
+};
+var end = {
+    elem: '#petime',
+    format: 'YYYY/MM/DD',
+    min: '1900-01-01',
+    max: '2099-06-16',
+    istime: false,
+    istoday: false,
+    choose: function(datas){
+	start.max = datas; //结束日选好后，重置开始日的最大日期
+    }
+};
+laydate(start);
+laydate(end);
+</script>
+
+
+
+<include file="Common:foot" />
+</body>
+</html>

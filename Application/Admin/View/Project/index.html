@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>审计项目管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='审计项目管理 > 审计项目列表';
+        </php>
+        <include file="Common:intoHead" />
+    <js href="--PUBLIC--/Js/laydate.js"/>        
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+
+
+                        <div class="current">
+                            <eq name="ACTION_NAME" value="index">审计项目列表</eq>
+                            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                        </div>
+                       <div class="search">
+                            <form action="{:U('search')}" method='get'>
+                            部门：
+                            <if condition="$Think.session.my_info.aid eq 10">
+                            <select name="department" id="department" style="width:90px" onchange="onchangeShow(this.value)">
+                               {$dp.pidOption}
+                            </select>                            
+                            <else />
+                            
+                            {$dp[$did]['dname']}
+                            <input type="hidden" value="{$Think.session.my_info.department}" name="department" />
+                            </if>
+                            人员：
+                            <select name="user" id="user">
+                            <option value="0">全部人员</option>
+                            <volist name="user" id="vo">
+                            <option value="{$vo.aid}"<eq name="vo.aid" value="$keys.user"> selected</eq>>{$vo.realname}</option>
+                            </volist>
+                            </select>
+                            开始时间：
+                            <input class="laydate-icon" id="pbtime" style="width:80px; margin-right:10px;" name="pbtime" type="text" size="40" value="{$keys.pbtime}" />
+                            结束时间：
+                            <input class="laydate-icon" id="petime" style="width:80px;" name="petime" type="text" size="40" value="{$keys.petime}" />
+搜索字段：
+<select name="field">
+              <option value="pcompany" <eq name="keys.field" value="pcompany">selected="selected"</eq>>企业名称</option>
+                                    <option value="pname" <eq name="keys.field" value="pname">selected="selected"</eq>>项目名称</option>
+                                    <option value="pcode" <eq name="keys.field" value="pcode">selected="selected"</eq>>项目编号</option>
+                                </select>
+                            &nbsp;&nbsp;关键字：
+                                <input type="text" value="{$keys.keyword}" style="width:120px" name="keyword" class="input" placeholder="搜索对应字段关键字" />
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+                    <eq name="ACTION_NAME" value="search">
+                       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+
+                       <tr><Td>
+                        搜索的关键词<span class="keyword">{$keys.keyword}</span>找到<span class="keyword">{$keys.count}</span>条
+                       </td>
+                   </tr>
+                       </table>
+                        
+                    </eq>
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td>AID</td>
+                                <td>项目名称</td>
+                                <td>审计单位</td>
+                                <td>开始时间</td>
+                                <td>结束时间</td>
+                                <td>状态</td>
+                                <td width="150">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" aid="{$vo.id}">
+                                <td>{$vo.id}</td>
+                                <td>{$vo.pname}-{$vo.pcode}</td>
+                                <td>{$vo.pcompany}</td>
+                                <td>{$vo.pbtime|date='Y-m-d',###}</td>
+                                <td>{$vo.petime|date='Y-m-d',###}</td>
+                                <td> <if condition="$vo.pstatus eq 1">启用<else/>禁用</if></td>
+                                <td>[ <a href="javascript:void(0);" class="opStatus" val="{$vo.pstatus}"><if condition="$vo.pstatus eq 1">禁用<else/>启用</if></a> ][<a href="__URL__/fileList?id={$vo.id}">管理资料</a>][ <a href="__URL__/editProject?id={$vo.id}">编辑</a> ]</td>
+                            </tr>
+                        </volist>
+                        <tr><td colspan="9" align="right" class="page">{$page}</td></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+  <script type="text/javascript">
+            $(function(){
+                //快捷启用禁用操作
+                $(".opStatus").click(function(){
+                    var obj=$(this);
+                    var id=$(this).parents("tr").attr("aid");
+                    var status=$(this).attr("val");
+                    $.getJSON("__URL__/opProjectStatus", { id:id, status:status }, function(json){
+                        if(json.status==1){
+                            popup.success(json.info);
+                            $(obj).attr("val",json.data.status).html(status==1?"启用":"禁用").parents("td").prev().html(status==1?"禁用":"启用");
+                        }else{
+                            popup.alert(json.info);
+                        }
+                    });
+                });          
+              
+            });
+<if condition="$Think.session.my_info.aid eq 10">
+			function onchangeShow(oneId){			
+				$.ajax({ 
+					//url : "__URL__/getAdmin", 
+                    url : "{:U('/Ks/a')}", 
+					data : {did : oneId}, // 参数 
+					type : "post", 
+					cache : false, 
+					dataType : "json", //返回json数据 
+					error: function(){ 
+						alert('error'); 
+
+                    // error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    //      alert(XMLHttpRequest.status);
+                    //      alert(XMLHttpRequest.readyState);
+                    //      alert(textStatus)
+					}, 
+					success:onchangecallback 
+				}); 
+			} 
+			function onchangecallback(data){ 
+			
+				document.all['user'].options.length = 0; //清空原有的option 
+				var str=""; 
+				str+="<option value='0'>全部人员</option>" 
+				if(data!=null){
+					for(var i=0;i<data.length;i++){ 
+						str+="<option value='"+data[i].aid+"'>"+data[i].realname+"</option>" 
+					} 
+				}
+				$("#user").html(str); 
+			} 
+
+</if>
+
+	var start = {
+		elem: '#pbtime',
+		format: 'YYYY-MM-DD',
+		min: '1900-01-01', //设定最小日期为当前日期
+		max: '2099-06-16', //最大日期
+		istime: false,
+		istoday: false,
+		choose: function(datas){
+			 end.min = datas; //开始日选好后，重置结束日的最小日期
+			 end.start = datas //将结束日的初始值设定为开始日
+		}
+	};
+	var end = {
+		elem: '#petime',
+		format: 'YYYY-MM-DD',
+		min: '1900-01-01',
+		max: '2099-06-16',
+		istime: false,
+		istoday: true,
+		choose: function(datas){
+		start.max = datas; //结束日选好后，重置开始日的最大日期
+		}
+	};
+	laydate(start);
+	laydate(end);
+			
+        </script>        
+        <include file="Common:foot" />
+    </body>
+</html>

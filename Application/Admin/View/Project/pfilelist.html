@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>审计项目管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='审计项目管理 > 审计项目文件列表>'.$project['pname'].'-'.$project['pcode'].':'.$project['pcompany'];
+        </php>
+        <include file="Common:intoHead" />
+    <js href="--PUBLIC--/Js/laydate.js"/>        
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+
+
+                        <div class="current">
+                            <eq name="ACTION_NAME" value="fileList">审计项目文件列表</eq>
+                            <eq name="ACTION_NAME" value="Filesearch">搜索结果</eq>
+                        </div>
+                       <div class="search">
+                            <form action="{:U('fileList')}" method='get'>
+                            <input type="hidden" name="id" value="{$project.id}" />
+							文件类型：
+                            <select name="pftype" id="pftype" style="min-width: 80px;">
+                                {$pfile.pidOption}
+                              </select>
+
+                            
+                            &nbsp;&nbsp;关键字：
+                                <input type="text" value="{$keys.keyword}" style="width:120px" name="keyword" class="input" placeholder="搜索文件关键字" />
+                                &nbsp;&nbsp;<button class="btn">筛选</button><button class="btn" onclick="window.location='__URL__/addFile?id={$project.id}';return false;">添加</button>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+                    <eq name="ACTION_NAME" value="search">
+                        <div class="seamsg">
+                            搜索的关键词<span class="keyword">{$keys.keyword}</span>找到<span class="keyword">{$keys.count}</span>条
+                        </div>
+                    </eq>
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td>ID</td>
+                                <td>文件名称</td>
+                                <td><p>文件类型</p></td>
+                                <td>添加时间</td>
+                                <td>状态</td>
+                                <td width="150">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                        <assign name="pid" value="$pf[$vo['pftype']].pid" />
+                            <tr align="center" aid="{$vo.id}">
+                                <td>{$vo.id}</td>
+                                <td width="50%">{$vo.pfname}</td>
+                                <td><gt name="pid" value="0"> {$pf[$pid].dname}-></gt>{$pf[$vo['pftype']].dname}</td>
+                                <td> {$vo.pftime|date='Y-m-d',###}</td>
+                                <td> <if condition="$vo.pfstatus eq 1">启用<else/>禁用</if></td>
+                                <td>[ <a href="javascript:void(0);" class="opStatus" val="{$vo.pfstatus}"><if condition="$vo.pfstatus eq 1">禁用<else/>启用</if></a> ][ <a href="__URL__/editProjectFile?id={$vo.id}">编辑</a> ]<notempty name="vo.pffname">[<a href="/upload/{$vo.pffname}" target="_blank">下载</a>]</notempty></td>
+                            </tr>
+                        </volist>
+                        <tr><td colspan="9" align="right" class="page">{$page}</td></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+  <script type="text/javascript">
+            $(function(){
+                //快捷启用禁用操作
+                $(".opStatus").click(function(){
+                    var obj=$(this);
+                    var id=$(this).parents("tr").attr("aid");
+                    var status=$(this).attr("val");
+                    $.getJSON("__URL__/opProjectFileStatus", { id:id, status:status }, function(json){
+                        if(json.status==1){
+                            popup.success(json.info);
+                            $(obj).attr("val",json.data.status).html(status==1?"启用":"禁用").parents("td").prev().html(status==1?"禁用":"启用");
+                        }else{
+                            popup.alert(json.info);
+                        }
+                    });
+                });          
+              
+            });
+
+	var start = {
+		elem: '#pbtime',
+		format: 'YYYY-MM-DD',
+		min: '1900-01-01', //设定最小日期为当前日期
+		max: '2099-06-16', //最大日期
+		istime: false,
+		istoday: false,
+		choose: function(datas){
+			 end.min = datas; //开始日选好后，重置结束日的最小日期
+			 end.start = datas //将结束日的初始值设定为开始日
+		}
+	};
+	var end = {
+		elem: '#petime',
+		format: 'YYYY-MM-DD',
+		min: '1900-01-01',
+		max: '2099-06-16',
+		istime: false,
+		istoday: true,
+		choose: function(datas){
+		start.max = datas; //结束日选好后，重置开始日的最大日期
+		}
+	};
+	laydate(start);
+	laydate(end);
+			
+        </script>        
+        <include file="Common:foot" />
+    </body>
+</html>

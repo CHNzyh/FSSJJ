@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>注册方式管理-用户管理-{$site.SITE_INFO.name}</title>
+    <php>
+        $addCss="";
+        $addJs="";
+        $currentNav ='用户管理 > 注册方式管理';
+    </php>
+    <include file="Common:intoHead" />
+</head>
+<body>
+<div class="wrap"> <include file="Common:head" />
+    <div class="mainBody"> <include file="Common:left" />
+        <div id="Right">
+            <div class="contentArea">
+                <div class="Item hr clearfix">
+                    <div class="current">注册方式管理</div>
+                </div>
+                <form action="" method="post">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+
+                        <tr>
+                            <th width="120">注册方式：</th>
+                            <td>
+                                <label><input <eq name="mbcof.register.account" value="on">checked="checked"</eq>   type="checkbox" class="chooseAll" name="register[account]"> 账号注册</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label><input <eq name="mbcof.register.email" value="on">checked="checked"</eq> type="checkbox" class="chooseAll" name="register[email]"> 邮箱注册</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label><input <eq name="mbcof.register.mobile" value="on">checked="checked"</eq> type="checkbox" class="chooseAll" name="register[mobile]"> 手机号注册</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                （勾选为开启状态）
+                        </tr>
+
+                    </table>
+                </form>
+                <div class="commonBtnArea" >
+                    <button class="btn submit">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<include file="Common:foot" />
+
+<script type="text/javascript">
+    $(function(){
+        $(".submit").click(function(){
+            commonAjaxSubmit();
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

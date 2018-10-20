@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>前台导航、链接管理-系统设置-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='资讯管理 > 前台导航、链接管理';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">前台导航、链接管理</div>
+                    </div>
+                    <form action="" method="post" id="quickForm">
+                        <b>导航位置、链接：</b>
+                        <input type="hidden" name="act" value="add" /> &nbsp;
+                        <select name="data[pid]">
+                            <option value="0">导航位置</option>
+                            <volist name="list" id="vo">
+                                <option value="{$vo.lid}">{$vo.fullname}<eq name="vo[pid]" value="0">-（位置）</eq></option>
+                            </volist>
+                        </select>  &nbsp;
+                        <input placeholder="你要添加的导航、链接名称" id="newName" class="input" type="text" name="data[name]" value="" /> &nbsp;
+                        <button class="btn quickSubmit">确定添加</button>
+                        <span class="knack">支持位置下两级链接，多于两级不予处理</span>
+                    </form>
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="tab">
+                        <thead>
+                            <tr align="center">
+                                <td width="5%">LID</td>
+                                <td width="20%">原结构 <b title="单击导航、链接隐藏/显示该导航、链接下在子类">[i]</b></td>
+                                <td width="10%" align="left">操作属性</td>
+                                <td width="15%">新结构</td>
+                                <td width="15%">修改后的名称</td>
+                                <td width="8%">窗口</td>
+                                <td width="12%">URL</td>
+                                <td width="10%">排序</td>
+                                <td width="10%">操作</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="list" id="tree">
+                                <tr pid="{$tree.pid}" lid="{$tree.lid}">
+                                    <td align="center">{$tree.lid}<input type="hidden" name="lid" value="{$tree.lid}"/></td>
+                                    <td class="tree" style="cursor: pointer;">{$tree.fullname}<eq name="tree[pid]" value="0">-（位置）</eq></td>
+                                    <td>
+
+                                        <select name="act" class="act">
+                                            <option selected="selected" value="edit">修改链接</option>
+                                            <notin name="tree.lid" value="$lock_id[link]"><option value="del">删除链接</option></notin>
+                                            <option value="add">添加子链接</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="pid">
+                                            <option value="0">顶级导航、链接</option>
+                                            <volist name="list" id="vo1">
+                                                <if condition="$vo1['lid'] eq $tree['lid']">
+                                                    <option value="{$vo1.lid}" selected="selected" readonly>{$vo1.fullname}<eq name="vo1[pid]" value="0">-（位置）</eq></option>
+                                                    <else/>
+                                                    <option value="{$vo1.lid}">{$vo1.fullname}<eq name="vo1[pid]" value="0">-（位置）</eq></option>
+                                                </if>
+                                            </volist>
+                                        </select>
+                                    </td>
+
+                                    <td><input type="text" value="" size="15" name="name" class="input" placeholder="你要修改的新名称"/></td>
+                                    <td align="center">
+                                        <if condition="$tree['pid'] neq 0">
+                                            <select name="target">
+                                                <option value="_self" <eq name="tree[target]" value="_self">selected="selected"</eq>>当前窗口</option>
+                                                <option value="_blank" <eq name="tree[target]" value="_blank">selected="selected"</eq>>新窗口</option>
+                                            </select>
+                                        <else/>
+                                        -
+                                        </if>
+                                    </td>
+                                    <td align="center">
+                                        <if condition="$tree['pid'] neq 0">
+                                            <input type="text" value="{$tree.url}" size="15" name="url" class="input" placeholder="链接地址"/>
+                                        <else/>
+                                        -
+                                        </if>
+                                        
+                                    </td>
+                                    <td>
+                                        <div class="ajax_order">
+                                            <a class="rising" href="javascript:void(0)">加</a>
+                                            <span class="input tc" aid="{$tree.lid}">{$tree.sort}</span>
+                                            <a class="drop" href="javascript:void(0)">减</a>
+                                        </div>
+                                    </td>
+                                    <td align="center"><button class="btn opCat">确定</button></td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <form action="" method="post" id="opForm">
+            <input id="lid" type="hidden" name="data[lid]" />
+            <input id="act" type="hidden" name="act" />
+            <input id="pid" type="hidden" name="data[pid]" />
+            <input id="name" type="hidden" name="data[name]" />
+            <input id="target" type="hidden" name="data[target]" />
+            <input id="url" type="hidden" name="data[url]" />
+        </form>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                //异步编辑排序字段
+                var odUrl = "{:U('Webinfo/order_navigation')}"; //排序提交地址
+                $('.ajax_order a').on("click",function(){
+                    var odType = $(this).attr('class');
+                    var odShow = $(this).parents('.ajax_order').children('.input');
+                    var odVal = odShow.html();
+                    var odAid = odShow.attr('aid');
+                    $.post(odUrl,{'odType':odType,'odAid':odAid},function(data){      //ajax后台
+                        if (data.status) {
+                            if(odType == 'rising'){
+                                odShow.html(parseInt(odVal) + 1);
+                            }else if(odType == 'drop'){
+                                odShow.html(parseInt(odVal) - 1);
+                            }
+                            
+                        } else {
+                            alert(data.msg);
+                        }
+                    },'json');        
+                });
+                $(".opCat").click(function(){
+                    var obj=$(this).parents("tr");
+                    $("#lid").val(obj.find("input[name='lid']").val());
+                    $("#act").val(obj.find("select[name='act']").val());
+                    $("#pid").val(obj.find("select[name='pid']").val());
+                    $("#name").val(obj.find("input[name='name']").val());
+                    $("#target").val(obj.find("select[name='target']").val());
+                    $("#url").val(obj.find("input[name='url']").val());
+                    if($("#act").val()=="del"){
+                        popup.confirm('你真的打算删除该导航、链接吗?','温馨提示',function(action){
+                            if(action == 'ok'){
+                                commonAjaxSubmit("","#opForm");
+                            }
+                        });
+                        return false;
+                    }
+                    commonAjaxSubmit("","#opForm");
+                });
+                $(".quickSubmit").click(function(){
+                    if($("#newName").val()==''){
+                        popup.alert("导航、链接名称不能为空滴！");
+                        return false;
+                    }
+                    commonAjaxSubmit("","#quickForm");
+                    return false;
+                });
+
+                var chn=function(lid,op){
+                    if(op=="show"){
+                        $("tr[pid='"+lid+"']").each(function(){
+                            $(this).removeAttr("status").show();
+                            chn($(this).attr("lid"),"show");
+                        });
+                    }else{
+                        $("tr[pid='"+lid+"']").each(function(){
+                            $(this).attr("status",1).hide();
+                            chn($(this).attr("lid"),"hide");
+                        });
+                    }
+                }
+                $(".tree").click(function(){
+                    if($(this).attr("status")!=1){
+                        chn($(this).parent().attr("lid"),"hide");
+                        $(this).attr("status",1);
+                    }else{
+                        chn($(this).parent().attr("lid"),"show");
+                        $(this).removeAttr("status");
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

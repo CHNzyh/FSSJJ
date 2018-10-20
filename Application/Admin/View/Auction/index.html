@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            <eq name="ACTION_NAME" value="index">{$saytyp.ch}</eq>
+            <eq name="ACTION_NAME" value="search">{$saytyp.ch}搜索结果</eq>
+            -{$site.SITE_INFO.name}
+        </title>
+        <php>
+            if(ACTION_NAME == 'index'){
+                $pagname = '拍卖列表';
+            }elseif(ACTION_NAME == 'search'){
+                $pagname = '搜索结果';
+            };
+            $addCss="";
+            $addJs="";
+            $currentNav ='商品管理 > '.$pagname;
+            $this->currentNav->$currentNav;
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">
+                            <eq name="ACTION_NAME" value="index">{$saytyp.ch}</eq>
+                            <eq name="ACTION_NAME" value="search">{$saytyp.ch}搜索结果</eq>
+                        </div>
+                        <div class="search">
+                            <form action="{:U('search')}" method='get'>
+                            关键字：
+                            <input type="hidden" value="{$saytyp.get}" name="typ" class="input"/>
+                                <input type="text" value="{$keys.keyword}" name="keyword" class="input" placeholder="搜索标题的关键字" />
+                                &nbsp;&nbsp;模式：
+                                <select name="type">
+                                    <option value="" <eq name="keys.type" value="">selected="selected"</eq> >所有</option>
+                                    <option value="0" <eq name="keys.type" value="0">selected="selected"</eq>>竞拍</option>
+                                    <option value="1" <eq name="keys.type" value="1">selected="selected"</eq>>竞标</option>
+                                    </select>
+                                &nbsp;&nbsp;频道：
+                                <select name="pid">
+                                    <option value="">所有频道</option>
+                                    <volist name="channel" id="vo">
+                                        <if condition="$vo[cid] eq $keys[pid]">
+                                            <option value="{$vo.cid}" selected="selected">{$vo.name}</option>
+                                            <else/>
+                                            <option value="{$vo.cid}">{$vo.name}</option>
+                                        </if>
+                                    </volist>
+                                </select>
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                        </div>
+                    </div>
+                    <eq name="ACTION_NAME" value="search">
+                        <div class="seamsg">
+                            在<span class="keyword">{$keys.chname}</span>频道的<span class="keyword">{$keys.catname}</span>分类下找到<span class="keyword">{$keys.count}</span>个<if condition="$keys['keyword'] != ''">与<span class="keyword">{$keys.keyword}</span>相关的</if>
+                            <span class="keyword">{$keys.tname}</span>商品！
+                        </div>
+                    </eq>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td width="5%">PID</td>
+                                <td width="5%">GID</td>
+                                <td width="26%">拍品名称</td>
+                                <td width="9%">所在频道</td>
+                                <td width="9%">所在分类</td>
+                                <td width="4%">模式</td>
+                                <td width="9%">开始时间</td>
+                                <td width="9%">结束时间</td>
+                                <td width="8%">发布人</td>
+                                <td width="15%">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" pid="{$vo.pid}">
+                                <td>{$vo.pid}</td>
+                                <td>{$vo.gid}</td>
+                                <td align="left">{$vo.pname}</td>
+                                <td>{$vo.pidName}</td>
+                                <td>{$vo.cidName}</td>
+                                <td>
+                                    <eq name="vo.type" value="0">竞拍</eq>
+                                    <eq name="vo.type" value="1">竞标</eq>
+                                </td>
+                                <td title="{$vo.starttime|date="Y-m-d H:i",###}">{$vo.starttime|date="m-d H:i",###}</td>
+                                <td title="{$vo.endtime|date="Y-m-d H:i",###}">{$vo.endtime|date="m-d H:i",###}</td>
+                                <td>{$vo.aidName}</td>
+                                <td>[ <a target="_blank" href="{:U('Home/Auction/details',array('pid'=>$vo[pid]))}">拍卖数据 </a> ] 
+                                <neq name="saytyp.get" value="bidend">
+                                    <eq name="vo.uid" value="0">[ <a href="__URL__/edit?pid={$vo.pid}">编辑 </a> ] </eq>[ <a link="{:U('Auction/del/',array('pid'=>$vo['pid']))}" href="javascript:void(0)" name="{$vo.title}" class="del">删除 </a> ]
+                                    
+                                </neq>
+                                </td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <td colspan="10" align="right" class="page">
+                            <eq name="saytyp.get" value="biding">
+                            <span class="fl">提示：发布的拍品一旦有人出价将不能对其进行编辑!请谨慎操作！</span>
+                            </eq>
+                            <eq name="saytyp.get" value="future">
+                            <span class="fl">提示：在拍品未开始状态！请检查商品数据！一旦开始且有人出价，您将无法对拍品进行编辑！</span>
+                            </eq>
+                            <eq name="saytyp.get" value="bidend">
+                            <span class="fl">提示：为了数据安全！结束的拍品将无法进行编辑和删除！</span>
+                            </eq>
+                            {$page}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            var formUrl ="{:U('Goods/search')}";
+            var getCateUrl ="{:U('Goods/getcate')}";
+            var catePid = '{$keys.pid}';
+            var selectObj = $('select[name=pid]');
+            // 频道select事件
+            selectObj.on("change",function(){
+                var pid = $(this).children('option:selected').attr('value');
+                getCateHtml(pid,$(this));
+            });
+            // 获取分类select的html
+            function getCateHtml(cheCid,selectObj){
+               $.post(getCateUrl,{'pid':cheCid},function(data){      //ajax后台
+                if (data.status) {
+                        selectObj.next('#cid_select').remove();
+                        selectObj.after(data.htm);
+                    } else {
+                        alert(data.msg);
+                    }
+                },'json');
+            }
+            $(function(){
+                getCateHtml(catePid,selectObj)
+                $(".del").click(function(){
+                    var delLink=$(this).attr("link");
+                    popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+                        if(action == 'ok'){
+                            top.window.location.href=delLink;
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

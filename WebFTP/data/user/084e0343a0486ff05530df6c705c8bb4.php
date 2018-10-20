@@ -1,0 +1,1 @@
+<?php exit(); ?>a:4:{s:5:"uname";s:5:"guest";s:5:"upawd";s:32:"e10adc3949ba59abbe56e057f20f883e";s:5:"upath";s:7:"/guest/";s:5:"uauth";a:5:{i:0;s:5:"nlist";i:1;s:8:"pathinfo";i:2;s:5:"thumb";i:3;s:5:"mkdir";i:4;s:6:"upload";}}

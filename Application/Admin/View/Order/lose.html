@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            <eq name="ACTION_NAME" value="lose">过期拍卖订单列表</eq>
+            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+            -{$site.SITE_INFO.name}
+        </title>
+        <php>
+            if(ACTION_NAME == 'lose'){
+                $pagname = '过期拍卖订单列表';
+            }elseif(ACTION_NAME == 'search'){
+                $pagname = '搜索结果';
+            };
+            $addCss="";
+            $addJs="";
+            $currentNav ='订单管理 > '.$pagname;
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    
+                    <div class="Item hr clearfix">
+                        <div class="current fl">
+                            <eq name="ACTION_NAME" value="lose">过期拍卖订单列表</eq>
+                            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                        </div>
+                        <div class="fl">
+                            <a class="sbtn" href="{:U('Order/index')}">有效订单</a>
+                            <a class="sbtn on" href="{:U('Order/lose')}">过期订单</a>
+                        </div>
+                        <div class="search">
+                            <form action="{:U('search')}" method='get'>
+                            订单号：
+                                <input type="text" value="{$keys.order_no}" name="order_no" class="input" placeholder="搜索订单号" />
+                                &nbsp;&nbsp;类型：
+                                <select name="status">
+                                    <option value="" <eq name="keys.status" value=""> selected="selected"</eq>>全部</option>
+                                    <option value="0" <eq name="keys.status" value="1"> selected="selected"</eq>>已扣除保证金</option>
+                                    <option value="0" <eq name="keys.status" value="4"> selected="selected"</eq>>未扣除保证金</option>
+                                </select>
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                        </div>
+                        
+                    </div>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td width="15%">订单号</td>
+                                <td width="5%">类型</td>
+                                <td width="10%">生成时间</td>
+                                <td width="10%">过期时间</td>
+                                <td width="20%">对应拍品</td>
+                                <td width="10%">所属用户账号</td>
+                                <td width="20%">状态</td>
+                                <td width="10%">操作</td>
+                            </tr>
+                        </thead>
+                        <empty name="list">
+                            <tr><td colspan="7">哎哟！什么也没有！</td></tr>
+                        <else /> 
+                            <volist name="list" id="vo">
+                                <tr align="center">
+                                    <td align="left">{$vo.order_no}</td>
+                                    <td>
+                                    <eq name="vo.type" value="0">竞拍</eq>
+                                    <eq name="vo.type" value="1">竞标</eq>
+                                    <td>{$vo.time|date="Y-m-d H:i:s",###}</td>
+                                    <td>{$vo.losetime|date="Y-m-d H:i:s",###}</td>
+                                    <td align="left">
+                                        <a style="color:#ff6600;" href="{:U('Home/Auction/details',array('pid'=>$vo[gid]))}" target="_blank">{$vo.pname}</a>
+                                    </td>
+                                    <td>{$vo.account}</td>
+                                    <td>
+                                        <eq name="vo.status" value="0">已过期<br/>未扣除保证金</eq>
+                                        <eq name="vo.status" value="4">已过期<br/>已扣除保证金</eq>
+                                    </td>
+                                    <td>
+                                    [ <a href="__URL__/edit?order_no={$vo.order_no}">编辑 </a> ] 
+                                    [ <a link="{:U('Order/del/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.title}" class="del">删除 </a> ]
+                                    <br/>
+                                    <eq name="vo.status" value="0">
+                                        [ <a href="javascript:void(0)" account="{$vo.account}" pname="{$vo.pname}" order="{$vo.order_no}" class="deduct">扣除保证金 </a> ]
+                                    </eq>
+                                    
+                                    </td>
+                                </tr>
+                            </volist>
+                            <tr>
+                                <td colspan="8" align="right" class="page"><span class="fl">过期订单为用户未在有效期内支付拍品订单，可以选择编辑有效期或扣除保证金</span>{$page}</td>
+                            </tr>
+                        </empty>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                // 扣除保证金
+                var deductUrl = "{:U('Order/deduct')}"
+                $(".deduct").click(function(){
+                    var thisObj =$(this);
+                    var delLink=thisObj.attr("link");
+                    var odNo = thisObj.attr("order");
+
+                    popup.confirm('你真的打算扣除用户【'+thisObj.attr("account")+'】<br/>参与【'+thisObj.attr("pname")+'】<br/>支付的保证金么？','温馨提示',function(action){
+                        if(action == 'ok'){
+                            $.post(deductUrl,{'order_no':odNo},function(data){
+                            if (data.status) {
+                                    popup.success(data.msg);
+                                    thisObj.remove();
+                                } else {
+                                    alert(data.msg);
+                                }
+                            },'json');
+                        }
+                    });
+                    return false;
+                });
+                // 扣除保证金——end
+
+                $(".del").click(function(){
+                    var delLink=$(this).attr("link");
+                    popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+                        if(action == 'ok'){
+                            top.window.location.href=delLink;
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

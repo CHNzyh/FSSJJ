@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>友情链接列表-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='广告管理 > 友情链接列表';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">
+                            友情链接
+                        </div>
+                        <div class="search">
+                            <a class="sbtn <eq name='ico' value=''>on</eq>" href="{:U('Link/index')}">全部</a>
+                            <a class="sbtn <eq name='ico' value='1'>on</eq>" href="{:U('Link/index',array('ico'=>'1'))}">图标显示的</a>
+                            <a class="sbtn <eq name='ico' value='0'>on</eq>" href="{:U('Link/index',array('ico'=>'0'))}">图标不显示的</a>
+                        </div>
+                    </div>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td>(ID)</td>
+                                <td>名称</td>
+                                <td>图标</td>
+                                <td>链接</td>
+                                <td>图标显示</td>
+                                <td width="130">排序</td>
+                                <td width="150">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" id="{$vo.id}">
+                                <td align="left">{$vo.id}</td>
+                                <td align="left">{$vo.name}</td>
+                                <td>
+                                <empty name="vo.ico">
+                                    无
+                                    <else/>
+                                    <img src="{$upWholeUrl}{$vo.ico}" width="{:C('LINK_ICO_WIDTH')}" height="{:C('LINK_ICO_HEIGHT')}">
+                                </empty>
+                                
+                                </td>
+                                <td align="left">{$vo.url}</td>
+                                <td>
+                                    <eq name="vo.rec" value="0">不显示</eq>
+                                    <eq name="vo.rec" value="1">显示</eq>
+                                </td>
+                                <td>
+                                    <div class="ajax_order">
+                                        <a class="rising" href="javascript:void(0)">加</a>
+                                        <span class="input" aid="{$vo.id}">{$vo.sort}</span>
+                                        <a class="drop" href="javascript:void(0)">减</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    [ <a href="__URL__/edit?id={$vo.id}">编辑 </a> ]
+                                    [ <a link="{:U('del',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.name}" class="del">删除 </a> ]
+                                </td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <td colspan="7" align="right" class="page">{$page}</td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+<script type="text/javascript">
+    var odUrl = "{:U('Link/sort')}"; //排序提交地址
+    $(function(){
+        //异步编辑排序字段
+        $('.ajax_order a').on("click",function(){
+            var odType = $(this).attr('class');
+            var odShow = $(this).parents('.ajax_order').children('.input');
+            var odVal = odShow.html();
+            var odAid = odShow.attr('aid');
+            $.post(odUrl,{'odType':odType,'odAid':odAid},function(data){      //ajax后台
+                if (data.status) {
+                    if(odType == 'rising'){
+                        odShow.html(parseInt(odVal) + 1);
+                    }else if(odType == 'drop'){
+                        odShow.html(parseInt(odVal) - 1);
+                    }
+                    
+                } else {
+                    alert(data.msg);
+                }
+            },'json');        
+        });
+        $(".del").click(function(){
+            var delLink=$(this).attr("link");
+            popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+                if(action == 'ok'){
+                    top.window.location.href=delLink;
+                }
+            });
+            return false;
+        });
+    });
+    
+</script>
+    </body>
+</html>

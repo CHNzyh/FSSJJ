@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            <eq name="ACTION_NAME" value="index">商品列表</eq>
+            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+            -{$site.SITE_INFO.name}
+        </title>
+        <php>
+            if(ACTION_NAME == 'index'){
+                $pagname = '商品列表';
+            }elseif(ACTION_NAME == 'search'){
+                $pagname = '搜索结果';
+            };
+            $addCss="";
+            $addJs="";
+            $currentNav ='商品管理 > '.$pagname;
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">
+                            <eq name="ACTION_NAME" value="index">商品列表</eq>
+                            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                        </div>
+                        <div class="search">
+                            <form action="{:U('search')}" method='get'>
+                            关键字：
+                                <input type="text" value="{$keys.keyword}" name="keyword" class="input" placeholder="搜索标题的关键字" />
+                                &nbsp;&nbsp;频道：
+                                <select name="pid">
+                                    <option value="">所有频道</option>
+                                    <volist name="channel" id="vo">
+                                        <if condition="$vo[cid] eq $keys[pid]">
+                                            <option value="{$vo.cid}" selected="selected">{$vo.name}</option>
+                                            <else/>
+                                            <option value="{$vo.cid}">{$vo.name}</option>
+                                        </if>
+                                    </volist>
+                                </select>
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                        </div>
+                    </div>
+                    <eq name="ACTION_NAME" value="search">
+                        <div class="seamsg">
+                            在<span class="keyword">{$keys.chname}</span>频道的<span class="keyword">{$keys.catname}</span>分类下找到<span class="keyword">{$keys.count}</span>个<if condition="$keys['keyword'] != ''">与<span class="keyword">{$keys.keyword}</span>相关的</if>商品！
+                        </div>
+                    </eq>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td width="5%">ID</td>
+                                <td width="35%">商品名称</td>
+                                <td width="8%">所在频道</td>
+                                <td width="8%">所在分类</td>
+                                <td width="15%">发布时间</td>
+                                <td width="9%">发布人</td>
+                                <td width="20%">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" id="{$vo.id}">
+                                <td align="left">{$vo.id}</td>
+                                <td align="left">{$vo.title}</td>
+                                <td>{$vo.pidName}</td>
+                                <td>{$vo.cidName}</td>
+                                <td>{$vo.published|date="Y-m-d H:i:s",###}</td>
+                                <td>{$vo.aidName}</td>
+                                <td>[ <a href="{:U('Auction/add',array('gid'=>$vo['id']))}">发布到拍卖 </a> ][ <a href="__URL__/edit?id={$vo.id}">编辑 </a> ] [ <a link="{:U('Goods/del_goods/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.title}" class="del">删除 </a> ]</td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <td colspan="7" align="right" class="page">{$page}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            var formUrl ="{:U('Goods/search')}";
+            var getCateUrl ="{:U('Goods/getcate')}";
+            var catePid = '{$keys.pid}';
+            var selectObj = $('select[name=pid]');
+            // 频道select事件
+            selectObj.on("change",function(){
+                var pid = $(this).children('option:selected').attr('value');
+                getCateHtml(pid,$(this));
+            });
+            // 获取分类select的html
+            function getCateHtml(cheCid,selectObj){
+               $.post(getCateUrl,{'pid':cheCid},function(data){      //ajax后台
+                if (data.status) {
+                        selectObj.next('#cid_select').remove();
+                        selectObj.after(data.htm);
+                    } else {
+                        alert(data.msg);
+                    }
+                },'json');
+            }
+            $(function(){
+                getCateHtml(catePid,selectObj)
+                $(".del").click(function(){
+                    var delLink=$(this).attr("link");
+                    popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+                        if(action == 'ok'){
+                            top.window.location.href=delLink;
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

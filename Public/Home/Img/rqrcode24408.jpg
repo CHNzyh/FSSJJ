@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wb="http://open.weibo.com/wb">
+
+
+
+
+
+
+<head>
+<link rel="shortcut icon" href="http://www.chevip.com/favicon.ico" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="description" content="车唯网-专业汽车服务平台,国内领先的二手车拍卖交易平台,基于公正、高效、安全的模式，集竞价拍卖、竞标、车况查定、安全支付及手续代办于一体。" />
+<meta name="keywords" content="车唯网,二手车,二手车拍卖,汽车拍卖,网上买车,免摇号买车,网上4S店" />
+<title>您访问的网页不存在。。</title> 
+<link href="http://wad.ojooo.com/acc.php?addrbweb/css/base.css" rel="stylesheet" type="text/css" />
+<link href="http://wad.ojooo.com/acc.php?addrbweb/css/index.css" rel="stylesheet" type="text/css" />
+<link href="http://wad.ojooo.com/acc.php?addrbweb/css/thickbox.css" rel="stylesheet" type="text/css" />
+<script type='text/javascript' src='http://wad.ojooo.com/acc.php?addrb/dwr/util.js'></script>
+<script type='text/javascript' src="http://wad.ojooo.com/acc.php?addrb/dwr/engine.js"></script>
+<script type='text/javascript' src="http://wad.ojooo.com/acc.php?addrb/dwr/interface/aj.js"></script>
+<script type="text/javascript" src="http://wad.ojooo.com/acc.php?addrb/control/H2Combox.js" ></script>
+<script src="http://wad.ojooo.com/acc.php?addrb/web/js/jquery-1.8.2.min.js" type="text/javascript" language="javascript"></script>
+<meta http-equiv="refresh" content="5; url=http://www.chevip.com">
+<script language="javascript">
+	jQuery(function($) {
+		new PopupLayer({trigger:"#chevip_area",popupBlk:"#chevip_area_view",closeBtn:"#chevip_area_close"});
+	});
+</script>
+</head>
+<body>
+<!--  头部开始	-->
+	
+
+
+
+
+<script type="text/javascript" charset="utf-8"
+	src="http://cvopen.chevip.com/module/adsview/content/adsview.js?ver=1.0"></script>
+<script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8"></script>
+<div class="t_header">
+	<div class="t_header_bd">
+		
+		<div class="t_header_fl fl">
+			专业汽车服务平台！您好，欢迎来到车唯网！
+			<a href="http://www.chevip.com/login" title="请登录">请登录</a>
+			<a href="http://www.chevip.com/register/register">免费注册</a>
+		</div>
+					
+		<div class="fl"><wb:follow-button uid="3203920027" type="red_1" width="67" height="24" ></wb:follow-button></div>
+			
+		<ul class="t_header_fr fr">
+			<!--				<li><a href="">我的车唯网</a></li>-->
+			<li>
+				<a href="http://www.chevip.com/cww/tojoin">加盟申请</a>
+			</li>
+			<li>
+				<a href="http://www.chevip.com/cww/help_0">帮助中心</a>
+			</li>
+			<li class="call_c">
+				&nbsp;
+			</li>
+		</ul>
+		
+	</div>
+</div>
+<div class="clearfix" id="header">
+	<div id="chevip_logo">
+		<h1>
+			<a target="_self" href="http://www.chevip.com/index.jsp">
+				<img width="199" height="57" title="车唯网" alt="车唯网"
+					src="http://www.chevip.com/web/images/chevip_logo.gif">
+			</a>
+		</h1>
+	</div>
+	<div id="chevip_area">
+		广州站
+	</div>
+	<div id="chevip_area_view" class="chevip_area_view"
+		style="display: none;">
+		<div class="main">
+			<h2>
+				请选择所在区域
+			</h2>
+			<a href="javascript:void(0)" id="chevip_area_close" class="closeBtn"></a>
+			<ul>
+				<li>
+					暂未开通其他城市，敬请期待！
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="chevip_right fr">
+		<script type="text/javascript"
+			src="http://cvopen.chevip.com/module/adsview/content/api.php?&parent=1&type=12&show=1&number=1&width=244&height=64&config=%7B%20%22TAG-CLASS%22%20%3A%20%20%22%22%20%2C%22SCREEN-X%22%20%3A%20%20%22%22%20%2C%22SCREEN-ROLL%22%20%3A%20%20%22Y%22%20%2C%22SHOW-CLOSE%22%20%3A%20%20%22Y%22%20%2C%22SMART-MEMORY%22%20%3A%20%20%22Y%22%20%2C%22STYLE-TOP%22%20%3A%20%20%22%22%20%2C%22STYLE-GAP%22%20%3A%20%20%22%22%20%2C%22COLOR-BORDER%22%20%3A%20%20%22%22%20%2C%22COLOR-TITLE%22%20%3A%20%20%22%22%20%2C%22COLOR-BG%22%20%3A%20%20%22%22%20%2C%22COLOR-TEXT%22%20%3A%20%20%22%22%20%2C%22COLOR-LINK%22%20%3A%20%20%22%22%20%2C%22SHOW-BREAK%22%20%3A%20%20%220%22%20%2C%22OPEN-TIME%22%20%3A%20%20%22load%22%20%2C%22OPEN-TIME%22%20%3A%20%20%22unload%22%20%2C%22SHOW-ENTER%22%20%3A%20%20%22%22%20%2C%22SHOW-OUTLET%22%20%3A%20%20%22%22%20%2C%22SHOW-TITLE%22%20%3A%20%20%22%22%20%2C%22SHOW-OPACITY%22%20%3A%20%20%22%22%20%2C%22SHOW-SPEED%22%20%3A%20%20%22%22%20%2C%22SHOW-TWEEN%22%20%3A%20%20%22%22%20%2C%22SHOW-RANDOM%22%20%3A%20%20%22Y%22%20%2C%22SHOW-BUTTON%22%20%3A%20%20%22Y%22%20%2C%22POSITION-X%22%20%3A%20%20%22%22%20%2C%22POSITION-Y%22%20%3A%20%20%22%22%20%2C%22SHOW-CLOSE%22%20%3A%20%20%22Y%22%20%2C%22SHOW-SPEED%22%20%3A%20%20%221%22%20%2C%22SHOW-EFFECT%22%20%3A%20%20%22Y%22%20%2C%22SHOW-RANDOM%22%20%3A%20%20%22Y%22%20%2C%22SHOW-TEMPLATE%22%20%3A%20%20%22%22%20%7D&key=&charset=utf-8"
+			charset="utf-8"></script>
+	</div>
+</div>
+<div class="top_nav clearfix" id="nav">
+	<div class="nav-bd" id="navview">
+		<div class="clearfix">
+			<ul class="top_nav_tab">
+				<li class="nav-item">
+					<a href="http://www.chevip.com/index.jsp"
+						class='current'>首 页</a>
+				</li>
+				<li class="nav-item first-nav-item">
+					<a href="http://www.chevip.com/cww/list_all"
+						>二手车拍卖</a>
+				</li>
+				<li class="nav-item">
+					<a href="http://www.chevip.com/ws4sd"
+						>网上4S店</a>
+				</li>
+				<li class="nav-item last-nav-item">
+					<a href="http://www.chevip.com/cww/access"
+						>车辆评估</a>
+				</li>
+			</ul>
+			<ul class="right-nav-item">
+				<li>
+					<a href="http://www.chevip.com/cww/article_list/articletype-6-nowpage-1">招标公告</a>
+				</li>
+			</ul>
+		</div>
+		<div class="nav-rel">
+			<div class="nav-track"></div>
+		</div>
+		<script>
+				(function($){
+				var $nav = $("#navview"), $track = $nav.find(".nav-track"),$tags = $nav.find("a"),$cur = $tags.filter(".current");
+				$tags.hover(function(){ track(this) },function(){ track($cur) }).hover(function(){ 
+					$tags.removeClass("current"); //$cur = $(this).addClass("current")
+				});
+				function track($t,l,w){
+					$t = $($t);
+					l = $t.offset().left - $nav.offset().left;
+					w = $t.outerWidth();
+					$track.stop().animate({width:w,left:l},400,"swing");
+					}
+					track( $cur);
+				})(jQuery)
+			</script>
+	</div>
+	<div class="nav-bd-sec clearfix">
+		<div class="fl">
+			<span class="btn_red1 fl">竞 拍</span>规定时间，多次出价，价高者得。
+			<a href="http://www.chevip.com/cww/list_auction"
+				class="view_che">查看正在竞拍车辆>></a>
+		</div>
+		<div class="fl">
+			<span class="btn_red1 fl">竞 标</span>规定时间，一次出价，价高者得。
+			<a href="http://www.chevip.com/cww/list_bid"
+				class="view_che">查看正在竞标车辆>></a>
+		</div>
+	</div>
+</div>
+<!--  头部结束	-->
+<style type="text/css">
+body,ul,ol,li,p,dt,dl,dd,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,th,img,div{margin:0;padding:0}
+img { border:0}
+body{background:#fff;color:#333;font-size:12px;font-family:Arial,'宋体'}
+ul,ol{list-style:none}
+h1,h2,h3,h4,h5,h6,em,stone,i{font-size:12px;font-weight:400}
+select,input,select{vertical-align:middle}
+a:link,a:visited{color:#333;text-decoration:none}
+a:hover,a:active,a:focus{color:#f60;text-decoration:underline}
+.clear{clear:both}
+.left { float:left; display:inline-block}
+.wrap { width:960px; overflow:hidden; margin:0 auto;}
+#top { height:43px; overflow:hidden; background:#343434; width:100%}
+#top ul { margin-left:20px;}
+#top li { float:left; display:inline-block; padding:0 15px;}
+#top a { color:#fff; font-size:14px; line-height:43px;}
+.login { float:right; display:inline-block;}
+.login a { padding-left:10px;}
+.m404 { width:409px; margin:100px auto; padding-right:150px;}
+</style>
+<div class="m404">
+<a href="http://www.chevip.com"><img src="http://www.chevip.com/images/404.png" width="409" height="177" alt="“真的很抱歉，我们搞丢了页面……”要不去首页看看？"></a></div>
+<!--  头部开始	-->
+	
+
+	<!---main_a7 end---->
+	<div class="h8 clearfix"></div>
+	<div class="main_a8">
+		<div class="main_a8_main">
+			<ul>
+				<li class="help1">帮助中心</li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/help_13">竞买须知</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/help_2">如何买车</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/footer_infor_4">隐私保护</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/footer_infor_5">版权声明</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/help_0">了解更多</a></li>
+			</ul>
+			<ul>
+				<li class="help2">车主服务</li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/help_4">免费评估</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/help_9">看车预约</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/help_10">置换服务</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/service_02">过户流程</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/help_2">了解更多</a></li>
+			</ul>
+			<ul>
+				<li class="help3">客服中心</li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/service_1">服务热线</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/service_2">网站合作</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/service_3">常见问题</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/service_4">问题反馈</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/service_1">了解更多</a></li>
+			</ul>
+			<ul>
+				<li class="help4">车唯信息</li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/footer_infor_1">关于我们</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/footer_infor_8">联系我们</a></li>
+                <li><a  rel="nofollow" href="http://www.chevip.com/cww/help_7">加盟合作</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/footer_infor_3">合作媒体</a></li>
+				<li><a  rel="nofollow" href="http://www.chevip.com/cww/footer_infor_1">了解更多</a></li>
+			</ul>
+			<div class="h8 clearfix"></div>
+		</div>
+	</div>
+	<!---main_a8 end---->
+	<div class="main_a9 clr">
+		<a href="http://www.chevip.com/cww/footer_infor_1" target="_blank" rel="nofflow">关于我们</a>|<a href="http://www.chevip.com/cww/footer_infor_2" target="_blank" rel="nofflow">广告服务</a>|<a href="http://www.chevip.com/cww/footer_infor_3" target="_blank" rel="nofollow">合作媒体</a>|<a href="http://www.chevip.com/cww/footer_infor_4" target="_blank" rel="nofollow">隐私保护</a>|<a href="http://www.chevip.com/cww/footer_infor_5" target="_blank" rel="nofollow">版权声明</a>|<a href="http://www.chevip.com/cww/footer_infor_6" target="_blank" rel="nofollow">诚聘英才</a>|<a href="http://www.chevip.com/cww/footer_infor_8" target="_blank" rel="nofollow">联系我们</a><br> &copy; CheVIP.com All Rights Reserved 车唯网 广东唯普汽车科技有限公司 版权所有 <a href="http://www.miibeian.gov.cn/" target="_blank">粤ICP备13001955号-1</a>
+		<a href='http://netadreg.gzaic.gov.cn/ntmm/WebSear/WebLogoPub.aspx?logo=440115115012012120600016' rel="nofollow"><img alt='' src='http://netadreg.gzaic.gov.cn/ntmm/default/images/logo_down.jpg' style='width:35px;height: 38px' /></a>
+	</div>
+<div class="hidden">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F964695f5a4f8e59cc00605c1c96b8dda' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+		
+		<a class="reg" id="reg" href="http://www.chevip.com/cww/article/articleid-50001642-articletype-5" target="_blank">
+			<img src="http://www.chevip.com/images/regift.gif" width="43" height="43"/>
+		</a>
+		
+<div class="linktips" id="linktips" >
+	<ul>
+    	<li class="tipscar"></li>
+    	<li class="tipsweibo"><a href="http://www.weibo.com/3203920027" target="_blank">关注微博</a></li>
+        <li class="tipsweixin"><a>微信扫二维码</a></li>
+    </ul>
+	
+</div>
+<script language="javascript" type="text/javascript" src="http://www.chevip.com/web/js/bottom.js"></script>
+<script>
+if(window.screen.height<865 || window.screen.width<1153)
+{
+//alert(window.screen.height); //这个是屏幕分辨率的高
+//alert(window.screen.width); //这个是屏幕分辨率的宽
+$(document).ready(function(){
+$("#linktips").removeClass("linktips").addClass("hidden");
+$("#backToTop").removeClass("backToTop").addClass("hidden");
+$("#reg").removeClass("reg").addClass("hidden");
+})
+}
+function  change_nav(){
+			document.getElementsByName("linktips").className="hidden";
+			//document.getElementById("badyAq"+i).style.display="";
+
+}
+//alert(window.screen.height); //这个是屏幕分辨率的高
+//alert(window.screen.width); //这个是屏幕分辨率的宽
+//alert(window.screen.availHeight);//这个是屏幕可用工作区高
+//alert(window.screen.availWidth);//这个是屏幕可用工作区宽
+</script>
+<!--  头部结束	-->

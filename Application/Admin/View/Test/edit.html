@@ -1,0 +1,498 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>{$title}-审计企业管理-{$site.SITE_INFO.name}</title>
+    <php>
+        $addCss="";
+        $addJs="";
+        $currentNav ='审计对象管理 > '.$title;
+    </php>
+    <include file="Common:intoHead"/>
+</head>
+<body>
+<div class="wrap">
+    <include file="Common:head"/>
+    <div class="mainBody">
+        <include file="Common:left"/>
+        <div id="Right">
+            <div class="contentArea">
+                <div class="Item hr clearfix">
+                    <div class="current">添加审计对象</div>
+                </div>
+                <form action="" method="post">
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <th width="120">名称：</th>
+                            <td><input name="name" type="text" class="input" size="40" value="{$info.name}"/></td>
+                        </tr>
+                        <tr>
+                            <th width="120">法人单位代码：</th>
+                            <td><input name="frdwdm" type="text" class="input" size="40" value="{$info.FRDWDM}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">法人单位全称：</th>
+                            <td><input name="frdwqc" type="text" class="input" size="40" value="{$info.FRDWQC}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">纳税人编码：</th>
+                            <td><input name="nsrbm" type="text" class="input" size="40" value="{$info.NSRBM}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">单位成立时间：</th>
+                            <td><input name="dwclsj" type="text" class="input" size="40" value="{$info.DWCLSJ}"/></td>
+                        </tr>
+
+                        <tr>
+                            <!--TODO need to fix-->
+                            <th width="120">录入时间：</th>
+                            <td><input name="dwclsj" type="text" class="input" size="40" value="{$info.DWCLSJ}"/></td>
+
+                            <th width="120">法定代表人(含历任法人)：</th>
+                            <td><input name="fddbr" type="text" class="input" size="40" value="{$info.DQFDDBR}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">被审计单位分类：</th>
+                            <td><select name="bsjdwfl" style="min-width: 80px;">{$info.bsjdwfl}</select></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">审计周期：</th>
+                            <td><select name="sjzq" style="min-width: 80px;">{$info.sjzq}</select></td>
+                        </tr>-
+
+                        <tr>
+                            <th width="120">审计情况(含历年)：</th>
+                            <td><select name="sjzq" style="min-width: 80px;">{$info.SJZQ}</select></td>
+                        </tr>
+                        <tr>
+                            <th width="120">审计详细情况：</th>
+                            <td><input name="sjxxqk" type="text" class="input" size="40" value="{$info.SJXXQK}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">单位成立时间：</th>
+                            <td><input name="dwclsj" type="text" class="input" size="40" value="{$info.DWCLSJ}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">预算类别：</th>
+                            <td><select name="yslb" style="min-width: 80px;">{$info.yslb}</select></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">经费保障方式：</th>
+                            <td><input name="jjbzfs" type="text" class="input" size="40" value="{$info.JJBZFS}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">领域：</th>
+                            <td><input name="ly" type="text" class="input" size="40" value="{$info.LY}"/></td>
+                        </tr>
+                    </table>
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 单位所在地行政区划</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">乡(镇)：</th>
+                            <td><input name="xz" type="text" class="input" size="40" value="{$info.XZQH_XZ}"/></td>
+
+                            <th width="120">街（村）、门牌号：</th>
+                            <td><input name="jc" type="text" class="input" size="40" value="{$info.XZQH_JC}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">街道办事处：</th>
+                            <td><input name="jdbsc" type="text" class="input" size="40" value="{$info.XZQH_JDBSC}"/></td>
+
+                            <th width="120">居（村）委会：</th>
+                            <td><input name="jwh" type="text" class="input" size="40" value="{$info.XZQH_JWH}"/></td>
+                        </tr>
+
+
+                        <tr>
+
+                            <th width="120">省地县码（地域）：</th>
+                            <td><input name="sdxm" type="text" class="input" size="40" value="{$info.XZQH_SDXM}"/></td>
+
+
+                            <th width="120">乡村码：</th>
+                            <td><input name="xcm" type="text" class="input" size="40" value="{$info.XZQH_XCM}"/></td>
+                        </tr>
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 通信号码</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">电话号码：</th>
+                            <td><input name="dhhm" type="text" class="input" size="40" value="{$info.TXHM_DHHM}"/></td>
+
+                            <th width="120">电话分机号：</th>
+                            <td><input name="dhfjh" type="text" class="input" size="40" value="{$info.TXHM_DHFJH}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">电子邮箱：</th>
+                            <td><input name="dzyx" type="text" class="input" size="40" value="{$info.TXHM_DZYX}"/></td>
+
+                            <th width="120">邮政编码：</th>
+                            <td><input name="yzbm" type="text" class="input" size="40" value="{$info.TXHM_YZBM}"/></td>
+                        </tr>
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 登记注册（或批准）情况</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">登记（批注）机关－工商行政管理部门：</th>
+                            <td><input name="gsbm" type="text" class="input" size="40" value="{$info.DJQK_GSBM}"/></td>
+
+                            <th width="120">工商登记注册号：</th>
+                            <td><input name="gsdjzch" type="text" class="input" size="40" value="{$info.DJQK_GSDJZCH}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">登记（批准）机关－编制部门：</th>
+                            <td><input name="bzbm" type="text" class="input" size="40" value="{$info.DJQK_BZBM}"/></td>
+
+                            <th width="120">编委登记注册号(编办文件“三定方案”)：</th>
+                            <td><input name="bwdjzch" type="text" class="input" size="40" value="{$info.DJQK_BWDJZCH}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">登记（批准）机关－民政部门：</th>
+                            <td><input name="mzbm" type="text" class="input" size="40" value="{$info.DJQK_MZBM}"/></td>
+
+                            <th width="120">社团、民办非企业登记注册号：</th>
+                            <td><input name="fqydjzch" type="text" class="input" size="40" value="{$info.DJQK_FQYDJZCH}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">登记（批准）机关－其他：</th>
+                            <td><input name="qt" type="text" class="input" size="40" value="{$info.DJQK_QT}"/></td>
+
+                            <th width="120">登记（批准）机关－其他（请注明）：</th>
+                            <td><input name="djjg" type="text" class="input" size="40" value="{$info.DJQK_DJJG}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">是否民办非企业：</th>
+                            <td><input name="sfmbfqy" type="text" class="input" size="40" value="{$info.DJQK_SFMBFQY}"/></td>
+                        </tr>
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 执行会计制度类别</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">执行会计制度：</th>
+                            <td><input name="zxkjzd" type="text" class="input" size="40" value="{$info.ZDLB_ZXKJZD}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">登记注册类型：</th>
+                            <td><input name="djzclx" type="text" class="input" size="40" value="{$info.ZDLB_DJZCLX}"/></td>
+
+                            <th width="120">控股情况：</th>
+                            <td><input name="kgqk" type="text" class="input" size="40" value="{$info.ZDLB_KGQK}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">隶属关系：</th>
+                            <td><input name="lsgz" type="text" class="input" size="40" value="{$info.ZDLB_LSGX}"/></td>
+                        </tr>
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 行政上下级单位</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">行政上级单位：</th>
+                            <td><input name="xzsjdw" type="text" class="input" size="40" value="{$info.XZSXJDW_SJDW}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">行政下级单位：</th>
+                            <td><input name="xzxjdw" type="text" class="input" size="40" value="{$info.XZSXJDW_XJDW}"/></td>
+                        </tr>
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 财务上下级单位</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">财务上级单位：</th>
+                            <td><input name="cwsjdw" type="text" class="input" size="40" value="{$info.CWSXJDW_SJDW}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">财务下级单位：</th>
+                            <td><input name="cwxjdw" type="text" class="input" size="40" value="{$info.CWSXJDW_CWXJDW}"/></td>
+                        </tr>
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 企业资质等级</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">建筑业资质等级（新标准）：</th>
+                            <td><input name="jzyzzdj" type="text" class="input" size="40" value="{$info.QYZZDJ_JZYZZDJ}"/></td>
+
+                            <th width="120">建筑业资质等级（原标准）：</th>
+                            <td><input name="jzyzzdjold" type="text" class="input" size="40" value="{$info.QYZZDJ_JZYZZDJ_OLD}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">房地产开发业资质等级：</th>
+                            <td><input name="fckfyzzdj" type="text" class="input" size="40" value="{$info.QYZZDJ_FCKFYZZDJ}"/></td>
+                        </tr>
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 从业人员数（总计）</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">从业人员数（男）：</th>
+                            <td><input name="men" type="text" class="input" size="40" value="{$info.CYRYS_MEN}"/></td>
+
+                            <th width="120">从业人员数（女）：</th>
+                            <td><input name="women" type="text" class="input" size="40" value="{$info.CYRYS_WOMEN}"/></td>
+                        </tr>
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 企业资产情况</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">企业实收资本：</th>
+                            <td><input name="qysszb" type="text" class="input" size="40" value="{$info.QYZCQK_QYSSZB}"/></td>
+
+                            <th width="120">国家资本：</th>
+                            <td><input name="gjzb" type="text" class="input" size="40" value="{$info.QYZCQK_GJZB}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">集体资本：</th>
+                            <td><input name="jtzb" type="text" class="input" size="40" value="{$info.QYZCQK_JTZB}"/></td>
+
+                            <th width="120">法人资本：</th>
+                            <td><input name="frzb" type="text" class="input" size="40" value="{$info.QYZCQK_FRZB}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">个人资本：</th>
+                            <td><input name="grzb" type="text" class="input" size="40" value="{$info.QYZCQK_GRZB}"/></td>
+
+                            <th width="120">港澳台资本：</th>
+                            <td><input name="gatzb" type="text" class="input" size="40" value="{$info.QYZCQK_GATZB}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">外商资本（不包括港澳台资本）：</th>
+                            <td><input name="wszb" type="text" class="input" size="40" value="{$info.QYZCQK_WSZB}"/></td>
+
+                            <th width="120">固定资产原值：</th>
+                            <td><input name="gdzcyz" type="text" class="input" size="40" value="{$info.QYZCQK_GDZCYZ}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">固定资产净值：</th>
+                            <td><input name="gdzcjz" type="text" class="input" size="40" value="{$info.QYZCQK_GDZCJZ}"/></td>
+                        </tr>
+                    <!--need to fix-->
+                        <!--<tr>-->
+                            <!--<th width="120">国别或地区名称1：</th>-->
+                            <!--<td><input name="nsrbm" type="text" class="input" size="40" value="{$info.name}"/></td>-->
+
+                            <!--<th width="120">国别或地区名称1：</th>-->
+                            <!--<td><input name="nsrbm" type="text" class="input" size="40" value="{$info.name}"/></td>-->
+                        <!--</tr>-->
+
+                        <!--<tr>-->
+                            <!--<th width="120">国别或地区名称2：</th>-->
+                            <!--<td><input name="nsrbm" type="text" class="input" size="40" value="{$info.name}"/></td>-->
+
+                            <!--<th width="120">国别或地区名称2：</th>-->
+                            <!--<td><input name="nsrbm" type="text" class="input" size="40" value="{$info.name}"/></td>-->
+                        <!--</tr>-->
+
+                        <!--<tr>-->
+                            <!--<th width="120">国别或地区名称3：</th>-->
+                            <!--<td><input name="nsrbm" type="text" class="input" size="40" value="{$info.name}"/></td>-->
+
+                            <!--<th width="120">国别或地区名称3：</th>-->
+                            <!--<td><input name="nsrbm" type="text" class="input" size="40" value="{$info.name}"/></td>-->
+                        <!--</tr>-->
+
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 企业主要经济指标</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">全年营业收入：</th>
+                            <td><input name="yysr" type="text" class="input" size="40" value="{$info.JJZB_YYSR}"/></td>
+
+                            <th width="120">其中：主营业务收入：</th>
+                            <td><input name="zyywsr" type="text" class="input" size="40" value="{$info.JJZB_ZYYWSR}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">产品（或设备）1名称：</th>
+                            <td><input name="cpmc" type="text" class="input" size="40" value="{$info.JJZB_MC}"/></td>
+
+                            <th width="120">产品（或设备）1计量单位：</th>
+                            <td><input name="cpjldw" type="text" class="input" size="40" value="{$info.JJZB_JLDW}"/></td>
+                        </tr>
+                        <tr>
+                            <th width="120">产品（或设备）1生产能力：</th>
+                            <td><input name="cpscnl" type="text" class="input" size="40" value="{$info.JJZB_SCNL}"/></td>
+                            <!--need to fix-->
+
+                            <th width="120">产品（或设备）2名称：</th>
+                            <td><input name="cpmc2" type="text" class="input" size="40" value="{$info.JJZB_MC2}"/></td>
+                        </tr>
+                        <tr>
+                            <th width="120">产品（或设备）2计量单位：</th>
+                            <td><input name="cpjldw2" type="text" class="input" size="40" value="{$info.JJZB_JLDW2}"/></td>
+
+                            <th width="120">产品（或设备）2生产能力：</th>
+                            <td><input name="cpscnl2" type="text" class="input" size="40" value="{$info.JJZB_SCNL2}"/></td>
+                        </tr>
+                        <tr>
+                            <th width="120">产品（或设备）3名称：</th>
+                            <td><input name="cpmc3" type="text" class="input" size="40" value="{$info.JJZB_MC3}"/></td>
+
+                            <th width="120">产品（或设备）3计量单位：</th>
+                            <td><input name="cpjldw3" type="text" class="input" size="40" value="{$info.JJZB_JLDW3}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">产品（或设备）3生产能力：</th>
+                            <td><input name="cpscnl3" type="text" class="input" size="40" value="{$info.JJZB_SCNL3}"/></td>
+
+                            <th width="120">工业企业规模：</th>
+                            <td><input name="gyqygm" type="text" class="input" size="40" value="{$info.JJZB_GYQYGM}"/></td>
+                        </tr>
+
+                    </table>
+
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <td width="120"> 附加指标</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">附加指标1：</th>
+                            <td><input name="first" type="text" class="input" size="40" value="{$info.FJZB_FIRST}"/></td>
+
+                            <th width="120">附加指标2：</th>
+                            <td><input name="second" type="text" class="input" size="40" value="{$info.FJZB_SECOND}"/></td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">附加指标3：</th>
+                            <td><input name="thrid" type="text" class="input" size="40" value="{$info.FJZB_THRID}"/></td>
+
+                            <th width="120">附加指标4：</th>
+                            <td><input name="fourth" type="text" class="input" size="40" value="{$info.FJZB_FOURTH}"/></td>
+                        </tr>
+                    </table>
+
+
+
+                    <!--<tr>-->
+                    <!--<th width="120">区域类型：</th>-->
+                    <!--<td>-->
+                    <!--<volist name="areatype" id="vo" key="k">-->
+                    <!--<input type="radio" name="areatype" value="{$vo}"-->
+                    <!--<eq name="vo" value="$info.area_type">checked</eq>/>{$vo}-->
+
+                    <!--&lt;!&ndash;<label style="cursor:pointer" for="s{$k}">{$vo.name}</label>&nbsp;&ndash;&gt;-->
+                    <!--</volist>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                    <!--<th>级别：</th>-->
+                    <!--<td><select name="leveltype" style="min-width: 80px;">{$info.leveltype}</select>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                    <!--<th>预算单位：</th>-->
+                    <!--<td><select name="unit" style="min-width: 80px;">{$info.unitList}</select>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+
+                    <!--<th>等级：</th>-->
+                    <!--<td>-->
+                    <!--<volist name="leval" id="vo" key="k">-->
+                    <!--<input type="radio" name="leval" value="{$vo}"-->
+                    <!--<eq name="vo" value="$info.leval">checked</eq>/>{$vo}-->
+
+                    <!--&lt;!&ndash;<label style="cursor:pointer" for="s{$k}">{$vo.name}</label>&nbsp;&ndash;&gt;-->
+                    <!--</volist>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+
+                    <!--<th>审计周期：</th>-->
+                    <!--<td>-->
+                    <!--<volist name="cycle" id="vo" key="k">-->
+                    <!--<input type="radio" name="cycle" value="{$vo}"-->
+                    <!--<eq name="vo" value="$info.cycle">checked</eq>/>{$vo}-->
+
+                    <!--&lt;!&ndash;<label style="cursor:pointer" for="s{$k}">{$vo.name}</label>&nbsp;&ndash;&gt;-->
+                    <!--</volist>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+
+
+                    <input type="hidden" name="id" value="{$info.id}"/>
+                </form>
+                <div class="commonBtnArea">
+                    <button class="btn submit">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<include file="Common:foot"/>
+<script type="text/javascript">
+    $(".submit").click(function () {
+//        if ($.trim($("input[name='cname']").val()) == '') {
+//            popup.alert("企业名称不能为空！");
+//            return false;
+//        }
+        commonAjaxSubmit();
+    });
+</script>
+</body>
+</html>

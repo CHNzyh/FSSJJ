@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>审计企业管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='企业管理 > 审计企业列表';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+
+
+                        <div class="current">
+                            <eq name="ACTION_NAME" value="add">企业列表</eq>
+                            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                        </div>
+                       <div class="search">
+                            <form action="{:U('searchcompany')}" method='post'>
+                            搜索字段：
+                                <select name="field">
+                                    <option value="cname" <eq name="keys.field" value="cname">selected="selected"</eq>>企业名称</option>
+                                </select>
+                            &nbsp;&nbsp;关键字：
+                                <input type="text" value="{$keys.keyword}" name="keyword" class="input" placeholder="搜索对应字段关键字" />
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+                    <eq name="ACTION_NAME" value="search">
+                        <div class="seamsg">
+                            搜索的关键词<span class="keyword">{$keys.keyword}</span>在<span class="keyword">{$keys.field}</span>字段内找到<span class="keyword">{$keys.count}</span>条
+                        </div>
+                    </eq>
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td>AID</td>
+                                <td>名称</td>
+                                <td>联系人</td>
+                                <td>电话</td>
+                                <td>开通时间</td>
+                                <td width="150">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" aid="{$vo.id}">
+                                <td>{$vo.id}</td>
+                                <td>{$vo.cname}-{$vo.cename}</td>
+                                <td>{$vo.ccontact}</td>
+                                <td>{$vo.cphone}</td>
+                                <td>{$vo.ctime|date='Y-m-d H:i:s',###}</td>
+                                <td>[<a href="__URL__/showtranslation?id={$vo.id}">查看</a>][ <a href="__URL__/translation?id={$vo.id}">审计</a> ]</td>
+                            </tr>
+                        </volist>
+                        <tr><td colspan="9" align="right" class="page">{$page}</td></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        
+        <include file="Common:foot" />
+    </body>
+</html>

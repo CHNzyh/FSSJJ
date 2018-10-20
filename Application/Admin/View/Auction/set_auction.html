@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>拍卖配置-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='拍卖管理 > 拍卖配置';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">拍卖配置</div>
+                    </div>
+                    <form>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                                <th>价格浮动：</th>
+                                <td><input type="text" class="input" size="5" name="Auction[stepsize]" value="{$bidcof.stepsize}"/></td>
+                            </tr>
+                            <tr>
+                                <th>时间浮动：</th>
+                                <td>
+                                    最后
+                                    <input type="text" class="input" size="5" name="Auction[steptime]" value="{$bidcof.steptime}"/>
+                                    秒内出价，时间延时
+                                    <input type="text" class="input" size="5" name="Auction[deferred]" value="{$bidcof.deferred}"/>
+                                    秒&nbsp;&nbsp;&nbsp;&nbsp;（60秒=1分钟）
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>保证金比例：</th>
+                                <td>
+                                    <input type="text" class="input" size="5" name="Auction[ratio_b]" value="{$bidcof.ratio_b}" placeholder="保证金"/>&nbsp;&nbsp;/&nbsp;&nbsp;<input type="text" class="input" size="5" name="Auction[ratio_g]" value="{$bidcof.ratio_g}" placeholder="商品价格"/> 按照比例冻结保证金(如：1/100，就是拍1000元的商品冻结10元保证金)
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>固定保证金：</th>
+                                <td>
+                                    <input type="text" class="input" size="5" name="Auction[fixation]" value="{$bidcof.fixation}"/> 按照每件拍品冻结保证金（如：填写100，就是每件商品冻结100，与商品价格无关）
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="right">
+                                    *该配置只是默认配置，发布拍品时候可以根据自己需求单独修改！*
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                $(".submit").click(function(){
+                    commonAjaxSubmit();
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

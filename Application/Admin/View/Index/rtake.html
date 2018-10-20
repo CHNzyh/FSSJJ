@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>回复-提现申请-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='提现申请 > 回复';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">提现申请回复</div>
+                    </div>
+                    <form>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                                <th>处理项：</th>
+                                <td colspan="2">
+                                    关于<span class="striking s2">{$tinfo.uaccount}</span>提现<span class="striking s1">{$tinfo.money}</span>的申请
+                                </td>
+                            </tr>
+                            <tr>
+                                <th width="100">回复状态：</th>
+                                <td>
+                                    <label><input type="radio" name="status" value="1" checked="checked" 
+                                    /> 已转账</label> &nbsp; 
+                                    <label><input type="radio" name="status" value="2"/> 驳回申请</label>&nbsp; &nbsp; &nbsp; &nbsp; 
+                                    设置已转账会扣除此次冻结用户的保证金。驳回申将解冻用户此次申请金额保证金，并通给用户发送驳回提醒。
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>备注、原因：</th>
+                                <td><textarea class="input" style="height: 60px; width: 300px;" name="cause">{$info.description}</textarea> 您回复时候可以填写转账情况和驳回原因</td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="tid" value="{$tinfo.tid}" />
+                        <input type="hidden" name="uid" value="{$tinfo.uid}" />
+                        <input type="hidden" name="money" value="{$tinfo.money}" />
+                    </form>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                $(".submit").click(function(){
+                    commonAjaxSubmit();
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

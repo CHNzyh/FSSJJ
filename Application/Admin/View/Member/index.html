@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>网站注册会员管理-后台管理首页-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='网站注册会员管理 > 会员列表';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">
+                            <eq name="ACTION_NAME" value="index">用户列表</eq>
+                            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                        </div>
+                       <div class="search">
+                            <form action="{:U('search')}" method='get'>
+                            搜索字段：
+                                <select name="field">
+                                    <option value="account" <eq name="keys.field" value="account">selected="selected"</eq>>账号</option>
+                                    <option value="nickname" <eq name="keys.field" value="nickname">selected="selected"</eq>>昵称</option>
+                                    <option value="email" <eq name="keys.field" value="email">selected="selected"</eq>>邮箱</option>
+                                    <option value="mobile" <eq name="keys.field" value="mobile">selected="selected"</eq>>手机</option>
+                                </select>
+                            &nbsp;&nbsp;关键字：
+                                <input type="text" value="{$keys.keyword}" name="keyword" class="input" placeholder="搜索对应字段关键字" />
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                        </div>
+                    </div>
+                    <eq name="ACTION_NAME" value="search">
+                        <div class="seamsg">
+                            搜索的关键词<span class="keyword">{$keys.keyword}</span>在<span class="keyword">{$keys.field}</span>字段内找到<span class="keyword">{$keys.count}</span>条
+                        </div>
+                    </eq>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                        <tr>
+                            <td width="5%">UID</td>
+                            <td width="15%">登录账号</td>
+                            <td width="12%">昵称</td>
+                            <td width="18%">邮箱</td>
+                            <td width="10%">手机号码</td>
+                            <td width="5%">性别</td>
+                            <td width="15%">登录IP</td>
+                            <td width="20%">操作</td>
+                        </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" id="{$vo.id}">
+                                <td align="left">{$vo.uid}</td>
+                                <td align="left">{$vo.account}</td>
+                                <td>{$vo.nickname}</td>
+                                <td align="left">{$vo.email}</td>
+                                <td>{$vo.mobile}</td>
+                                <td><if condition="$vo['sex'] eq 0">女<else />男</if></td>
+                                <td>{$vo.login_ip}</td>
+                                <td>[ <a href="__URL__/edit?uid={$vo.uid}">信息编辑 </a> ] [ <a href="__URL__/wallet?uid={$vo.uid}">账户编辑 </a> ] [ <a link="{:U('Member/del/',array('uid'=>$vo['uid']))}" href="javascript:void(0)" name="{$vo.nickname}" class="del">删除 </a> ]</td>
+                            </tr>
+                        </volist>
+                        <tr><td colspan="8" align="right" class="page">{$page}</td></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                $(".del").click(function(){
+                    var delLink=$(this).attr("link");
+                    popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+                        if(action == 'ok'){
+                            top.window.location.href=delLink;
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

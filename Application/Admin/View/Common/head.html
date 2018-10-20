@@ -1,0 +1,19 @@
+<div id="Top">
+    <div class="logo"><img src="__IMG__/logo.png" /></div>
+    <div class="menu">
+        <ul> {$menu} </ul>
+    </div>
+</div>
+<div id="Tags">
+    <div class="userPhoto"></div>
+    <div class="navArea">
+        <div class="userInfo">
+            <div>
+                <a href="{:U("Public/loginOut")}" class="loginOut"><span>&nbsp;</span>退出系统</a>
+            </div>
+            欢迎您，{$my_info.email}
+        </div>
+        <div class="nav"><font id="today"><php>echo date("Y-m-d H:i:s");</php></font>您的位置：{$currentNav}</div>
+    </div>
+</div>
+<div class="clear"></div>

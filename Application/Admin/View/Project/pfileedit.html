@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$title}-审计项目管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='审计项目管理 >'.$project['pname'].'-'.$project['pcode'].':'.$project['pcompany'].'>'.$title ;
+        </php>
+    <include file="Common:intoHead" />
+    
+    <js href="--PUBLIC--/Js/laydate.js"/>
+    <js href="--PUBLIC--/Js/jquery-validate.js"/>
+
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr clearfix">
+                        <div class="current">{$title}</div>
+                    </div>
+                    <form action="" method="post" name="projectfile" id="projectfile">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                              <th>项目名称：</th>
+                              <td>{$project.pcompany}->{$project.pname}-{$project.pcode}
+                                  <input type="hidden" name="pid" id="pid" value="{$info.pid}" />
+                                  <input type="hidden" name="cid" id="cid" value="{$info.cid}" />
+                              </td>
+                            </tr>
+                            <tr>
+                              <th>文件名称：</th>
+                              <td><input name="pfname" id="pfname" type="text" class="input" size="40" value="{$info.pfname}" />
+                              </td>
+                            </tr>
+                            <tr>
+                              <th>文件类型：</th>
+                              <td>
+                              <select name="pftype" id="pftype" style="min-width: 80px;">
+                                {$pfile.pidOption}
+                              </select>
+                              <input type="hidden" name="pfpath" id="pfpath" value="{$info.pfpath}" />
+                              <input type="hidden" name="projectpath" id="projectpath" value="{$project.ppath}" />
+                              <input type="hidden" name="pdepaid" value="{$project.pdepaid}" />
+                               &nbsp;</td>
+                            </tr>
+                            <tr>
+                              <th>文件目录：</th>
+                              <td>
+                              <input type="hidden" id="filepath_1" value="{$filepath}" />
+                              <input type="text" name="filepath" readonly="readonly" id="filepath" value="{$info.projectpath}/{$info.pfpath}" class="input" size="40" />
+                              &nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th width="120">开始时间：</th>
+                                <td>
+                                
+                                <input class="laydate-icon" id="pfbtime" style="width:200px; margin-right:10px;" name="pfbtime" type="text" size="40" value="{$info.pfbtime}" /></td>
+                            </tr>
+                            <tr>
+                              <th>结束时间：</th>
+                              <td><input class="laydate-icon" id="pfetime" style="width:200px;" name="pfetime" type="text" size="40" value="{$info.pfetime}" /></td>
+                            </tr>                           
+                            <tr>
+                              <th>上传文件：</th>
+                              <td><input type="text" name="pffname" id="pffname" value="{$info.pffname}" readonly="readonly" class="input" size="40" /><input type="button" value="上传" onclick="showupload()" />&nbsp;</td>
+                            </tr>
+                            <tr>
+                              <th>备注：</th>
+                              <td><textarea name="pfcontent" rows="5" cols="57">{$info.pfcontent}</textarea>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th>状态：</th>
+                                <td>
+                                    <select name="pfstatus" style="width: 80px;">
+                                        <if condition="$info.pfstatus eq 1">
+                                            <option value="1" selected>启用</option>
+                                            <option value="0">禁用</option>
+                                            <else/>
+                                            <option value="1">启用</option>
+                                            <option value="0" selected>禁用</option>
+                                        </if>
+                                    </select>
+                                    如果禁用了将无法使用</td>
+                            </tr>
+
+                        </table>
+                        <input type="hidden" name="id" id="id" value="{$info.id}" />
+                    <div class="commonBtnArea">
+                    <input type="submit" value="提交" class="btn"/>
+                    <input type="button" value="返回" class="btn" onclick="window.history.back();" />
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+
+<script type="text/javascript">
+
+$(function(){
+
+
+		$("#projectfile").validate({
+			//
+			submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form   
+                
+                commonAjaxSubmit(); 
+                },   
+			rules : {
+				pfname: {
+					required : true
+				},
+				pftype : {
+					min:1
+				}
+
+			},
+			messages : {
+				pfname: {
+					required : '文件名称不能为空'
+				},
+				pftype : {
+					min : '文件类型必须选择'
+				}
+			}
+		});
+        
+
+
+	$("#pftype").change(function(){
+		if($(this).val()>0){
+			$.ajax({ 
+					url : "__URL__/getUrl", 
+					data : {id : $(this).val()}, // 参数 
+					type : "post", 
+					cache : false, 
+					dataType : "json", //返回json数据 
+					error: function(){ 
+						alert('error'); 
+					}, 
+					success:function(data){
+						if(data.status==1){
+							$("#pfpath").attr('value',data.info);
+							$("#filepath").attr('value',$("#projectpath").val()+'/'+data.info+'/'+$("#filepath_1").val());
+						}else{
+							popup.alert(data.info);
+						}
+					} 
+				});
+		}
+	});
+	
+		
+});
+
+
+
+function showupload(){
+	top1 = document.body.scrollHeight/2-300;
+	left = document.body.clientWidth/2-350;
+	path = $("#filepath").val();
+	if(path!=''&& path!='/'){
+		window.open ('/webftp/index.php?path='+path,'newwindow','height=600,width=750,top='+top1+',left='+left+',toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no') 
+	}else{
+		popup.error('请先选择文件类型再上传！');
+	}
+}
+
+
+
+var start = {
+    elem: '#pfbtime',
+    format: 'YYYY/MM/DD',
+    min: '1900-01-01', //设定最小日期为当前日期
+    max: '2099-06-16', //最大日期
+    istime: false,
+    istoday: true,
+    choose: function(datas){
+         end.min = datas; //开始日选好后，重置结束日的最小日期
+         end.start = datas //将结束日的初始值设定为开始日
+    }
+};
+var end = {
+    elem: '#pfetime',
+    format: 'YYYY/MM/DD',
+    min: '1900-01-01',
+    max: '2099-06-16',
+    istime: false,
+    istoday: true,
+    choose: function(datas){
+	start.max = datas; //结束日选好后，重置开始日的最大日期
+    }
+};
+laydate(start);
+laydate(end);
+</script>    
+    
+    
+    
+<include file="Common:foot" />
+</body>
+</html>

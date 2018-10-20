@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>筛选条件管理-商品管理-后台管理首页-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='商品管理 > 筛选条件管理';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">筛选条件管理</div>
+                    </div>
+                    <form action="" method="post" class="userInfo clearfix formConfl" id="quickForm">
+                        <b class="fl thead">添加条件：</b>
+                        <input class="fl" type="hidden" name="act" value="add" /> &nbsp;
+                        <select class="fl" name="data[pid]">
+                            <option value="0">顶级条件</option>
+                            <volist name="list" id="vo">
+                                <option value="{$vo.fid}">{$vo.fullname}</option>
+                            </volist>
+                        </select>  &nbsp;
+                        <input placeholder="筛选条件名称" id="newName" class="input fl" type="text" name="data[name]" value="" /> &nbsp;
+
+                        <button class="btn quickSubmit fl">确定添加</button>
+                        <span class="knack">小窍门：添加多个用,号隔开</span>
+                    </form>
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="tab">
+                        <thead>
+                            <tr align="center">
+                                <td width="10%">原条件CID</td>
+                                <td width="20%">原条件结构 <b title="单击条件隐藏/显示该条件下在子类">[i]</b></td>
+                                <td width="20%" align="left">操作属性</td>
+                                <td width="15%">新条件</td>
+                                <td width="15%">修改后的名称</td>
+                                <td width="10%">排序</td>
+                                <td width="10%">操作</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="list" id="tree">
+                                <tr pid="{$tree.pid}" fid="{$tree.fid}">
+                                    <td align="center">{$tree.fid}<input type="hidden" name="fid" value="{$tree.fid}"/></td>
+                                    <td class="tree" style="cursor: pointer;">{$tree.fullname}</td>
+                                    <td>
+                                        <select name="act" class="act">
+                                            <option selected="selected" value="edit">修改该条件</option>
+                                            <option value="del">删除该条件</option>
+                                            <option value="add">在该条件中添加子条件</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="pid">
+                                            <option value="0">顶级条件</option>
+                                            <volist name="list" id="vo1">
+                                                <if condition="$vo1['fid'] eq $tree['fid']">
+                                                    <option value="{$vo1.fid}" selected="selected" readonly>{$vo1.fullname}</option>
+                                                    <else/>
+                                                    <option value="{$vo1.fid}">{$vo1.fullname}</option>
+                                                </if>
+                                            </volist>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" value="" name="name" class="input" placeholder="你要修改条件的新名称"/></td>
+                                    <td>
+                                        <div class="ajax_order">
+                                            <a class="rising" href="javascript:void(0)">加</a>
+                                            <span class="input tc" aid="{$tree.fid}">{$tree.sort}</span>
+                                            <a class="drop" href="javascript:void(0)">减</a>
+                                        </div>
+                                    </td>
+                                    <td align="center"><button class="btn opCat">确定</button></td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <form action="" method="post" id="opForm">
+            <input id="fid" type="hidden" name="data[fid]" />
+            <input id="act" type="hidden" name="act" />
+            <input id="pid" type="hidden" name="data[pid]" />
+            <input id="name" type="hidden" name="data[name]" />
+        </form>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+<script type="text/javascript">
+    $(function(){
+        //异步编辑排序字段
+        var odUrl = "{:U('Goods/order_filtrate')}"; //排序提交地址
+        $('.ajax_order a').on("click",function(){
+            var odType = $(this).attr('class');
+            var odShow = $(this).parents('.ajax_order').children('.input');
+            var odVal = odShow.html();
+            var odAid = odShow.attr('aid');
+            $.post(odUrl,{'odType':odType,'odAid':odAid},function(data){      //ajax后台
+                if (data.status) {
+                    if(odType == 'rising'){
+                        odShow.html(parseInt(odVal) + 1);
+                    }else if(odType == 'drop'){
+                        odShow.html(parseInt(odVal) - 1);
+                    }
+                    
+                } else {
+                    alert(data.msg);
+                }
+            },'json');        
+        });
+        $(".opCat").click(function(){
+            var obj=$(this).parents("tr");
+            $("#fid").val(obj.find("input[name='fid']").val());
+            $("#act").val(obj.find("select[name='act']").val());
+            $("#pid").val(obj.find("select[name='pid']").val());
+            $("#name").val(obj.find("input[name='name']").val());
+            if($("#act").val()=="del"){
+                popup.confirm('你真的打算删除该条件吗?','温馨提示',function(action){
+                    if(action == 'ok'){
+                        commonAjaxSubmit("","#opForm");
+                    }
+                });
+                return false;
+            }
+            commonAjaxSubmit("","#opForm");
+        });
+        $(".quickSubmit").click(function(){
+            if($("#newName").val()==''){
+                popup.alert("条件名称不能为空滴！");
+                return false;
+            }
+            commonAjaxSubmit("","#quickForm");
+            return false;
+        });
+
+        var chn=function(fid,op){
+            if(op=="show"){
+                $("tr[pid='"+fid+"']").each(function(){
+                    $(this).removeAttr("status").show();
+                    chn($(this).attr("fid"),"show");
+                });
+            }else{
+                $("tr[pid='"+fid+"']").each(function(){
+                    $(this).attr("status",1).hide();
+                    chn($(this).attr("fid"),"hide");
+                });
+            }
+        }
+        $(".tree").click(function(){
+            if($(this).attr("status")!=1){
+                chn($(this).parent().attr("fid"),"hide");
+                $(this).attr("status",1);
+            }else{
+                chn($(this).parent().attr("fid"),"show");
+                $(this).removeAttr("status");
+            }
+        });
+    });
+</script>
+    </body>
+</html>

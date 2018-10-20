@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>添加、编辑用户-用户管理-{$site.SITE_INFO.name}</title>
+    <php>
+        $addCss="";
+        $addJs="";
+        $currentNav ='用户管理 > 添加、编辑用户';
+    </php>
+    <include file="Common:intoHead" />
+</head>
+<body>
+<div class="wrap"> <include file="Common:head" />
+    <div class="mainBody"> <include file="Common:left" />
+        <div id="Right">
+            <div class="contentArea">
+                <div class="Item hr clearfix">
+                    <div class="current">添加、编辑用户</div>
+                </div>
+                <form action="" method="post">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <th>登录账号：</th>
+                            <td><input name="info[account]" type="text" class="input" size="30" value="{$info.account}" /></td>
+                        </tr>
+                        <tr>
+                            <th width="120">密码：</th>
+                            <td><input name="info[pwd]" type="password" class="input" size="30" value="" />  不修改留空</td>
+                        </tr>
+                        <tr>
+                            <th width="120">昵称：</th>
+                            <td><input name="info[nickname]" type="text" class="input" size="20" value="{$info.nickname}" /></td>
+                        </tr>
+                        <tr>
+                            <th width="120">真实姓名：</th>
+                            <td><input name="info[truename]" type="text" class="input" size="20" value="{$info.truename}" /></td>
+                        </tr>
+                        
+                        <tr>
+                            <th width="120">性别：</th>
+                            <td>
+                                <label>
+                                    <input type="radio" name="info[sex]" value="1" <if condition="$info['sex'] eq 1">checked</if> >男
+                                </label>
+                                <label><input type="radio" name="info[sex]" value="0" <if condition="$info['sex'] eq 0">checked</if>>女</label></td>
+                        </tr>
+                        <tr>
+                            <th>邮箱：</th>
+                            <td><input name="info[email]" type="text" class="input" size="30" value="{$info.email}" /></td>
+                        </tr>
+                        <tr>
+                            <th width="120">手机号码：</th>
+                            <td><input name="info[mobile]" type="text" class="input" size="30" value="{$info.mobile}" /></td>
+                        </tr>
+                        <tr>
+                            <th width="120">电话：</th>
+                            <td><input name="info[phone]" type="text" class="input" size="30" value="{$info.phone}" /></td>
+                        </tr>
+                        <tr>
+                            <th width="120">QQ：</th>
+                            <td><input name="info[qq]" type="text" class="input" size="30" value="{$info.qq}" /></td>
+                        </tr>
+                    </table>
+                    <input type="hidden" name="uid" value="{$info.uid}"/>
+                </form>
+                <div class="commonBtnArea" >
+                    <button class="btn submit">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<include file="Common:foot" />
+
+<script type="text/javascript">
+    $(function(){
+        $(".submit").click(function(){
+            commonAjaxSubmit();
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

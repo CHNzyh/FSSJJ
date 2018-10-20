@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>分类与筛选关联管理-商品管理-后台管理首页-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='商品管理 > 分类与筛选关联管理';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">分类与筛选关联管理</div>
+                    </div>
+                    <form action="" method="post" class="userInfo formConfl" id="quickForm">
+                        <b class="thead">添加关联：</b>
+                        <select name="data[cid]">
+                            <option value="0">所有频道</option>
+                            <volist name="cate" id="vo">
+                                <option value="{$vo.cid}">{$vo.fullname}<eq name="vo[pid]" value="0">--&lt;频道&gt;</eq></option>
+                            </volist>
+                        </select><---&nbsp;关联&nbsp;--->
+                        <select name="data[eid]">
+                            <option value="">所有字段</option>
+                            <option value="0">地区</option>
+                            <volist name="fdlist" id="vo">
+                                <option value="{$vo.eid}">{$vo.name}</option>
+                            </volist>
+                        </select>  &nbsp;
+
+                        <button class="btn quickSubmit">确定关联</button>
+
+                    </form>
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="tab">
+                        <thead>
+                            <tr align="center">
+                                <td width="10%">商品频道分类</td>
+                                <td width="90%">扩展字段</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <foreach name="map" item="vo">
+                                <tr>
+                                    <td>{$vo.cid|cateName=###}<eq name="vo[pid]" value="0">--&lt;频道&gt;</eq></td>
+                                    <td>
+                                        <div class="extend">
+                                            <ul class="clearfix plus">
+                                            <foreach name="vo['extend']" item="v" key="k">
+                                                <li class="clearfix">
+                                                    <div class="fl">{$v}</div>
+                                                    <div class="delLinkBox fl" >[ <a class="delLinkBtn" href="javascript:void(0);" cid="{$vo.cid}" eid="{$k}">解除关联</a> ]</div>
+                                                </li>
+                                            </foreach>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </foreach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+<script type="text/javascript">
+    $(function(){
+        // 删除关联
+        var delLinkUrl = "{:U('Goods/delExtend')}";
+        $('tr').on('click','.delLinkBtn',function(){
+            var delFid = $(this).attr('eid');
+            var delCid = $(this).attr('cid');
+            var thisObj = $(this);
+            $.post(delLinkUrl,{'eid':delFid,'cid':delCid},function(data){
+                if(data.status){
+                   if(thisObj.parents('.plus').children('li').length == 1){
+                        thisObj.parents('tr').remove();
+                    } else {
+                        thisObj.parents('li').remove();
+                    } 
+                }
+                    
+                shortBox(data.msg,data.status);
+            });
+        });
+        // 短暂提示框
+        function shortBox(msg,yn){
+            if(yn == 1){
+                popup.success(msg);
+            } else {
+                popup.error(msg);
+            }
+            setTimeout(function(){
+                popup.close("asyncbox_success");
+            },1000);
+        }
+        // 提交添加关联
+
+        $(".quickSubmit").click(function(){
+            commonAjaxSubmit("","#quickForm");
+            return false;
+        });
+    });
+</script>
+    </body>
+</html>

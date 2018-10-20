@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>登录-{$site.SITE_INFO.name}</title>
+        <base href="{$site.WEB_ROOT}"/>
+        <css href="/Public/Min/?f=__CSS__/base.css|--PUBLIC--/Js/asyncbox/skins/default.css"/>
+        <js href="/Public/Min/?f=--PUBLIC--/Js/jquery-1.9.0.min.js|--PUBLIC--/Js/functions.js|--PUBLIC--/Js/jquery.form.js|--PUBLIC--/Js/asyncbox/asyncbox.js"/>
+    </head>
+
+<body class="loginWeb">
+    <div class="loginBox">
+        <div class="innerBox">
+            <div class="logo"> <img src="__IMG__/login_logo.gif" /></div>
+            <form id="form1" action="" method="post">
+                <div class="loginInfo">
+                    <ul class="clearfix">
+                        <li class="clearfix">
+                            <div class="row1">登录账号：</div>
+                            <div class="row2"><input class="input" name="email" id="email" size="30" type="text" /></div>
+                        </li>
+                        
+                        <li class="clearfix">
+                            <div class="row1">登录密码：</div>
+                            <div class="row2"><input class="input" name="pwd" id="pwd" size="30" type="password" /></div>
+                        </li>
+<!--
+                        <li class="clearfix">
+                            <div class="row1">验证码：</div>
+                            <div class="row2"><input class="input" id="verify_code" name="verify_code" type="text" style="width:100px;" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="__URL__/verify_code" id="verifycode"  title="看不清？单击此处刷新" onclick="this.src+='?rand='+Math.random();"/></div>
+                        </li>
+-->
+                    </ul>
+                </div>
+                <input type="hidden" name="op_type" id="op_type" value="1"/>
+            </form>
+            <div class="clear"></div>
+            <div class="operation"><button class="btn submit">登录</button></div>
+            <div style="width:90%;margin:0 auto; font-size:12px;">推荐使用的浏览器及版本为：IE10/IE11、<A href="/Uploads/Soft/Firefox.exe">Firefox40</A> 及以上版本、Chrome 35及以上版本。推荐分辨庇显示宽度为1280</div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $(".submit").click(function(){
+                $("#op_type").val("1");
+                if($("#email").val()==''||$("#pwd").val()==''||$("#verify_code").val()==''){
+                    popup.alert("填写完整方可登陆");
+					
+                    return false;
+                }
+                commonAjaxSubmit();
+            });
+            $(".findPwd").click(function(){
+                $("#op_type").val("2");
+                if($("#email").val()==''){
+                    popup.alert("填写了你的邮箱方可找回密码");
+                    return false;
+                }
+                if($("#verify_code").val()==''){
+                    popup.alert("请写验证码方可找回密码");
+                    return false;
+                }
+                commonAjaxSubmit();
+            });
+			
+			
+			$($("#email")).keypress(function (e) {
+        		if (e.keyCode == 13){
+					$(".submit").click();
+				}
+    		 });
+			$($("#pwd")).keypress(function (e) {
+        		if (e.keyCode == 13){
+					$(".submit").click();
+				}
+    		 });
+			$($("#verify_code")).keypress(function (e) {
+        		if (e.keyCode == 13){
+					$(".submit").click();
+				}
+    		 });			 			 
+			
+			
+			
+        });
+    </script>
+</body>
+</html>

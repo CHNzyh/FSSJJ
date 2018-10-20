@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>订单编辑-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='拍卖管理 > 订单编辑';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">订单编辑</div>
+                    </div>
+                    <form>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                                <th>有效期：</th>
+                                <td>
+                                    <select name="info[act]">
+                                        <option value="" selected="selected">不操作</option>
+                                        <option value="add">加</option>
+                                        <option value="sub">减</option>
+                                    </select>
+                                    <input  style="text-align: right;" type="text" class="input" size="5" name="info[day]" value=""/>&nbsp;天&nbsp;&nbsp;*根据需要选填
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>状态：</th>
+                                <td>
+                                    <label><input type="radio" value="0" name="info[status]"<eq name="info.status" value="0"> checked="checked"</eq>> 待支付</label> &nbsp; 
+                                    <label><input type="radio" value="1" name="info[status]"<eq name="info.status" value="1"> checked="checked"</eq>> 待发货</label> &nbsp; 
+                                    <label><input type="radio" value="2" name="info[status]"<eq name="info.status" value="2"> checked="checked"</eq>> 已发货</label> &nbsp; 
+                                    <label><input type="radio" value="3" name="info[status]"<eq name="info.status" value="3"> checked="checked"</eq>> 已收货</label>
+                                </td>
+                            </tr>
+                            <tr>
+                            <th>备注：</th>
+                                <td>
+                                    <textarea name="info[remark]" style="height: 60px; width: 300px;" class="input">{$info.remark}</textarea>
+                                    &nbsp;*这里的信息会在用户订单列表内显示，如果发物流或快递可以填写快递号和提醒。您可以根据编辑的状态填写相应的备注！
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="info[order_no]" value="{$info.order_no}" />
+                    </form>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                $(".submit").click(function(){
+                    commonAjaxSubmit();
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

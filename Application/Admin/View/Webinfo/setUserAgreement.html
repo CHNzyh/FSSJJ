@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>用户协议-系统设置-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='系统设置 > 用户协议';
+        </php>
+    <include file="Common:intoHead" />
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr clearfix">
+                        <div class="current">用户协议</div>
+                    </div>
+                    <form action="" method="post">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td><textarea id="content" style="width: 100%; height:200px;" name="USER_AGREEMENT">{$UserAgreement.USER_AGREEMENT}</textarea></td>
+                            </tr>
+                        </table>
+                    </form>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+<js href="--PUBLIC--/ueditor/ueditor.config.js,--PUBLIC--/ueditor/ueditor.all.min.js,--PUBLIC--/ueditor/lang/zh-cn/zh-cn.js"/>
+<script type="text/javascript">
+    $(function(){
+        window.UEDITOR_CONFIG.toolbars=[['fullscreen','source','|','undo','redo','|','bold','italic','removeformat','formatmatch','forecolor','|','insertorderedlist','insertunorderedlist','|','indent','rowspacingtop','rowspacingbottom','lineheight','|','justifyleft','justifycenter','justifyright','justifyjustify','paragraph','fontfamily','fontsize']];
+        UE.getEditor('content');
+    });
+    $(".submit").click(function(){
+        commonAjaxSubmit();
+    });
+</script>
+</body>
+</html>

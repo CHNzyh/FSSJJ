@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>账户管理-用户管理-{$site.SITE_INFO.name}</title>
+    <php>
+        $addCss="";
+        $addJs="";
+        $currentNav ='用户管理 > 账户管理';
+    </php>
+    <include file="Common:intoHead" />
+</head>
+<body>
+<div class="wrap"> <include file="Common:head" />
+    <div class="mainBody"> <include file="Common:left" />
+        <div id="Right">
+            <div class="contentArea">
+                <div class="Item hr clearfix">
+                    <div class="current">账户管理</div>
+                </div>
+                <form action="" method="post">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <th>用户账号：</th>
+                            <td>{$info.account}</td>
+                        </tr>
+                        <tr>
+                            <th>保证金：</th>
+                            <td>当前：{$info.wallet_pledge}&nbsp;&nbsp;&nbsp;冻结：{$info.wallet_pledge_freeze}&nbsp;&nbsp;&nbsp;可用：{$info.available}</td>
+                        </tr>
+                        <tr>
+                            <th>信用额度：</th>
+                            <td>当前：{$info.wallet_limsum}&nbsp;&nbsp;&nbsp;冻结：{$info.wallet_limsum_freeze}&nbsp;&nbsp;&nbsp;可用：{$info.available_limsum}</td>
+                        </tr>
+                        <tr>
+                            <th>操作项：</th>
+                            <td>
+                                <select name="info[item]">
+                                    <option value="pledge">保证金</option>
+                                    <option value="limsum">信用额度</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>动作：</th>
+                            <td>
+                                <select name="info[act]">
+                                    <option value="add">加</option>
+                                    <option value="minus">减</option>
+                                    <option value="freeze">冻结</option>
+                                    <option value="unfeeze">解冻</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>金额：</th>
+                            <td>
+                                <input name="info[money]" type="text" class="input" size="30" value="" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>备注：</th>
+                            <td>
+                                <textarea name="info[remark]" style="width:225px; height:60px;" class="input"></textarea>
+                            </td>
+                        </tr>
+                        
+                    </table>
+                    <input type="hidden" name="info[uid]" value="{$info.uid}"/>
+                </form>
+                <div class="commonBtnArea" >
+                    <button class="btn submit">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<include file="Common:foot" />
+
+<script type="text/javascript">
+    $(function(){
+        $(".submit").click(function(){
+            commonAjaxSubmit();
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

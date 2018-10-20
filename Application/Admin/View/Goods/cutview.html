@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- 图像剪裁 -->
+<css href="--PUBLIC--/Jcrop/jquery.Jcrop.css"/>
+
+<js href="--PUBLIC--/Js/jquery-1.7.2.min.js"/>
+<js href="--PUBLIC--/Jcrop/jquery.Jcrop.js"/>
+<js href="--PUBLIC--/Js/asyncbox/asyncbox.js"/>
+<!-- 图像剪裁end -->
+<script type="text/javascript">
+	var dialog = frameElement.api;
+	var midWidth = "{:picSize(1,'width')}";
+	var midHeight = "{:picSize(1,'height')}";
+	
+	$(document).ready(function(){
+		var ranNub=parseInt(Math.random()*100); 
+		$('img').attr('id',ranNub);
+	$('#'+ranNub).attr('src',dialog.data.imgurl);
+		var api = $.Jcrop('#'+ranNub,{
+			setSelect: [0,0,midWidth,midHeight] //setSelect是Jcrop插件内部已定义的运动方法
+		});
+		//记得放在jQuery(window).load(...)内调用，否则Jcrop无法正确初始化
+		$('#'+ranNub).Jcrop({
+			aspectRatio:midWidth/midHeight,
+			minSize:[midWidth, midHeight],
+			onChange:showCoords,
+			onSelect:showCoords
+		});	
+		//简单的事件处理程序，响应自onChange,onSelect事件，按照上面的Jcrop调用
+		function showCoords(obj){
+			dialog.returnValue = obj.x + '|' + obj.y + '|' + obj.w + '|' + obj.h;
+		}
+	});
+</script>
+	<head></head>
+	<body id="mid">
+        <img width="{:picSize(0,'width')}" height="{:picSize(0,'height')}" id="cutImg" src="" />
+	</body>
+</html>

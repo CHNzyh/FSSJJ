@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title><eq name="ACTION_NAME" value="index">广告列表</eq>
+            <eq name="ACTION_NAME" value="search">筛选结果</eq>
+            -{$site.SITE_INFO.name}</title>
+        <php>
+            if(ACTION_NAME == 'index'){
+                $pagname = '商品列表';
+            }elseif(ACTION_NAME == 'search'){
+                $pagname = '筛选结果';
+            };
+            $addCss="";
+            $addJs="";
+            $currentNav ='广告管理 > '.$pagname;
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">
+                            <eq name="ACTION_NAME" value="index">广告列表</eq>
+                            <eq name="ACTION_NAME" value="search">筛选结果</eq>
+                        </div>
+                        <div class="search">
+                            <form action="{:U('search')}" method='get'>
+                                广告位：
+                                <select name="id">
+                                    <option value="">==所有广告位==</option>
+                                    <volist name="search" id="vo">
+                                        <if condition="$vo[id] eq $keys[id]">
+                                            <option value="{$vo.id}" selected="selected">{$vo.name}</option>
+                                            <else/>
+                                            <option value="{$vo.id}">{$vo.name}</option>
+                                        </if>
+                                    </volist>
+                                </select>
+                                &nbsp;&nbsp;广告类型：
+                                <select id="advType" name="type">
+                                    <option value="" <empty name="keys[type]">selected="selected"</empty>>==所有类型==</option>
+
+                                    <option value="1" <eq name="keys[type]" value="1">selected="selected"</eq>>图片广告</option>
+                                    <option value="2" <eq name="keys[type]" value="2">selected="selected"</eq>>Flash广告</option>
+                                    <option value="3" <eq name="keys[type]" value="3">selected="selected"</eq>>自定义代码广告</option>
+                                </select>
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                        </div>
+                    </div>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td>(ID)</td>
+                                <td>广告名称</td>
+                                <td>广告类型</td>
+                                <td>广告位置</td>
+                                <td width="130">排序</td>
+                                <td width="150">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" id="{$vo.id}">
+                                <td align="left">{$vo.id}</td>
+                                <td align="left">{$vo.name}</td>
+                                <td>{$vo.type|getAdvtype}</td>
+                                <td>{$vo.position}</td>
+                                <td>
+                                    <div class="ajax_order">
+                                        <a class="rising" href="javascript:void(0)">加</a>
+                                        <span class="input" aid="{$vo.id}">{$vo.sort}</span>
+                                        <a class="drop" href="javascript:void(0)">减</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    [ <a class="forbid" href="javascript:void(0)" aid="{$vo.id}" forType="{$vo.status}" ><eq name="vo[status]" value="1">禁用</eq><eq name="vo[status]" value="0">恢复</eq> </a> ]
+                                    [ <a href="__URL__/edit_advertising?id={$vo.id}">编辑 </a> ]
+                                    [ <a link="{:U('Advertising/del_advertising/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.name}" class="del">删除 </a> ]
+                                </td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <td colspan="6" align="right" class="page">{$page}</td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+<script type="text/javascript">
+    var odUrl = "{:U('Advertising/order_advertising')}"; //排序提交地址
+    var forUrl = "{:U('Advertising/forbid')}"; //禁用提交地址
+        $(function(){
+            $('.forbid').on("click",function(){
+            var forType = $(this).attr('forType');
+            var forAid = $(this).attr('aid');
+            var forObj = $(this);
+            $.post(forUrl,{'forType':forType,'forAid':forAid},function(data){      //ajax后台
+                if (data.status) {
+                    if(data.type == '1'){
+                        forObj.html('恢复');
+                        forObj.attr('forType',0);
+                    }else if(data.type == '0'){
+                        forObj.html('禁用');
+                        forObj.attr('forType',1);
+                    }
+                } else {
+                    alert(data.msg);
+                }
+            },'json');        
+        });
+        //异步编辑排序字段
+    $('.ajax_order a').on("click",function(){
+        var odType = $(this).attr('class');
+        var odShow = $(this).parents('.ajax_order').children('.input');
+        var odVal = odShow.html();
+        var odAid = odShow.attr('aid');
+        $.post(odUrl,{'odType':odType,'odAid':odAid},function(data){      //ajax后台
+            if (data.status) {
+                if(odType == 'rising'){
+                    odShow.html(parseInt(odVal) + 1);
+                }else if(odType == 'drop'){
+                    odShow.html(parseInt(odVal) - 1);
+                }
+                
+            } else {
+                alert(data.msg);
+            }
+        },'json');        
+    });
+    $(".del").click(function(){
+        var delLink=$(this).attr("link");
+        popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+            if(action == 'ok'){
+                top.window.location.href=delLink;
+            }
+        });
+        return false;
+    });
+    });
+</script>
+    </body>
+</html>

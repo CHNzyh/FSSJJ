@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            提现申请
+            -{$site.SITE_INFO.name}
+        </title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='首页 > 提现申请';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">
+                            提现申请列表
+                        </div>
+                        <div class="search">
+                        <a href="{:U('Index/take')}" class="sbtn <eq name='sw' value=''>on</eq>">全部</a>
+                            <a href="{:U('Index/take',array('sw'=>0))}" class="sbtn <eq name='sw' value='0'>on</eq>">未处理</a>
+                            <a href="{:U('Index/take',array('sw'=>1))}" class="sbtn <eq name='sw' value='1'>on</eq>">已转账</a>
+                            <a href="{:U('Index/take',array('sw'=>2))}" class="sbtn <eq name='sw' value='2'>on</eq>">已驳回</a>
+                        </div>
+                    </div>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td width="10%">用户账号</td>
+                                <td width="10%">提现金额</td>
+                                <td width="25%">收款账户</td>
+                                <td width="15%">备注</td>
+                                <td width="10%">申请时间</td>
+                                <td width="20%">状态</td>
+                                <td width="10%">操作</td>
+                            </tr>
+                        </thead>
+                        <empty name="take_list">
+                            <tr><td colspan="7">哎哟！这里空空如也</td></tr>
+                        <else />
+                            <volist name="take_list" id="vo">
+                                <tr align="center" id="{$vo.id}">
+                                    <td align="left">{$vo.uaccount}</td>
+                                    <td>{$vo.money}</td>
+                                    <td>
+                                        <ul class="bankinfo">
+                                            <li class="clearfix"><div class="th">银行：</div><div class="td">{$vo.bank}</div></li>
+                                            <li class="clearfix"><div class="th">开户行：</div><div class="td">{$vo.bankhome}</div></li>
+                                            <li class="clearfix"><div class="th">姓名：</div><div class="td">{$vo.name}</div></li>
+                                            <li class="clearfix"><div class="th">账号：</div><div class="td">{$vo.account}</div></li>
+                                        </ul>
+                                    </td>
+                                    <td align="left">{$vo.remark}</td>
+                                    <td>{$vo.time|date='Y-m-d H:i',###}</td>
+                                    <td>
+                                        <eq name="vo.status" value="0"><span class="striking s2">等待提现</span></eq>
+                                            <eq name="vo.status" value="1">
+                                            <span class="striking s2">已转账</span>
+                                            <div class="tl">
+                                            时间：{$vo.dtime|date='Y-m-d H:i',###}<br>
+                                            回复：{$vo.cause}
+                                            </div>
+                                            </eq>
+                                            <eq name="vo.status" value="2">
+                                            <span class="striking s1">被驳回</span>
+                                            <div class="tl">
+                                            时间：{$vo.dtime|date='Y-m-d H:i',###}<br>
+                                            原因：{$vo.cause}
+                                            </div>
+                                        </eq>
+                                    </td>
+                                    <td>
+                                    <eq name="vo.status" value="0">[ <a href="{:U('Index/take',array('tid'=>$vo[tid]))}">回复申请 </a> ]<else/>无</eq>
+                                        
+                                    </td>
+                                </tr>
+                            </volist>
+
+                            <tr>
+                                <td colspan="7" align="right" class="page">{$page}</td>
+                            </tr>
+                        </empty>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                $(".del").click(function(){
+                    var delLink=$(this).attr("link");
+                    popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+                        if(action == 'ok'){
+                            top.window.location.href=delLink;
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>权限管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='权限管理 > 管理员列表';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+
+
+                        <div class="current">
+                            <eq name="ACTION_NAME" value="index">管理员列表</eq>
+                            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                        </div>
+                       <div class="search">
+                            <form action="{:U('search')}" method='get'>
+                            搜索字段：
+                                <select name="field">
+                                    <option value="email" <eq name="keys.field" value="email">selected="selected"</eq>>账号</option>
+                                    <option value="realname" <eq name="keys.field" value="realname">selected="selected"</eq>>姓名</option>
+                                    <option value="mobile" <eq name="keys.field" value="mobile">selected="selected"</eq>>手机</option>
+                                </select>
+                            &nbsp;&nbsp;关键字：
+                                <input type="text" value="{$keys.keyword}" name="keyword" class="input" placeholder="搜索对应字段关键字" />
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+                    <eq name="ACTION_NAME" value="search">
+                        <div class="seamsg">
+                            搜索的关键词<span class="keyword">{$keys.keyword}</span>在<span class="keyword">{$keys.field}</span>字段内找到<span class="keyword">{$keys.count}</span>条
+                        </div>
+                    </eq>
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td>AID</td>
+                                <td>账号</td>
+                                <td>备注</td>
+                                <td>部门</td>
+                                <td>开通时间</td>
+                                <td>状态</td>
+                                <td width="150">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" aid="{$vo.aid}">
+                                <td>{$vo.aid}</td>
+                                <td>{$vo.email}</td>
+                                <td>{$vo.remark}&nbsp;</td>
+                                <td>{$vo.dname}</td>
+                                <td>{$vo.time|date='Y-m-d H:i:s',###}</td>
+                                <td>{$vo.statusTxt}</td>
+                                <td><if condition="$vo.email eq C('ADMIN_AUTH_KEY')">--<else/>[ <a href="javascript:void(0);" class="opStatus" val="{$vo.status}">{$vo.chStatusTxt}</a> ][ <a href="__URL__/editAdmin?aid={$vo.aid}">编辑</a> ]</if></td>
+                            </tr>
+                        </volist>
+                        <tr><td colspan="9" align="right" class="page">{$page}</td></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        
+  <script type="text/javascript">
+            $(function(){
+                //快捷启用禁用操作
+                $(".opStatus").click(function(){
+                    var obj=$(this);
+                    var id=$(this).parents("tr").attr("aid");
+                    var status=$(this).attr("val");
+                    $.getJSON("__URL__/opAdminStatus", { id:id, status:status }, function(json){
+                        if(json.status==1){
+                            popup.success(json.info);
+                            $(obj).attr("val",json.data.status).html(status==1?"启用":"禁用").parents("td").prev().html(status==1?"禁用":"启用");
+                        }else{
+                            popup.alert(json.info);
+                        }
+                    });
+                });            
+
+                var chn=function(cid,op){
+                    if(op=="show"){
+                        $("tr[pid='"+cid+"']").each(function(){
+                            $(this).removeAttr("status").show();
+                            chn($(this).attr("id"),"show");
+                        });
+                    }else{
+                        $("tr[pid='"+cid+"']").each(function(){
+                            $(this).attr("status",1).hide();
+                            chn($(this).attr("id"),"hide");
+                        });
+                    }
+                }
+              
+            });
+        </script>        
+        <include file="Common:foot" />
+    </body>
+</html>

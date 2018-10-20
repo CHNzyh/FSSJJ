@@ -1,0 +1,34 @@
+#picShow .button span{display:block;float:left;margin-top:20px;margin-left:10px;}
+#picShow .button .btn_pro {padding-left:330px;width:132px;height:28px;text-indent:-9999px;}
+#picShow .button .btn_pro a {display:block;width:132px;height:28px;background:url(../Img/picshow/sprite.gif) no-repeat 0 -94px;}
+#picShow .button .btn_add {width:132px;height:28px;text-indent:-9999px;}
+#picShow .button .btn_add a {display:block;width:132px;height:28px;background:url(../Img/picshow/sprite.gif) no-repeat 0 -123px;}
+#picShow .image {width:520px;height:390px;text-align:center;}
+#picShow .image img {width:520px;height:390px;overflow:hidden;}
+#picShow .switch {width:520px;height:87px; position: relative;margin:10px auto 5px;background:url(../Img/picshow/sprite.gif) no-repeat 0px 0px;}
+#picShow .clear{clear:both;}
+#picShow .icon1{width:15px; position: absolute;top:30px; left: 7px;}
+#picShow .icon1 a{display:block;width:15px;height:30px;background:url(../Img/picshow/sprite.gif) no-repeat -693px -92px;}
+#picShow .icon1 a:hover {background:url(../Img/picshow/sprite.gif) no-repeat -693px -132px;}
+#picShow .icon2{ padding-top: 30px;
+    position: absolute;
+    right: 7px;
+    width: 15px;}
+#picShow .icon2 a{width:15px;height:30px;position: absolute;right: 0px; top: 30px; background:url(../Img/picshow/sprite.gif) no-repeat -670px -92px;}
+#picShow .icon2 a:hover{background:url(../Img/picshow/sprite.gif) no-repeat -670px -132px;}
+/* Download by http://www.codefans.net */
+#picShow .switch_center {width:455px;height:83px;overflow:hidden; position: absolute; left: 32px; }
+#picShow .switch_center ul {}
+#picShow .switch_center li {display:inline;float:left;width:83px;height:62px;margin-right:9px;padding-top:12px;}
+#picShow .switch_center li a {display:block;width:83px;height:62px;border:1px solid #ccc;}
+#picShow .switch_center li a img {width:83px;height:62px;}
+#picShow .switch_center li a.on {
+	border:1px solid #FF9900;
+}
+#picShow .switch_center li a:hover {border:1px solid #FF9900;}
+#picShow .loading {width:520px;height:390px;line-height:520px;background:#333 url(../Img/picshow/loading.gif) no-repeat center center;}
+#picShow .bottom {width:960px;text-align:center;font-size:12px;color:#002856;margin-top:50px;margin-bottom:50px;}
+#picShow .bottom a{text-decoration:none;padding:0 5px;color:#002856;font-size:12px;font-family:"宋体";}
+#picShow .bottom a:hover {color:#ff6500;}
+#picShow .pointer_icoN{cursor: url("../Img/picshow/right.cur"), pointer;}
+#picShow .pointer_icoP{cursor: url("../Img/picshow/left.cur"), pointer;}

@@ -1,0 +1,379 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>添加、编辑商品-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='商品管理 > 添加编辑商品';
+        </php>
+<base href="{$site.WEB_ROOT}"/>
+<css href="{$site.WEB_ROOT}Public/Min/?f=__CSS__/base.css|__CSS__/layout.css|__CSS__/common.css|--PUBLIC--/Js/asyncbox/skins/default.css{$addCss}"/>
+<js href="{$site.WEB_ROOT}Public/Min/?f=--PUBLIC--/Js/jquery-1.7.2.min.js|--PUBLIC--/Js/functions.js|__JS__/base.js|--PUBLIC--/Js/jquery.form.js|--PUBLIC--/Js/asyncbox/asyncbox.js{$addJs}"/>
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">添加编辑商品</div>
+                    </div>
+                    <form>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                                <th width="150">商品标题：</th>
+                                <td><input id="title" type="text" class="input" size="60" name="info[title]" value="{$info.title}"/></td>
+                            </tr>
+                            <tr>
+                                <th>所属频道、分类：</th>
+                                <td>
+                                    <select id="cateSel" name="info[cid]">
+                                        <volist name="list" id="vo">
+                                            <if condition="$vo[cid] eq $info[cid]">
+                                                <option value="{$vo.cid}" selected="selected">{$vo.fullname}<eq name="vo[pid]" value="0">--&lt;频道&gt;</eq></option>
+                                                <else/>
+                                                <option value="{$vo.cid}">{$vo.fullname}<eq name="vo[pid]" value="0">--&lt;频道&gt;</eq></option>
+                                            </if>
+                                        </volist>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>地区：</th>
+                                <td id="region_box">
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>筛选条件：</th>
+                                <td>
+                                    <div id="filtHtml"></div>
+                                    <input type="hidden" name="info[filtrate]" value="{$info.filtrate}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>商品价格：</th>
+                                <td><input type="text" class="input" size="10" name="info[price]" value="{$info.price}"/></td>
+                            </tr>
+                            <tr>
+                                <th>商品运费：</th>
+                                <td><input type="text" class="input" size="10" name="info[freight]" value="{$info.freight}"/></td>
+                            </tr>
+                            <tr>
+                                <th>商品关键词：</th>
+                                <td><input type="text" class="input" size="60" name="info[keywords]" value="{$info.keywords}"/> 多关键词间用半角逗号（,）分开，用于SEO的keywords、商品关键词的检索和显示</td>
+                            </tr>
+                            <tr>
+                                <th>商品描述：</th>
+                                <td><textarea class="input" style="height: 60px; width: 600px;" name="info[description]">{$info.description}</textarea> 用于SEO的description和商品详细页的商品描述</td>
+                            </tr>
+                            
+                            <tr>
+                                <th>商品内容：</th>
+                                <td>
+                                    <div id="tab">
+                                       <div id="tab_menu">
+                                          <ul class="clearfix">
+                                                <li class="selected">商品详情</li>
+                                          </ul>
+                                       </div>
+                                       <div id="tab_box">
+                                            <div><textarea id="content" style="width: 88%; height:400px;" name="info[content]">{$info.content}</textarea></div>
+                                       </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>商品图片：</th>
+                                <td>
+                                    <div class="up_btn_box">
+                                        <div class="up_explain">
+                                        下面是上传的图片，如果图片看着不舒服，可以点击小剪刀来修剪一下！
+                                        </div>
+                                        <input id="goodsPic_upload" type="file" multiple="true">
+                                    </div>
+                                    <div class="cuitclear"></div>
+                                    <ul id="uploadImageList" class="clearfix">
+                                        <notempty name="info[pictures]">
+                                            <foreach name='info[pictures]' item='pv'>
+                                                <li class="photo">
+                                                    <img src="{$upWholeUrl}{$pv|picRep=###,3}" width="{:picSize(3,'width')}" height="{:picSize(3,'height')}" />
+                                                    <div class="imper clearfix">
+                                                        <a class="delImg" title="删除" imgurl="{$pv}" href="javascript:;"></a>
+                                                        <a class="bigImg" title="大图" href="{:C('UPLOADS_PICPATH')}{$pv|picRep=###,1}"  target="_blank"></a>
+                                                        <a class="cutImg" title="裁剪" imgurl="{$upWholeUrl}{$pv|picRep=###,0}" href="javascript:;"></a>
+                                                    </div>
+                                                    <input type="hidden" name="pic[]" value="{$pv}" />
+                                                </li>
+                                            </foreach>
+                                        </notempty>
+                                    </ul>
+                                    <input name="list1SortOrder" type="hidden" />
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="info[id]" value="{$info.id}" />
+                    </form>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div id="region" class="hide"><region province="info.province" city="info.city" area="info.area" layer="info.layer"/></div>
+        <include file="Common:foot" />
+<!-- 选项卡 -->
+<js href="__JS__/tab.js"/>
+<!-- 拖动排序 -->
+<js href="--PUBLIC--/Js/jquery.dragsort-0.5.1.min.js"/>
+<!-- Ueditor编辑器js -->
+<js href="--PUBLIC--/ueditor/ueditor.config.js,--PUBLIC--/ueditor/ueditor.all.min.js,--PUBLIC--/ueditor/lang/zh-cn/zh-cn.js"/>
+<!-- Uploadify插件 -->
+<css href="--PUBLIC--/uploadify/uploadify.css"/>
+<js href="--PUBLIC--/uploadify/jquery.uploadify.min.js"/>
+<!-- title提示插件 -->
+<css href="--PUBLIC--/Js/poshytip/tip-yellow/tip-yellow.css,--PUBLIC--/Js/poshytip/tip-yellowsimple/tip-yellowsimple.css"/>
+<js href="--PUBLIC--/Js/poshytip/jquery.poshytip.min.js"/>
+
+
+<script type="text/javascript">
+var goodsId = "{$info.id}"; //商品图片id
+var uploadPath ="{:C('UPLOADS_PICPATH')}"; //图片上传根目录
+var imgOrderUrl = "{:U('Goods/goodPicOrder')}"; //排序商品图片提交的地址
+var cutImgpPag = "{:U('Goods/cutview','','')}"; //剪裁窗口视图地址
+
+var cutImgUrl = "{:U('Goods/cutoper')}"; //剪裁提交地址
+var upPathRoot="{$upWholeUrl}"; //图片上传根目录完整路径
+var miPicW="{:picSize(3,'width')}"; //商品图片小图的宽度
+var miPicH="{:picSize(3,'height')}"; //商品图片小图的高度
+
+$('.imper a').poshytip();
+
+// 百度编辑器
+window.UEDITOR_CONFIG.imageUrl = "{:U('Upload/editorUpload')}";
+window.UEDITOR_CONFIG.wordImageUrl = "{:U('Upload/editorUpload')}";
+window.UEDITOR_CONFIG.imagePath = '{$upWholeUrl}';
+window.UEDITOR_CONFIG.wordImagePath = '{$upWholeUrl}';
+window.UEDITOR_CONFIG.savePath = ['{$upWholeUrl}'];
+UE.getEditor('content');
+// 百度编辑器_end
+// 选择分类获取匪类对应筛选条件
+var getFiltUrl = "{:U('Goods/getFilt')}"; //获取筛选条件的提交地址
+var getExtendsUrl = "{:U('Goods/getExtends')}"; //获取字段扩展的提交地址
+getFilHtml($('#cateSel').val(),$('input[name="info[filtrate]"]').val()); //初始化筛选条件
+getExtendsHtml($('#cateSel').val(),goodsId); //初始化扩展字段
+$('#cateSel').on("change",function(){
+    var cateCid = $(this).children('option:selected').attr('value');
+    $('input[name="info[filtrate]"]').val(''); //更换分类把筛选设置成空的
+    // 初始化tab
+    $('#tab_menu ul li').eq(1).addClass("selected");
+    $("#tab_box>div").eq(1).show();
+    getFilHtml(cateCid);
+    getExtendsHtml(cateCid,goodsId);
+});
+// 函数------获取筛选条件html
+function getFilHtml(cateCid,filtStr){
+    $.post(getFiltUrl,{'cid':cateCid,'filtStr':filtStr},function(data){      //ajax后台
+    if (data.status) {
+            $('#filtHtml').html(data.html);
+        } else {
+            alert(data.msg);
+        }
+    },'json'); 
+}
+// 函数------获取扩展字段
+function getExtendsHtml(cateCid,goodsId){
+    $.post(getExtendsUrl,{'cid':cateCid,'gid':goodsId},function(data){      //ajax后台
+    $('#tab .ext').remove();
+    if (data.status) {
+            if(data.region!='no' && data.region!=0){
+                $('#region_box').parents('tr').show();
+                $('#region_box').html($('#region').html());
+            }else{
+                $('#region_box').html('');
+                $('#region_box').parents('tr').hide();
+            }
+            $('#tab_menu ul').append(data.ulhtml);
+            $('#tab_box').append(data.divhtml);
+            $(data.textarr).each(function(i,val) {
+                UE.getEditor(val);
+            });
+        } else {
+            alert(data.msg);
+        }
+    },'json'); 
+}
+// ------点击获取子级条件
+var getChildUrl = "{:U('Goods/getChild')}";
+$(document).on('click','.filtParent',function(){
+    
+    var filtFid = $(this).attr('fid');
+    var newFilt = $(this).parents('ul');
+
+    newFilt.nextUntil('ul').each(function(i, o){
+        if($(o).attr('fid')==filtFid){
+            $(o).css("display", "block");
+        }else{
+            $(o).css("display", "none");
+            $(o).find('.filtParent').removeClass('current');
+        }
+    });
+    newFilt.find('.filtParent').removeClass('current');
+    $(this).addClass('current');
+    getFiltArr(); //设置表单info[filtrate]"]的值
+    // if(newFilt.next('.filtLi').attr('fid') != filtFid){ //判断是否已经加载过子条件，加载过不在请求
+    //    newFilt.find('.filtParent').removeClass('current');
+    //     $(this).addClass('current');
+    //     getFiltArr(); //设置表单info[filtrate]"]的值
+    //     newFilt.next('.filtLi').remove();
+    //     $.post(getChildUrl,{'fid':filtFid},function(data){      //ajax后台
+    //         if (data.status) {
+    //             newFilt.after(data.msg);
+    //         } else {
+    //             alert(data.msg);
+    //         }
+    //     },'json'); 
+    // }
+});
+// -----生成条件表单info[filtrate]的值
+function getFiltArr(){
+    var filtId = '';
+    $('.filtParent.current').each(function(i, o){
+        filtId += $(o).attr('fid')+'_';
+    });
+    filtId=filtId.substring(0,filtId.length-1);
+    $('input[name="info[filtrate]"]').val(filtId);  
+}
+//图像处理裁剪操作
+$('#uploadImageList').on("click",".cutImg",function(){
+    var cutImgPath = $(this).attr('imgurl'); //裁剪图片的地址
+    var cutImgP = $(this).parent('.imper').next('input').attr('value'); //数据库内图片要裁剪原图
+    var upImgBox = $(this).parent('.imper').prev('img');
+    var upDataImg = upImgBox.attr('src')
+    //裁剪成功后更新裁剪的图片
+    asyncbox.open({
+        url : cutImgpPag+ '/' + Math.random(),
+        cache : false,
+        data:{imgurl:cutImgPath},
+        buttons : [{
+          value : "裁剪",
+          result : "ok"
+        }],
+        callback : function(btnRes,cntWin,returnValue){
+            //判断 btnRes 值。
+            if(btnRes == 'ok'){
+                $.post(cutImgUrl,{'cutSize':returnValue , 'cutImgP':cutImgP},function(data){
+                    if (data.status) {
+                        upImgBox.attr('src',upDataImg+'?'+Math.random());
+                    } else {
+                        alert(data.msg);
+                    }
+                },'json'); 
+            }
+        }
+    });
+
+});
+//图像处理裁剪操作_end
+// 商品图片删除
+    var delUrl = "{:U('Goods/del_pic')}";
+    $('#uploadImageList').on("click",'.delImg',function(){
+        var delImgUrl = $(this).attr('imgurl');
+        var delDiv = $(this);
+        $.post(delUrl,{'goodsId':goodsId,'imgUrl':delImgUrl},function(data){      //ajax后台
+            if (data.status) {
+                delDiv.parents('.photo').fadeOut().remove();
+
+                popup.success(data.msg);
+                setTimeout(function(){
+                    popup.close("asyncbox_success");
+                },1000);
+            } else {
+                alert(data.msg);
+            }
+        },'json');        
+    });
+// 商品图片删除_end
+//拖动排序
+    if(goodsId){ //如果商品id存在表示编辑商品可有以下操作
+        $("#uploadImageList").dragsort({ dragSelector: "li", dragBetween: true, dragEnd: saveOrder, placeHolderTemplate: "<li class='placeHolder'></li>" });     
+    }else{ //如果商品id不存在表示添加商品排序不进行保存
+        $("#uploadImageList").dragsort({ dragSelector: "li", dragBetween: true, placeHolderTemplate: "<li class='placeHolder'></li>" });  
+    }
+    function saveOrder() {
+        var data = $("#uploadImageList li").map(function() { return $(this).children("input").val(); }).get();
+        var imgArr = data.join("|"); //组合图片从新排列数据
+        $.post(imgOrderUrl,{'goodsId':goodsId,'imgArr':imgArr},function(data){  //ajax提交到后台排序
+            if (data.status) {
+                popup.success(data.msg);
+                setTimeout(function(){
+                    popup.close("asyncbox_success");
+                },1000);
+            } else {
+                popup.error(data.msg);
+                setTimeout(function(){
+                    popup.close("asyncbox_success");
+                },2000);
+            }
+        },'json');
+    };
+//拖动排序_end
+
+    $(function(){
+        var uplode_url = '{:U("Upload/upGoodsPic")}';//PHP处理脚本地址
+        var uplode_path = '__PUBLIC__';
+        var sid = '{:session_id()}';//sessionID
+        // 商品图片上传
+        $('#goodsPic_upload').uploadify({
+            swf      : uplode_path+'/uploadify/uploadify.swf', //加载swf
+            uploader : uplode_url, //PHP处理脚本地址
+             width : 118,    //上传按钮宽度
+             height : 33,    //上传按钮高度
+            fileTypeDesc : 'Image Files',                 //类型描述
+            //'removeCompleted' : false,    //是否自动消失
+            fileTypeExts : '*.gif; *.jpg; *.jpeg',     //允许类型
+            fileSizeLimit : '3MB',                    //允许上传最大值
+            buttonText :'<div class="btn up_but"><div class="up_but_ico"></div>上传图片</div>',                                   //按钮的文字
+            formData : {'session_id' : sid,'goodsId':goodsId},
+
+            onUploadSuccess : function(file, data, response) { //成功上传返回
+                eval('var data = ' + data);
+                if (data.status) {
+                    var ranNub=parseInt(Math.random()*100);  
+                    //插入到image标签内，显示图片的缩略图
+                    $('#uploadImageList').append('<li class="photo" id="'+ranNub+'" title="'+data.msg+'"><img src="'+upPathRoot+data.minipath+'" width="'+miPicW+'" height="'+miPicH+'"/><div class="imper"><a class="delImg" imgurl="'+data.path+'" href="javascript:;"></a><a class="bigImg" href="'+uploadPath+data.maxpath+'"  target="_blank"></a><a class="cutImg" imgurl="'+upPathRoot+data.prepath+'" href="javascript:;"></a></div><input type="hidden" name="pic[]" value="'+data.path+'" /></li>');
+                    var upImgLi = $('#'+ranNub);
+                    upImgLi.poshytip({
+                        showOn: 'none',
+                        alignTo: 'target',
+                        alignX: 'inner-left',
+                        offsetX: 0,
+                        offsetY: 5
+                    });
+                    upImgLi.poshytip('show');
+                    setTimeout(function(){
+                        upImgLi.poshytip('hide');
+                    },2000);
+                    upImgLi.removeAttr('title id');
+                } else {
+                    alert(data.msg);
+                }
+
+            }
+        });
+        //商品图片上传_end
+
+        
+
+        $(".submit").click(function(){
+            commonAjaxSubmit();
+            return false;
+        });
+    });
+</script>
+    </body>
+</html>

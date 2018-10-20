@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$title}-审计企业管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='审计企业管理 > '.$title ;
+        </php>
+    <include file="Common:intoHead" />
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr clearfix">
+                        <div class="current">{$title}</div>
+                    </div>
+                    <form action="" method="post">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                                <th width="120">企业名称：</th>
+                                <td><input name="cname" type="text" class="input" size="40" value="{$info.cname}" /></td>
+                            </tr>
+                            <tr>
+                                <th width="120">企业机构代码：</th>
+                                <td><input name="cename" type="text" class="input" size="40" value="{$info.cename}" /></td>
+                            </tr>
+                            <tr>
+                              <th>联系人：</th>
+                              <td><input name="ccontact" type="text" class="input" size="40" value="{$info.ccontact}" /></td>
+                            </tr>
+                            <tr>
+                              <th>联系电话：</th>
+                              <td><input name="cphone" type="text" class="input" size="40" value="{$info.cphone}" /></td>
+                            </tr>
+                            <tr>
+                              <th>地址：</th>
+                              <td><input name="caddress" type="text" class="input" size="40" value="{$info.caddress}" /></td>
+                            </tr>
+                            <tr>
+                              <th>邮箱：</th>
+                              <td><input name="cemail" type="text" class="input" size="40" value="{$info.cemail}" /></td>
+                            </tr>
+                            <tr>
+                              <th>备注：</th>
+                              <td><textarea name="ccontent" rows="5" cols="57">{$info.ccontent}</textarea>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th>状态：</th>
+                                <td>
+                                    <select name="cstatus" style="width: 80px;">
+                                        <if condition="$info.cstatus eq 1">
+                                            <option value="1" selected>启用</option>
+                                            <option value="0">禁用</option>
+                                            <else/>
+                                            <option value="1">启用</option>
+                                            <option value="0" selected>禁用</option>
+                                        </if>
+                                    </select>
+                                    如果禁用了将无法使用本企业</td>
+                            </tr>
+
+                        </table>
+                        <input type="hidden" name="id" value="{$info.id}"/>
+                    </form>
+                    <div class="commonBtnArea">
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+<script type="text/javascript">
+    $(".submit").click(function(){
+        if($.trim($("input[name='cname']").val())==''){
+            popup.alert("企业名称不能为空！");
+            return false;
+        }
+            commonAjaxSubmit();
+    });
+</script>
+</body>
+</html>

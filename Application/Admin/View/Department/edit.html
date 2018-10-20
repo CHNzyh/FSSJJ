@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$title}-部门管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='部门管理 > '.$title ;
+        </php>
+    <include file="Common:intoHead" />
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr clearfix">
+                        <div class="current">{$title}</div>
+                    </div>
+                    <form action="" method="post">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                                <th width="120">部门名称：</th>
+                                <td><input name="dname" type="text" class="input" size="40" value="{$info.dname}" /></td>
+                            </tr>
+                            <tr>
+                                <th width="120">部门英文名称：</th>
+                                <td><input name="dename" type="text" class="input" size="40" value="{$info.dename}" /></td>
+                            </tr>
+                            <tr>
+                                <th>状态：</th>
+                                <td>
+                                    <select name="dstatus" style="width: 80px;">
+                                        <if condition="$info.dstatus eq 1">
+                                            <option value="1" selected>启用</option>
+                                            <option value="0">禁用</option>
+                                            <else/>
+                                            <option value="1">启用</option>
+                                            <option value="0" selected>禁用</option>
+                                        </if>
+                                    </select>
+                                    如果禁用了将无法使用本部门</td>
+                            </tr>
+                            <tr>
+                              <th>父级组ID：</th>
+                              <td><select name="pid" style="min-width: 80px;">
+                                {$info.pidOption}
+                              </select></td>
+                            </tr>
+                            <tr>
+                              <th>显示排序：</th>
+                              <td><input class="input" name="dsort" type="text" size="40" value="{$info.dsort}" /></td>
+                            </tr>
+                            <tr>
+                                <th>备注：</th>
+                                <td><textarea name="dcontent" rows="5" cols="57">{$info.dcontent}</textarea></td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="id" value="{$info.id}"/>
+                    </form>
+                    <div class="commonBtnArea">
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+<script type="text/javascript">
+    $(".submit").click(function(){
+        if($.trim($("input[name='dname']").val())==''){
+            popup.alert("部门名称不能为空！");
+            return false;
+        }
+        if($.trim($("input[name='dename']").val())==''){
+            popup.alert("部门英文名称不能为空！");
+            return false;
+        }
+            commonAjaxSubmit();
+    });
+</script>
+</body>
+</html>

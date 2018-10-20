@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            <eq name="ACTION_NAME" value="index">日志列表</eq>
+            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+            -{$site.SITE_INFO.name}
+        </title>
+        <php>
+            if(ACTION_NAME == 'index'){
+                $pagname = '日志列表';
+            }elseif(ACTION_NAME == 'search'){
+                $pagname = '搜索结果';
+            };
+            $addCss="";
+            $addJs="";
+            $currentNav ='日志管理 > '.$pagname;
+        </php>
+        <include file="Common:intoHead" />
+    <js href="--PUBLIC--/Js/laydate.js"/>        
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">
+                            <eq name="ACTION_NAME" value="index">日志列表</eq>
+                            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                        </div>
+                        <div class="search">
+                            <form action="{:U('search')}" method='get'>
+                            部门：
+                            <select name="department" id="department" style="width:90px" onchange="onchangeShow(this.value)">
+                               {$dp.pidOption}
+                            </select>                            
+                            人员：
+                            <select name="user" id="user">
+                            <option value="0">全部人员</option>
+                            <volist name="user" id="vo">
+                            <option value="{$vo.aid}"<eq name="vo.aid" value="$keys.user"> selected</eq>>{$vo.realname}</option>
+                            </volist>
+                            </select>
+                            开始时间：
+                            <input class="laydate-icon" id="pbtime" style="width:80px; margin-right:10px;" name="pbtime" type="text" size="40" value="{$keys.pbtime}" />
+                            结束时间：
+                            <input class="laydate-icon" id="petime" style="width:80px;" name="petime" type="text" size="40" value="{$keys.petime}" />
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                        </div>
+                    </div>
+                    <eq name="ACTION_NAME" value="search">
+                        <div class="seamsg">
+                            在<span class="keyword">{$keys.name}</span>分类下找到<span class="keyword">{$keys.count}</span>个<if condition="$keys['keyword'] != ''">与<span class="keyword">{$keys.keyword}</span>相关的</if>日志！
+                        </div>
+                    </eq>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                            	<td width="10%">序号</td>
+                                <td width="55%">操作内容</td>
+                                <td width="10%">姓名/用户名</td>
+                                <td>IP</td>
+                                <td width="15%">发布时间</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" id="{$vo.id}">
+                            	<td>{$vo.id}</td>
+                                <td align="left">{$vo.lcontent}</td>
+                                <td>{$vo.realname}/{$vo.nickname}</td>
+                                <td>{$vo.ip}</td>
+                                <td>{$vo.ltime|date="Y-m-d H:i:s",###}</td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <td colspan="6" align="right" class="page">{$page}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+  <script type="text/javascript">
+            $(function(){
+                //快捷启用禁用操作
+                $(".opStatus").click(function(){
+                    var obj=$(this);
+                    var id=$(this).parents("tr").attr("aid");
+                    var status=$(this).attr("val");
+                    $.getJSON("__URL__/opProjectStatus", { id:id, status:status }, function(json){
+                        if(json.status==1){
+                            popup.success(json.info);
+                            $(obj).attr("val",json.data.status).html(status==1?"启用":"禁用").parents("td").prev().html(status==1?"禁用":"启用");
+                        }else{
+                            popup.alert(json.info);
+                        }
+                    });
+                });          
+              
+            });
+			function onchangeShow(oneId){			
+				$.ajax({ 
+					url : "__URL__/getAdmin", 
+					data : {did : oneId}, // 参数 
+					type : "post", 
+					cache : false, 
+					dataType : "json", //返回json数据 
+					error: function(){ 
+						alert('error'); 
+					}, 
+					success:onchangecallback 
+				}); 
+			} 
+			function onchangecallback(data){ 
+			
+				document.all['user'].options.length = 0; //清空原有的option 
+				var str=""; 
+				str+="<option value='0'>全部人员</option>" 
+				if(data!=null){
+					for(var i=0;i<data.length;i++){ 
+						str+="<option value='"+data[i].aid+"'>"+data[i].realname+"</option>" 
+					} 
+				}
+				$("#user").html(str); 
+			} 
+
+
+	var start = {
+		elem: '#pbtime',
+		format: 'YYYY-MM-DD',
+		min: '1900-01-01', //设定最小日期为当前日期
+		max: '2099-06-16', //最大日期
+		istime: false,
+		istoday: false,
+		choose: function(datas){
+			 end.min = datas; //开始日选好后，重置结束日的最小日期
+			 end.start = datas //将结束日的初始值设定为开始日
+		}
+	};
+	var end = {
+		elem: '#petime',
+		format: 'YYYY-MM-DD',
+		min: '1900-01-01',
+		max: '2099-06-16',
+		istime: false,
+		istoday: true,
+		choose: function(datas){
+		start.max = datas; //结束日选好后，重置开始日的最大日期
+		}
+	};
+	laydate(start);
+	laydate(end);
+			
+        </script>        
+    </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>添加、编辑拍卖-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='拍卖管理 > 添加编辑拍卖';
+        </php>
+
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">
+                        <div class="current">添加编辑拍卖</div>
+                    </div>
+                    <form>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            
+                            <tr>
+                                <th width="100">商品ID：</th>
+                                <td>{$info.gid}
+                                <input type="hidden" name="info[gid]" value="{$info.gid}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>拍卖标题：</th>
+                                <td><input type="text" class="input" size="60" name="info[pname]" value="{$info.pname}"/></td>
+
+                            </tr>
+                            <tr>
+                                <th>拍卖模式：</th>
+                                <td>
+                                    <label>
+                                        <input name="info[type]" type="radio" value="0" <eq name="info[type]" value="0">checked="checked"</eq><eq name="info[type]" value="">checked="checked"</eq> />
+                                        竞拍 
+                                    </label> 
+                                    <label>
+                                        <input name="info[type]" type="radio" value="1" <eq name="info[type]" value="1">checked="checked"</eq> />
+                                        竞标 
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;（竞拍）：规定时间，多次出价，价高者得。（竞标）：规定时间，一次出价，价高者得。
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>拍品状态：</th>
+                                <td>
+                                    <label>
+                                        <input name="info[status]" type="radio" value="0" <eq name="info[status]" value="0">checked="checked"</eq><eq name="info[status]" value="">checked="checked"</eq> />
+                                        新增 
+                                    </label> 
+                                    <label>
+                                        <input name="info[status]" type="radio" value="1" <eq name="info[status]" value="1">checked="checked"</eq> />
+                                        降价 
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;（新增）：表示第一次参与拍卖的商品——默认。（降价）：表示之前该商品有发布拍卖，但未成交，用于让客户了解到该商品已经降价。
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <th>开始时间：</th>
+                                <td><input id="start_time" type="text" class="input" size="20" name="info[starttime]" value="<neq name='info[starttime]' value=''>{$info.starttime|date='Y-m-d H:i',###}</neq>"/></td>
+                            </tr>
+                            <tr>
+                                <th>结束时间：</th>
+                                <td><input id="end_time" type="text" class="input" size="20" name="info[endtime]" value="<neq name='info[starttime]' value=''>{$info.endtime|date='Y-m-d H:i',###}</neq>"/></td>
+                            </tr>
+                            <tr>
+                                <th>拍卖起拍价：</th>
+                                <td><input type="text" class="input" size="10" name="info[onset]" value="{$info.onset}"/></td>
+                            </tr>
+                            <tr>
+                                <th>拍卖保留价：</th>
+                                <td><input type="text" class="input" size="10" name="info[price]" value="{$info.price}"/></td>
+                            </tr>
+                            <tr>
+                                <th>价格浮动：</th>
+                                <td><input type="text" class="input" size="10" name="info[stepsize]" value="{$info.stepsize}"/></td>
+                            </tr>
+                            <tr>
+                                <th>时间延时：</th>
+                                <td>最后
+                                    <input type="text" class="input" size="5" name="info[steptime]" value="{$info.steptime}"/>
+                                    秒内出价，时间延时
+                                    <input type="text" class="input" size="5" name="info[deferred]" value="{$info.deferred}"/>
+                                    秒&nbsp;&nbsp;&nbsp;&nbsp;（60秒=1分钟）</td>
+                            </tr>
+                            <tr>
+                                <th>保证金：</th>
+                                <td>
+                                    <select id="pledge_type" name="info[pledge_type]">
+                                        <option value="0" <eq name="info[pledge_type]" value="0">selected="selected"</eq> >比例</option>
+                                        <option value="1" <eq name="info[pledge_type]" value="1">selected="selected"</eq> >定额</option>
+                                    </select>
+                                    <span id="pledge"></span>
+                                </td>
+                            </tr>
+                            <eq name="ACTION_NAME" value="edit">
+                            <tr>
+                                <th>注意：</th>
+                                <td>如果拍品已开始且已有人出价。请不要编辑除标题以外的数据。否则会导致数据混乱！请根据情况酌情处理！</td>
+                            </tr>
+                            </eq>
+                        </table>
+
+                        <input type="hidden" name="info[pid]" value="{$info.pid}" />
+                    </form>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div id="ratio" class="hide">
+            <input type="text" class="input" size="5" name="info[ratio_b]" value="{$info.ratio_b}" placeholder="保证金"/>&nbsp;&nbsp;/&nbsp;&nbsp;<input type="text" class="input" size="5" name="info[ratio_g]" value="{$info.ratio_g}" placeholder="商品价格"/> 按照比例冻结保证金(如：1/100，就是拍1000元的商品冻结10元保证金)
+        </div>
+        <div id="fixation" class="hide">
+            <input type="text" class="input" size="5" name="info[fixation]" value="{$info.fixation}"/> 按照每件拍品冻结保证金（如：填写100，就是每件商品冻结100，与商品价格无关）
+        </div>
+        <include file="Common:foot" />
+        <!-- 日期时间插件 -->
+        <css href="--PUBLIC--/Js/datetimepicker/jquery.datetimepicker.css"/>
+        <js href="--PUBLIC--/Js/datetimepicker/jquery.datetimepicker.js"/>
+        <!-- 日期时间插件 -->
+        <script type="text/javascript">
+            //初始化保证金字段
+            repledge($('#pledge_type').val()); //初始化扩展字段
+            $('#pledge_type').on("change",function(){
+                var type = $(this).children('option:selected').val();
+                repledge(type);
+            });
+            function repledge(pledge_type){
+                if(pledge_type==0){
+                    $('#pledge').html($('#ratio').html());
+                }else if(pledge_type==1){
+                    $('#pledge').html($('#fixation').html());
+                }
+            }
+            //初始化保证金字段_end 
+            $(function(){
+                //为input添加时间插件
+                $('#start_time').datetimepicker({lang:'ch'});
+                $('#end_time').datetimepicker({lang:'ch'});
+                //为input添加插件_end
+                $(".submit").click(function(){
+                    commonAjaxSubmit();
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>
