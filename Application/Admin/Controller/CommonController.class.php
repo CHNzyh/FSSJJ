@@ -42,14 +42,23 @@ class CommonController extends Controller {
                 } else {
                     if (C('GUEST_AUTH_ON')) {
                         $this->assign('jumpUrl', C('USER_AUTH_GATEWAY'));
-                    }
-                    
-
+                    }    
                     $this->error(L('_VALID_ACCESS_'));
                 }
             }
         }
-        $menu =  $this->show_menu();
+        /*
+         * 2018-10-21
+         * 增加对特定菜单的显示，通过转换CONTROLLER_NAME内容。
+         */
+        $ctlname = CONTROLLER_NAME;
+        switch ($ctlname){
+            case 'Config':
+                $ctlname = 'Access';
+                break;
+            
+        }        
+        $menu =  $this->show_menu($ctlname);
 
 
         $this->upWholeUrl = __ROOT__.trim(C('UPLOADS_PICPATH'),'.');
@@ -110,7 +119,7 @@ class CommonController extends Controller {
     }
 
     
-    private function show_menu() {
+    private function show_menu($ctlname) {
         $node = D('Node')->where('level=2 and menu=1')->order('sort,id')->relation(true)->select();
 
         $module = '';
@@ -143,42 +152,41 @@ class CommonController extends Controller {
             }
         }
 
-
-
-        //print_r($node);
-        
+            
         //$cache = C('admin_big_menu');
         $cache = $node;
         $count = count($cache);
         
 
-
+        
         $i = 1;
         $menu = "";
 
 
         foreach ($cache as $key => $value) {
             if ($i == 1) {
-
-                $css = ($value['name'] == CONTROLLER_NAME) ? "fisrt_current" : "fisrt";
+                $css = ($value['name'] == $ctlname) ? "fisrt_current" : "fisrt";
                 $menu.='<li class="' . $css . '"><span><a href="' . U($value['name'] . '/index') . '">' . $value['title'] . '</a></span></li>';
             } else if ($i == $count) {
-                $css = $value['name'] == CONTROLLER_NAME ? "end_current" : "end";
+                $css = $value['name'] == $ctlname ? "end_current" : "end";
                 $menu.='<li class="' . $css . '"><span><a href="' . U($value['name'] . '/index') . '">' . $value['title'] . '</a></span></li>';
             } else {
-                $css = $value['name'] == CONTROLLER_NAME ? "current" : "";
+                $css = $value['name'] == $ctlname ? "current" : "";
                 $menu.='<li class="' . $css . '"><span><a href="' . U($value['name'] . '/index') . '">' . $value['title'] . '</a></span></li>';
             }
-            if($value['name'] == CONTROLLER_NAME){
+            if($value['name'] == $ctlname){
                 
                 foreach ($value['node'] as $key1 => $value1) {
-                    $sub_menu[] = array('url'=>U(CONTROLLER_NAME.'/'.$value1['name']),'title'=>$value1['title']);
+                    //2018-10-21节点控制新增操作类选项
+                    $url = ($value1['ctrlname']!='')?U($value1['ctrlname'].'/'.$value1['name']):U($ctlname.'/'.$value1['name']);
+                    
+                    //$sub_menu[] = array('url'=>U(CONTROLLER_NAME.'/'.$value1['name']),'title'=>$value1['title']);
+                    $sub_menu[] = array('url'=>$url,'title'=>$value1['title']);
                 }
-
             }
             $i++;
         }
-       
+       print_r($sub_menu);
         $result = array('menu'=>$menu,'sub_menu'=>$sub_menu);
         return $result;
     }
