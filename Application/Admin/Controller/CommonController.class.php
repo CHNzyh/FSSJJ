@@ -186,7 +186,7 @@ class CommonController extends Controller {
             }
             $i++;
         }
-       print_r($sub_menu);
+       
         $result = array('menu'=>$menu,'sub_menu'=>$sub_menu);
         return $result;
     }
