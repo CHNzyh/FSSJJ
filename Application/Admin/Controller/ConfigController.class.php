@@ -7,5 +7,7 @@ use Org\Util\Category;
  *功能描述：添加、修改、删除数据字典内容
  */
 Class ConfigController extends CommonController{
-    
+    public function index(){
+        $this->display();
+    }
 }
