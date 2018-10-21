@@ -26,3 +26,5 @@
                     //$sub_menu[] = array('url'=>U(CONTROLLER_NAME.'/'.$value1['name']),'title'=>$value1['title']);
                     $sub_menu[] = array('url'=>$url,'title'=>$value1['title']);
 
+ 数据库结构修改：
+on_node:增加ctrlname字段，varchar 20
