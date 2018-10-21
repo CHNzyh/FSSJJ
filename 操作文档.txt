@@ -1,4 +1,28 @@
 2018-10-21
-新增功能描述：
-新增功能文件：
-数据库操作内容：
+新增功能描述：数据字典管理
+新增功能文件：ConfigController.class.php
+数据库操作内容：修改config表结构。
+
+修改功能描述：对菜单显示可以指定特定的操作文件
+修改功能文件：CommonController.class.php
+修改行：50-61
+  /*
+         * 2018-10-21
+         * 增加对特定菜单的显示，通过转换CONTROLLER_NAME内容。
+         */
+        $ctlname = CONTROLLER_NAME;
+        switch ($ctlname){
+            case 'Config':
+                $ctlname = 'Access';
+                break;
+            
+        }        
+        $menu =  $this->show_menu($ctlname);
+修改类中操作 show_menu过程，增加$ctlname参数用来转义操作类名称。
+修改行：180-183
+   //2018-10-21节点控制新增操作类选项
+                    $url = ($value1['ctrlname']!='')?U($value1['ctrlname'].'/'.$value1['name']):U($ctlname.'/'.$value1['name']);
+                    
+                    //$sub_menu[] = array('url'=>U(CONTROLLER_NAME.'/'.$value1['name']),'title'=>$value1['title']);
+                    $sub_menu[] = array('url'=>$url,'title'=>$value1['title']);
+
