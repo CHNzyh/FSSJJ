@@ -77,7 +77,7 @@ class PublicController extends Controller {
         }
 
 
-        $this->redirect("Index/index");
+        $this->redirect("Public/index");
     }
 
     public function findPwd() {
