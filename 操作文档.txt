@@ -1,4 +1,4 @@
-2018-10-21
+﻿2018-10-21
 新增功能描述：数据字典管理
 新增功能文件：ConfigController.class.php
 数据库操作内容：修改config表结构。
@@ -28,3 +28,11 @@
 
  数据库结构修改：
 on_node:增加ctrlname字段，varchar 20
+
+修改文件：ConfigModel.class.php
+修改内容：增加获取指定数据字典过程
+public function getConfigA($condition){
+         
+         $M = M('Config');
+         return $M->where($condition)->select();
+     }
