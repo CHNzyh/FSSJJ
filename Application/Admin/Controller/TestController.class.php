@@ -15,7 +15,6 @@ class TestController extends CommonController
         $this->assign('list', $data['list']);
         $this->assign('keys', $data['keys']);
         $this->assign('page', $data['page']);
-
         $this->display('index');
     }
 
@@ -37,7 +36,8 @@ class TestController extends CommonController
 
         } else {
             $info['cstatus'] = 1;
-            $config = M('Config');
+            $config = D('Config');
+           
 //            $areatype = array("市级对象", "县级对象", "县级对象");
 //            $leval = array("A", "B", "C");
 //            $cycle = array("1年", "2年", "3年", "4年", "5年");
@@ -60,7 +60,7 @@ class TestController extends CommonController
     public function editSjObject()
     {
         if (IS_POST) {
-            $this->checkToken();
+           // $this->checkToken();
             header('Content-Type:application/json; charset=utf-8');
             echo json_encode(D("Test")->editSjObject());
         } else {
@@ -71,10 +71,14 @@ class TestController extends CommonController
             $sql = "select * from on_sjobject as SJ left join on_sjobjectdetail as DETAIL  ON DETAIL.pid=SJ.id  where SJ.id =" . (int)$_GET['id'];
             $sjobjectArray = $sjobject->query($sql);
             $info = $sjobjectArray[0];
-
-            $info = $this ->getCycleListOption($info,$config);
-            $info = $this ->getLevalTypeListOption($info,$config);
-            $info = $this ->getUnitListOption($info,$config);
+            
+            
+            //$info = $this ->getCycleListOption($info,$config);
+            $info = $this->getSelectOption($info, 'sjzq', 'pid=4');
+            $info = $this->getSelectOption($info, 'bsjdwfl', 'pid=5');
+            $info = $this->getSelectOption($info, 'yslb', 'pid=6');
+            //$info = $this ->getLevalTypeListOption($info,$config);
+            //$info = $this ->getUnitListOption($info,$config);
 //            $areatype = array("市级对象", "县级对象");
 //            $leval = array("A", "B", "C");
 //            $cycle = array("1年", "2年", "3年", "4年", "5年");
@@ -122,36 +126,46 @@ class TestController extends CommonController
         header('Content-Type:application/json; charset=utf-8');
         echo json_encode(D("Test")->opStatus());
     }
+    private function getSelectOption($info,$fieldname,$condition){
+        //$cycle = $config->where("pid = 5")->field("dname")->order('dsort')->select();
+        $result = D('Config')->getConfigA($condition);
+        $info[$fieldname] = "";
+        foreach ($result as $v) {
+            $selected = $v['dname'] == $info[$fieldname] ? ' selected="selected"' : "";
+            $info[$fieldname] .= '<option value="' . $v['dname'] . '"' . $selected . '>' . $v['dname'] . '</option>';
+        }
+        return $info;
+    }
 
     private function getLevalTypeListOption($info,$config)
     {
-        $cycle = $config->where("extent = 'leval_type'")->field("field_name")->select();
+        $cycle = $config->where("pid = 5")->field("dname")->order('dsort')->select();
         $info['bsjdwfl'] = "";
         foreach ($cycle as $v) {
-            $selected = $v['field_name'] == $info['bsjdwfl'] ? ' selected="selected"' : "";
-            $info['bsjdwfl'] .= '<option value="' . $v['field_name'] . '"' . $selected . '>' . $v['field_name'] . '</option>';
+            $selected = $v['dname'] == $info['bsjdwfl'] ? ' selected="selected"' : "";
+            $info['bsjdwfl'] .= '<option value="' . $v['dname'] . '"' . $selected . '>' . $v['dname'] . '</option>';
         }
         return $info;
     }
 
     private function getUnitListOption($info,$config)
     {
-        $cycle = $config->where("extent = 'unit'")->field("field_name")->select();
+        $cycle = $config->where("pid = 6")->field("dname")->order('dsort')->select();
         $info['yslb'] = "";
         foreach ($cycle as $v) {
-            $selected = $v['field_name'] == $info['yslb'] ? ' selected="selected"' : "";
-            $info['yslb'] .= '<option value="' . $v['field_name'] . '"' . $selected . '>' . $v['field_name'] . '</option>';
+            $selected = $v['dname'] == $info['yslb'] ? ' selected="selected"' : "";
+            $info['yslb'] .= '<option value="' . $v['dname'] . '"' . $selected . '>' . $v['dname'] . '</option>';
         }
         return $info;
     }
 
     private function getCycleListOption($info,$config)
     {
-        $cycle = $config->where("extent = 'cycle'")->field("field_name")->select();
+        $cycle = $config->where("pid = 4")->field("dname")->order('dsort')->select();
         $info['sjzq'] = "";
         foreach ($cycle as $v) {
-            $selected = $v['field_name'] == $info['sjzq'] ? ' selected="selected"' : "";
-            $info['sjzq'] .= '<option value="' . $v['field_name'] . '"' . $selected . '>' . $v['field_name'] . '</option>';
+            $selected = $v['dname'] == $info['sjzq'] ? ' selected="selected"' : "";
+            $info['sjzq'] .= '<option value="' . $v['dname'] . '"' . $selected . '>' . $v['dname'] . '</option>';
         }
         return $info;
     }
