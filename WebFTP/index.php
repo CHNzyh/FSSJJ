@@ -149,7 +149,8 @@ if (!WF_Auth::isLogin($filepath)) {
 			{@if file.ext=='jpg' || file.ext=='png' || file.ext=='gif' || file.ext=='bmp'}
 				<td><a href="${nfs.host}${nfs.path}${file.path}" onclick="return false;" id="file-id-${idx}" data-path="${file.path}" data-name="${file.name}" data-ext="${file.ext}" data-mtime="${file.mtime}" data-chmod="${file.chmod}" title="双击预览图片" rel="show" colortitle="文件名称：<font color=red>${file.name}&nbsp;&nbsp;&nbsp;&nbsp;</font>图片大小: <font color=red>${file.fsize}</font>">${file.name}</a></td>
 			{@else}
-				<td><a href="${nfs.host}${nfs.path}${file.path}" id="file-id-${idx}" data-path="${file.path}" data-name="${file.name}" data-ext="${file.ext}" title="${file.name}" data-mtime="${file.mtime}" data-chmod="${file.chmod}" target="_blank" >${file.name}</a></td>
+				<!--<td><a href="${nfs.host}${nfs.path}${file.path}" id="file-id-${idx}" data-path="${file.path}" data-name="${file.name}" data-ext="${file.ext}" title="${file.name}" data-mtime="${file.mtime}" data-chmod="${file.chmod}" target="_blank" >${file.name}</a></td>-->
+				<td><a href="javascript:app.nfs.url('${file.path}', '${file.name}', 'file')">${file.name}</a></td>
 			{@/if}
 			<td>${file.fmtime}</td> <td>${file.fsize}</td>
 			<td title="${file.fchmod}">${file.chmod}</td>
