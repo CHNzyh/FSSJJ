@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$title}-共享文件管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='共享文件管理 > '.$title ;
+        </php>
+    <include file="Common:intoHead" />
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr clearfix">
+                        <div class="current">{$title}</div>
+                    </div>
+                    <form action="" method="post">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                          <tr>
+                            <th width="120">文件名称：</th>
+                            <td><input name="s_name" id="s_name" type="text" class="input" size="40" value="{$info.s_name}" /></td>
+                          </tr>
+                          <tr>
+                            <th>所属科室：</th>
+                            <td><input name="s_did" type="hidden" id="s_did" value="{$dp.id}" />{$dp.dname}</td>
+                          </tr>
+                          <tr>
+                            <th>文件目录：</th>
+                            <td><input type="text" name="s_url" readonly="readonly" id="filepath" value="{$info.filepath}" class="input" size="40" />
+                              &nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>上传文件：</th>
+                            <td><input type="text" name="pffname" id="pffname" value="{$info.s_url}" readonly="readonly" class="input" size="40" />
+                                <input type="button" value="上传" onclick="showupload()" />
+                              &nbsp;</td>
+                          </tr>
+                            <tr>
+                                <th>备注：</th>
+                                <td><textarea name="s_content" rows="5" cols="57">{$info.s_content}</textarea></td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="id" value="{$info.id}"/>
+                    </form>
+                    <div class="commonBtnArea">
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+<script type="text/javascript">
+    $(".submit").click(function(){
+        if($.trim($("input[name='s_name']").val())==''){
+            popup.alert("文件名称不能为空！");
+            return false;
+        }
+        if($.trim($("input[name='pffname']").val())==''){
+            popup.alert("还没有上传要共享的文件！");
+            return false;
+        }
+            commonAjaxSubmit();
+    });
+function showupload(){
+	top1 = document.body.scrollHeight/2-300;
+	left = document.body.clientWidth/2-350;
+	path = $("#filepath").val();
+	if(path!=''&& path!='/'){
+		window.open ('/webftp/index.php?path='+path,'newwindow','height=600,width=750,top='+top1+',left='+left+',toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no') 
+	}else{
+		popup.error('请先选择文件类型再上传！');
+	}
+}
+</script>
+</body>
+</html>
