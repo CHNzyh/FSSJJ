@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>{$title}-审计企业管理-添加法人</title>
+    <php>
+        $addCss="";
+        $addJs="";
+        $currentNav ='审计对象管理 > '.$title;
+    </php>
+    <include file="Common:intoHead"/>
+</head>
+<body>
+<div class="wrap">
+    <include file="Common:head"/>
+    <div class="mainBody">
+        <include file="Common:left"/>
+        <div id="Right">
+            <div class="contentArea">
+                <div class="Item hr clearfix">
+                    <div class="current">添加审计对象</div>
+                </div>
+                <form action="" method="post">
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                        <tr>
+                            <th width="120">年度：</th>
+                            <td><input name="time" type="text" class="input" size="40" value="{$info.time}"/></td>
+                        </tr>
+                        <tr>
+                            <th width="120">法人名称：</th>
+                            <td><input name="corporation" type="text" class="input" size="40" value="{$info.corporation}"/></td>
+                        </tr>
+
+                    </table>
+                    <input type="hidden" name="id" value="{$info.id}"/>
+                </form>
+                <div class="commonBtnArea">
+                    <button class="btn submit">提交</button>
+
+                    <a class="btn" href="__URL__/editCorporation?id={$id}">返回</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<include file="Common:foot"/>
+<script type="text/javascript">
+    $(".submit").click(function () {
+        commonAjaxSubmit();
+    });
+</script>
+</body>
+</html>

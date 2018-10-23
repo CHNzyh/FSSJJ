@@ -40,7 +40,7 @@ public function getConfigA($condition){
 2018-10-22
 修改文件：AccessControll.class.php
 修改内容：行275 增加节点显示排序
-$list = $cat->getList('',0,'sort');   
+$list = $cat->getList('',0,'sort');
 
 修改文件：\Application\Admin\Conf\config.php
 修改内容：增加共享文件上传路径参数
@@ -50,3 +50,7 @@ $list = $cat->getList('',0,'sort');
 修改内容：行152，原点文件名称是下载，改成返回文件路径。
 <!--<td><a href="${nfs.host}${nfs.path}${file.path}" id="file-id-${idx}" data-path="${file.path}" data-name="${file.name}" data-ext="${file.ext}" title="${file.name}" data-mtime="${file.mtime}" data-chmod="${file.chmod}" target="_blank" >${file.name}</a></td>-->
 				<td><a href="javascript:app.nfs.url('${file.path}', '${file.name}', 'file')">${file.name}</a></td>
+
+date:2018年10月23日21:38:13
+modify:增加法人添加页面，以及部分功能
+file:addCorporation.html   corporation.html   TestModel.php   TestController.php

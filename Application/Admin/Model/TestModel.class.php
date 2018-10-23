@@ -228,6 +228,24 @@ class TestModel extends Model
     }
 
     /**
+     * 添加法人代表
+     */
+    public function addCorporation($id)
+    {
+        $corporation = M('Corporation');
+        $data['sjid'] = $id;
+        $data['time'] = I('post.time');
+        $data['corporation'] = I('post.corporation');
+        if ($corporation->add($data)) {
+            $this->log->content = '添加法人';
+            $this->log->addLog();
+            return array('status' => 1, 'info' => '法人添加成功！');
+        } else {
+            return array('status' => 0, 'info' => '法人添加失败，请重试！');
+        }
+    }
+
+    /**
      * 管理审计情况
      */
     public function manageSjInfo()
@@ -244,7 +262,6 @@ class TestModel extends Model
 
             $where = array($keys[field] => array('LIKE', '%' . $keys['keyword'] . '%'));
         }
-//    if($data['status']==1) $where['cstatus'] =1;//不显示禁用企业
 
         $count = $M->where($where)->count();
         $pConf = page($count, C('PAGE_SIZE'));
