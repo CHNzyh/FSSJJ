@@ -40,11 +40,9 @@ class PublicController extends Controller {
                 }
                 RBAC::saveAccessList();
                 $log = D('log');
-
-                $log->addLog('用户登陆');
-            }
-          
-        
+                $log->content='用户登陆';
+                $log->addLog();
+            }        
 
             echo json_encode($returnLoginInfo);
         } else {
@@ -66,7 +64,8 @@ class PublicController extends Controller {
     public function loginOut() {
         $log = D('log');
         $log->content='用户登出';
-        $log->addLog();        setcookie("$this->loginMarked", NULL, -3600, "/");
+        $log->addLog();        
+        setcookie("$this->loginMarked", NULL, -3600, "/");
         unset($_SESSION["$this->loginMarked"], $_COOKIE["$this->loginMarked"]);
         
         if (isset($_SESSION[C('USER_AUTH_KEY')])) {
