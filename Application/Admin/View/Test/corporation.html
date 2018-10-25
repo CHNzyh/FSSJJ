@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>审计企业管理-后台管理-{$site.SITE_INFO.name}</title>
+    <php>
+        $addCss="";
+        $addJs="";
+        $currentNav ='审计对象 > 管理历任法人信息';
+    </php>
+    <include file="Common:intoHead"/>
+</head>
+<body>
+<div class="wrap">
+    <include file="Common:head"/>
+    <div class="mainBody">
+        <include file="Common:left"/>
+        <div id="Right">
+            <div class="Item hr clearfix">
+
+
+                <div class="search">
+                    <a class="btn" href="__URL__/addCorporation?id={$info}">添加</a>
+                </div>
+
+
+            </div>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                <thead>
+                <tr>
+                    <td>时间</td>
+                    <td>法人代表</td>
+                    <td width="150">操作</td>
+                </tr>
+                </thead>
+                <volist name="FRlist" id="vo">
+                    <tr align="center" aid="{$vo.id}">
+                        <td>{$vo.time}</td>
+                        <td>{$vo.corporation}</td>
+                        <td>
+                            [ <a href="__URL__/editCorporation?id={$info}">编辑</a> ]
+                            [ <a href="__URL__/deleteCorporation?id={$info}">编辑</a> ]
+                        </td>
+                    </tr>
+                </volist>
+                <tr>
+                    <td colspan="9" align="right" class="page">{$page}</td>
+                    </td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+
+<script type="text/javascript">
+    $(function () {
+        //快捷启用禁用操作
+        $(".opStatus").click(function () {
+            var obj = $(this);
+            var id = $(this).parents("tr").attr("aid");
+            var status = $(this).attr("val");
+            $.getJSON("__URL__/opCompanyStatus", {id: id, status: status}, function (json) {
+                if (json.status == 1) {
+                    popup.success(json.info);
+                    $(obj).attr("val", json.data.status).html(status == 1 ? "启用" : "禁用").parents("td").prev().html(status == 1 ? "禁用" : "启用");
+                } else {
+                    popup.alert(json.info);
+                }
+            });
+        });
+
+    });
+</script>
+<include file="Common:foot"/>
+</body>
+</html>
