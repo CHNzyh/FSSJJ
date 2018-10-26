@@ -14,7 +14,9 @@ class DepartmentModel extends Model{
 		$result = M('Department')->select();
 
 		$cat = new Category("Department", array("id", "pid", "dname", "fullname"));
+                
 		$temp = $cat->getList('',0,'dsort');
+                
 		return $temp;
 
 
@@ -85,8 +87,15 @@ class DepartmentModel extends Model{
 		unset($result);
 		return $dp;
 	}
+        public function getDepartmentname($id){
+            $M = M('Department');
+            $result = $M->Where('id='.$id)->find();
+           
+            return $result;
+            
+        }
 
-	
+        
      public function getDepartmentarray($info = array(),$title='根节点') {
        
         $cat = new Category('Department', array('id', 'pid', 'dname', 'fullname'));
