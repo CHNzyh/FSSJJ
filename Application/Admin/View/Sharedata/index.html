@@ -33,11 +33,12 @@
                             <tr align="center">
                             	<td>{$k}</td>
                                 <td align="left" class="tree" style="cursor: pointer;">{$vo.s_name}</td>
-                                <td>{$dp[$vo[s_did]][dname]}&nbsp;</td>
+                                <td>{$vo[dname]}&nbsp;</td>
                                 <td>{$vo.s_content}</td>                                
-                                <td>[下载]<eq name="Think.session.my_info.aid" value="$vo['s_uid']">[ <a href="__URL__/edit?id={$vo.id}">编辑</a> ] [ <a link="{:U('/Share/del/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.id}" class="del">删除 </a> ]</eq></td>
+                                <td>[下载]<eq name="Think.session.my_info.aid" value="$vo['s_uid']">[ <a href="{:U('/Sharedata/editShare/',array('id'=>$vo['id']))}">编辑</a> ] [ <a link="{:U('/Sharedata/delShare/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.s_name}" class="del">删除 </a> ]</eq></td>
                             </tr>
                         </volist>
+						<tr><td colspan="9" align="right" class="page">{$page}</td></td></tr>
                     </table>
                 </div>
             </div>
