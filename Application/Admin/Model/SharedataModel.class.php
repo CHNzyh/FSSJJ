@@ -17,17 +17,19 @@ class SharedataModel extends Model{
     {
         $this->log = D('Log');
         $this->share = M('Sharedata');
-        $this->sharelog = D('Sharedata');
+        $this->sharelog = D('Sharedatalog');
     }
-    public function add()
-    {
-    
+    public function addShare()
+    {    
         $datas = I('post.');
+        
         $datas['s_time'] = time();
-        $datas['s_url'] = I('post.pffname');       
+        //$datas['s_url'] = I('post.pffname');       
         $datas['s_uid'] = session('my_info.aid');
         $datas['s_ip'] = get_client_ip();
-        unset($datas['pffname']);
+        $datas['s_stime'] = strtotime($datas['s_stime']);
+        $datas['s_etime'] = strtotime($datas['s_etime']);
+        //unset($datas['pffname']);
 
         if ($this->share->add($datas)) {
             $this->log->content = '添加共享文件';
@@ -39,26 +41,43 @@ class SharedataModel extends Model{
 
     }
 
-    public function editFile()
+    public function editShare()
     {
 
         $datas = I('post.');
-        $datas['pfbtime'] = strtotime(I('post.pfbtime'));
-        $datas['pfetime'] = strtotime(I('post.pfetime'));
-        $datas['pfupdatetime'] = time();
-        $datas['pf_user'] = $_SESSION['my_info']['aid'];
-        $datas['pf_ip'] = get_client_ip();
-        unset($datas['filepath']);
+        $datas['s_time'] = time();
+        //$datas['s_url'] = I('post.pffname');       
+        $datas['s_uid'] = session('my_info.aid');
+        $datas['s_ip'] = get_client_ip();
+        $datas['s_stime'] = strtotime($datas['s_stime']);
+        $datas['s_etime'] = strtotime($datas['s_etime']);
 
 
-        if (M('projectfile')->save($datas)) {
-            $this->log->content = '修改审计项目文件内容';
+        if ($this->share->save($datas)) {
+            $this->log->content = '修改共享文件';
             $this->log->addLog();
-            return array('status' => 1, 'info' => '修改项目文件内容添加成功！', 'url' => u('Project/fileList?id=' . $datas['pid']));
+            return array('status' => 1, 'info' => '修改共享文件内容添加成功！', 'url' => u('Sharedata/index'));
 
         } else {
             return array('status' => 0, 'info' => '修改失败，请重试！');
         }
-
+    }
+    
+    public function delShare($id){
+        $result = $this->getShare($id);
+       
+       @unlink(C('UPLOAD_PATH').$result['s_url']);
+        if ($this->share->where("id=" . (int) $_GET['id'])->delete()) {
+            $this->log->content = '删除共享文件';
+            $this->log->addLog();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public function getShare($id){
+        $result = $this->share->where('id='.$id)->find();
+        return $result;
     }
 }

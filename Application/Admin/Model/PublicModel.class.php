@@ -41,6 +41,8 @@ class PublicModel extends Model
 			}
 
 			if ($info["pwd"] == encrypt($datas["pwd"])) {
+                                $role = D('role_user')->where('user_id='.$info['aid'])->find();
+                                $info['rolid'] = $role['role_id']>0?$role['role_id']:0;                                
 				$loginMarked = c("TOKEN");
 				$loginMarked = md5($loginMarked["admin_marked"]);
 				$shell = $info["aid"] . md5($info["pwd"] . c("AUTH_CODE"));
