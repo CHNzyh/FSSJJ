@@ -4,9 +4,10 @@
 $DB_PREFIX = C('DB_PREFIX');
 return array(
         
-    'UPLOAD_PATH' =>file_get_contents('http://127.0.0.1/upload/1.php'),
-    'PAGE_SIZE' =>20,
-    
+    'UPLOAD_PATH' =>file_get_contents('http://127.0.0.1:8080/upload/1.php'),
+    'SHAREDATA_URL' =>file_get_contents('http://127.0.0.1:8080/upload/1.php').'\sharedata',
+    'PAGE_SIZE' =>1,
+    'DEFAULT_FILTER' => 'strip_tags,trim',
     
     'ADV_PICPATH'=>'Advertising',
     'ADV_MAX_WIDTH'=>'1400',
@@ -29,6 +30,7 @@ return array(
     'NEWS_ICO_WIDTH'=>'180',
     'NEWS_ICO_HEIGHT'=>'100',
 
+    'SHARE_FILEPATH'=>'Sharedata',
     
     'USER_AUTH_ON' => true,
     'USER_AUTH_TYPE' => 1, 
