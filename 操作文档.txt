@@ -54,3 +54,30 @@ $list = $cat->getList('',0,'sort');
 date:2018年10月23日21:38:13
 modify:增加法人添加页面，以及部分功能
 file:addCorporation.html   corporation.html   TestModel.php   TestController.php
+
+2018-10-25
+修改内容：增加用户登陆角色ID
+修改文件：PublicModel.class.php
+修改方法：public fuction auth
+$role = D('role_user')->where('user_id='.$info['aid'])->find();
+$info['rolid'] = $role['role_id']>0?$role['role_id']:0;   
+
+修改内容：修改登陆和退时的LOG记录方法
+修改文件：PublicControll.class.php
+public function index()
+$log = D('log');
+$log->content='用户登陆';
+$log->addLog();
+
+public function loginOut
+        $log = D('log');
+        $log->content='用户登出';
+        $log->addLog();
+
+
+2018-10-26
+修改文件：DepartmentModel.class.php
+修改内容：增加获取部门详细内容方法
+public function getDepartmentname($id)
+
+共享文件添加、修改、删除、普通列表功能完成。
