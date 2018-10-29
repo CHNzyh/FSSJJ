@@ -29,18 +29,20 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
                 <thead>
                 <tr>
-                    <td>时间</td>
                     <td>法人代表</td>
+                    <td>开始时间</td>
+                    <td>结束时间</td>
                     <td width="150">操作</td>
                 </tr>
                 </thead>
                 <volist name="FRlist" id="vo">
                     <tr align="center" aid="{$vo.id}">
-                        <td>{$vo.time}</td>
                         <td>{$vo.corporation}</td>
+                        <td>{$vo.startTime}</td>
+                        <td>{$vo.endTime}</td>
                         <td>
-                            [ <a href="__URL__/editCorporation?id={$info}">编辑</a> ]
-                            [ <a href="__URL__/deleteCorporation?id={$info}">编辑</a> ]
+                            [ <a href="__URL__/editCorporationDetail?id={$vo.id}">编辑</a> ]
+                            [ <a href="__URL__/deleteCorporation?id={$info}">删除</a> ]
                         </td>
                     </tr>
                 </volist>

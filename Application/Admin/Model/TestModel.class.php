@@ -234,14 +234,34 @@ class TestModel extends Model
     {
         $corporation = M('Corporation');
         $data['sjid'] = $id;
-        $data['time'] = I('post.time');
+
+        $data['startTime'] = strtotime(I('post.startTime'));
+        $data['endTime'] = strtotime(I('post.endTime'));
         $data['corporation'] = I('post.corporation');
+        $data['explain'] = I('post.explain');
         if ($corporation->add($data)) {
             $this->log->content = '添加法人';
             $this->log->addLog();
             return array('status' => 1, 'info' => '法人添加成功！');
         } else {
             return array('status' => 0, 'info' => '法人添加失败，请重试！');
+        }
+    }
+
+    public function editCorporationDetail($id){
+        $corporation = M('Corporation');
+        $data['id'] = $id;
+
+        $data['startTime'] = strtotime(I('post.startTime'));
+        $data['endTime'] = strtotime(I('post.endTime'));
+        $data['corporation'] = I('post.corporation');
+        $data['explain'] = I('post.explain');
+        if ($corporation->save($data)) {
+            $this->log->content = '编辑法人';
+            $this->log->addLog();
+            return array('status' => 1, 'info' => '编辑添加成功！',"url" => u("Test/editCorporationFromDetail?id=$id"));
+        } else {
+            return array('status' => 0, 'info' => '法人编辑失败，请重试！');
         }
     }
 
