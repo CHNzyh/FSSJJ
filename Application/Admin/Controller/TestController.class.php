@@ -36,8 +36,6 @@ class TestController extends CommonController
 
         } else {
             $info['cstatus'] = 1;
-            $config = D('Config');
-
 //            $areatype = array("市级对象", "县级对象", "县级对象");
 //            $leval = array("A", "B", "C");
 //            $cycle = array("1年", "2年", "3年", "4年", "5年");
@@ -50,7 +48,7 @@ class TestController extends CommonController
             $info = $this->getSelectOption($info, 'yslb', 'pid=6');
             $this->assign('info', $info);
             $this->assign('title', '添加审计对象');
-            $this->display('edit');
+            $this->display('addObject');
         }
     }
 
@@ -100,14 +98,67 @@ class TestController extends CommonController
     {
         //1.初始化法人表
         $M = M('Corporation');
-        $FRlist = $M->where("sjid=" . (int)$_GET['id'])->order('time desc')->select();
+        $FRlist = $M->where("sjid=" . (int)$_GET['id'])->select();
+
+        foreach ($FRlist as $num => $v) {
+            $v['startTime'] = date('Y/m/d', $v['startTime']);
+            $v['endTime'] = date('Y/m/d', $v['endTime']);
+            $FRlist[$num] = $v;
+        }
 
         $this->assign('title', '编辑历任法人');
         $this->assign('FRlist', $FRlist);
         $this->assign('name', $_GET['name']);
         $this->assign('info', (int)$_GET['id']);
 
+
+
         $this->display('corporation');
+    }
+
+    /**
+     * 从列表回来的历任法人主列表
+     */
+    public function editCorporationFromDetail($id)
+    {
+        //1.初始化法人表
+        $M = M('Corporation');
+        $info = $M->where("id=" . $id)->find();
+
+        $FRlist= $M->where("sjid=" . $info['sjid'])->select();
+
+        foreach ($FRlist as $num => $v) {
+            $v['startTime'] = date('Y/m/d', $v['startTime']);
+            $v['endTime'] = date('Y/m/d', $v['endTime']);
+            $FRlist[$num] = $v;
+        }
+
+        $this->assign('title', '编辑历任法人');
+        $this->assign('FRlist', $FRlist);
+        $this->assign('name', $_GET['name']);
+        $this->assign('info', $info['sjid']);
+
+
+
+        $this->display('corporation');
+    }
+
+    /**
+     * 在历任法人上面点击编辑
+     */
+    public function editCorporationDetail(){
+
+        if (IS_POST) {
+            header('Content-Type:application/json; charset=utf-8');
+            echo json_encode(D("Test")->editCorporationDetail((int)$_GET['id']));
+        } else {
+            $M = M('Corporation');
+            $detail = $M->where("id=" . (int)$_GET['id'])->find();
+            $detail['startTime'] = date('Y/m/d', $detail['startTime']);
+            $detail['endTime'] = date('Y/m/d', $detail['endTime']);
+            $this->assign('info', $detail);
+            $this->display('editCorporation');
+        }
     }
 
     public function opCompanyStatus()

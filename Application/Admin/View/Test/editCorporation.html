@@ -3,11 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{$title}-审计企业管理-添加法人</title>
+    <title>{$title}-审计企业管理-编辑法人</title>
     <php>
         $addCss="";
         $addJs="";
-        $currentNav ='审计对象管理 > 添加法人';
+        $currentNav ='审计对象管理 > 编辑法人';
     </php>
     <include file="Common:intoHead"/>
 
@@ -53,9 +53,7 @@
                     <input type="hidden" name="id" value="{$info.id}"/>
                 </form>
                 <div class="commonBtnArea" >
-                    <button class="btn submit" visiable = "false">添加</button>
-
-                    <a class="btn" href="__URL__/editCorporation?id={$id}" visiable = "false">返回</a>
+                    <button class="btn submit" visiable = "false">确定</button>
                 </div>
 
             </div>
