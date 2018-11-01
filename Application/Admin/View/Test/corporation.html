@@ -42,7 +42,7 @@
                         <td>{$vo.endTime}</td>
                         <td>
                             [ <a href="__URL__/editCorporationDetail?id={$vo.id}">编辑</a> ]
-                            [ <a href="__URL__/deleteCorporation?id={$info}">删除</a> ]
+                            [ <a link="{:U('/test/deleteCorporation/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.corporation}" class="del">删除 </a> ]
                         </td>
                     </tr>
                 </volist>
@@ -72,6 +72,15 @@
             });
         });
 
+    });
+    $(".del").click(function(){
+        var delLink=$(this).attr("link");
+        popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+            if(action == 'ok'){
+                top.window.location.href=delLink;
+            }
+        });
+        return false;
     });
 </script>
 <include file="Common:foot"/>
