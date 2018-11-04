@@ -22,10 +22,6 @@ class TestModel extends Model
      */
     public function addSjObject()
     {
-//        $datas['name'] = I('post.cname');
-//        if (0 < $M->where('name ="' . $datas['name'] . '"')->count()) {
-//            return array('status' => 0, 'info' => '已经存在相同的审计对象名称!');
-//        }
         $SJOBJECT = M("Sjobject");
         $sj['FRDWDM'] = I('post.frdwdm');
         $sj['name'] = I('post.name');
@@ -247,6 +243,27 @@ class TestModel extends Model
         }
     }
 
+    /**
+     * 添加审计情况
+     */
+    public function addSituation($id)
+    {
+        $corporation = M('Situation');
+        $data['sjid'] = $id;
+        $data['name'] = I('post.name');
+
+        $data['startTime'] = strtotime(I('post.startTime'));
+        $data['endTime'] = strtotime(I('post.endTime'));
+        $data['explain'] = I('post.explain');
+        if ($corporation->add($data)) {
+            $this->log->content = '添加审计情况';
+            $this->log->addLog();
+            return array('status' => 1, 'info' => '审计情况添加成功！');
+        } else {
+            return array('status' => 0, 'info' => '审计情况添加失败，请重试！');
+        }
+    }
+
     public function editCorporationDetail($id){
         $corporation = M('Corporation');
         $data['id'] = $id;
@@ -258,9 +275,26 @@ class TestModel extends Model
         if ($corporation->save($data)) {
             $this->log->content = '编辑法人';
             $this->log->addLog();
-            return array('status' => 1, 'info' => '法人添加成功！',"url" => u("Test/editCorporationFromDetail?id=$id"));
+            return array('status' => 1, 'info' => '法人编辑成功！',"url" => u("Test/editCorporationFromDetail?id=$id"));
         } else {
             return array('status' => 0, 'info' => '法人编辑失败，请重试！');
+        }
+    }
+
+    public function editSituationDetail($id){
+        $corporation = M('Situation');
+        $data['id'] = $id;
+        $data['name'] =I('post.name');
+
+        $data['startTime'] = strtotime(I('post.startTime'));
+        $data['endTime'] = strtotime(I('post.endTime'));
+        $data['explain'] = I('post.explain');
+        if ($corporation->save($data)) {
+            $this->log->content = '编辑审计情况';
+            $this->log->addLog();
+            return array('status' => 1, 'info' => '审计情况编辑成功！',"url" => u("Test/editSituationFromDetail?id=$id"));
+        } else {
+            return array('status' => 0, 'info' => '审计情况编辑失败，请重试！');
         }
     }
 
@@ -273,6 +307,10 @@ class TestModel extends Model
         return array("status" => 1, "info" => "提交功能暂未开发！", "url" => u("Test/index"));
     }
 
+    /** 初始化审计对象主列表
+     * @param array $data
+     * @return array
+     */
     public function searchSjobject($data = array())
     {
 
@@ -295,6 +333,13 @@ class TestModel extends Model
         C('TOKEN_ON', false);
 
         return $data;
+    }
+
+    /**
+     * 生成审计计划报表
+     */
+    public function buildSJPlan($data = array()){
+
     }
 
     public function opStatus()
