@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>{$title}-审计企业管理-编辑审计情况</title>
+    <php>
+        $addCss="";
+        $addJs="";
+        $currentNav ='审计对象管理 > 编辑审计情况';
+    </php>
+    <include file="Common:intoHead"/>
+
+    <js href="--PUBLIC--/Js/laydate.js"/>
+    <js href="--PUBLIC--/Js/jquery-validate.js"/>
+</head>
+<body>
+<div class="wrap">
+    <include file="Common:head"/>
+    <div class="mainBody">
+        <include file="Common:left"/>
+        <div id="Right">
+            <div class="contentArea">
+                <div class="Item hr clearfix">
+                    <div class="current">编辑审计情况</div>
+                </div>
+                <form action="" method="post">
+                    <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
+
+                        <tr>
+                            <th width="120">名称：</th>
+                            <td><input name="name" type="text" class="input" size="40" value="{$info.name}"/></td>
+                        </tr>
+                        <tr>
+                            <th width="120">开始时间：</th>
+                            <td><input class="laydate-icon" id="startTime" style="width:200px; margin-right:10px;" name="startTime" type="text" size="40" value="{$info.startTime}" /></td>
+                            <!--<td><input name="time" type="text" class="input" size="40" value="{$info.time}"/></td>-->
+                        </tr>
+
+                        <tr>
+                            <th width="120">结束时间：</th>
+                            <td><input class="laydate-icon" id="endTime" style="width:200px;" name="endTime" type="text" size="40" value="{$info.endTime}" /></td>
+                            <!--<td><input name="time" type="text" class="input" size="40" value="{$info.time}"/></td>-->
+                        </tr>
+
+                        <tr>
+                            <th>审计情况：</th>
+                            <td><input type="text" name="situation" id="pffname" value="{$info.situation}" readonly="readonly" class="input" size="40" />
+                                <input type="button" value="上传" onclick="showupload()" />&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                            <th width="120">备注：</th>
+                            <td><input name="explain" type="text" class="input" size="40" value="{$info.explain}"/></td>
+                        </tr>
+
+
+                    </table>
+                    <input type="hidden" name="id" value="{$info.id}"/>
+                </form>
+                <div class="commonBtnArea" >
+                    <button class="btn submit" visiable = "false">确定</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<include file="Common:foot"/>
+<script type="text/javascript">
+    $(".submit").click(function () {
+        commonAjaxSubmit();
+    });
+
+    var start = {
+        elem: '#startTime',
+        format: 'YYYY/MM/DD',
+        min: '1900-01-01', //设定最小日期为当前日期
+        max: '2099-06-16', //最大日期
+        istime: false,
+        istoday: false,
+        choose: function(datas){
+            end.min = datas; //开始日选好后，重置结束日的最小日期
+            end.start = datas //将结束日的初始值设定为开始日
+        }
+    };
+    var end = {
+        elem: '#endTime',
+        format: 'YYYY/MM/DD',
+        min: '1900-01-01',
+        max: '2099-06-16',
+        istime: false,
+        istoday: false,
+        choose: function(datas){
+            start.max = datas; //结束日选好后，重置开始日的最大日期
+        }
+    };
+    function showupload(){
+        top1 = document.body.scrollHeight/2-300;
+        left = document.body.clientWidth/2-350;
+        path = $("#filepath").val();
+        if(path!=''&& path!='/'){
+            window.open ('/webftp/index.php?path='+path,'newwindow','height=600,width=750,top='+top1+',left='+left+',toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no')
+        }else{
+            popup.error('请先选择文件类型再上传！');
+        }
+    }
+    laydate(start);
+    laydate(end);
+</script>
+</body>
+</html>
