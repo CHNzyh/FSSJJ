@@ -113,7 +113,6 @@ class TestModel extends Model
                 $this->log->content = '添加审计对象';
                 $this->log->addLog();
                 return array('status' => 1, 'info' => '审计对象添加成功！', 'url' => u('Test/index'));
-//            return array('status' => 1, 'info' => $datas['name'], 'url' => u('Test/index'));
             } else {
                 return array('status' => 0, 'info' => '审计对象添加失败，请重试！');
             }
@@ -259,11 +258,12 @@ class TestModel extends Model
         if ($corporation->save($data)) {
             $this->log->content = '编辑法人';
             $this->log->addLog();
-            return array('status' => 1, 'info' => '编辑添加成功！',"url" => u("Test/editCorporationFromDetail?id=$id"));
+            return array('status' => 1, 'info' => '法人添加成功！',"url" => u("Test/editCorporationFromDetail?id=$id"));
         } else {
             return array('status' => 0, 'info' => '法人编辑失败，请重试！');
         }
     }
+
 
     /**
      * 管理审计情况
@@ -284,7 +284,7 @@ class TestModel extends Model
         }
 
         $count = $M->where($where)->count();
-        $pConf = page($count, C('PAGE_SIZE'));
+        $pConf = page($count, 10);
 
         $list = $M->where($where)->order('id desc')->limit($pConf['first'], $pConf['list'])->select();
 

@@ -36,13 +36,6 @@ class TestController extends CommonController
 
         } else {
             $info['cstatus'] = 1;
-//            $areatype = array("市级对象", "县级对象", "县级对象");
-//            $leval = array("A", "B", "C");
-//            $cycle = array("1年", "2年", "3年", "4年", "5年");
-//
-//            $info = $this->getLevalTypeListOption($info);
-//            $info = $this->getUnitListOption($info);
-//            $areatype = $this->getAreaTypeListOption($areatype);
             $info = $this->getSelectOption($info, 'sjzq', 'pid=4');
             $info = $this->getSelectOption($info, 'bsjdwfl', 'pid=5');
             $info = $this->getSelectOption($info, 'yslb', 'pid=6');
@@ -67,23 +60,9 @@ class TestController extends CommonController
             $sql = "select * from on_sjobject as SJ left join on_sjobjectdetail as DETAIL  ON DETAIL.pid=SJ.id  where SJ.id =" . (int)$_GET['id'];
             $sjobjectArray = $sjobject->query($sql);
             $info = $sjobjectArray[0];
-
-
-            //$info = $this ->getCycleListOption($info,$config);
             $info = $this->getSelectOption($info, 'sjzq', 'pid=4');
             $info = $this->getSelectOption($info, 'bsjdwfl', 'pid=5');
             $info = $this->getSelectOption($info, 'yslb', 'pid=6');
-            //$info = $this ->getLevalTypeListOption($info,$config);
-            //$info = $this ->getUnitListOption($info,$config);
-//            $areatype = array("市级对象", "县级对象");
-//            $leval = array("A", "B", "C");
-//            $cycle = array("1年", "2年", "3年", "4年", "5年");
-//            $info = $this->getLevalTypeListOption($info);
-//            $info = $this->getUnitListOption($info);
-
-//            $this->assign('areatype', $areatype);
-//            $this->assign('leval', $leval);
-//            $this->assign('cycle', $cycle);
             $this->assign('title', '添加审计对象');
             $this->assign("info", $info);
 
@@ -112,7 +91,6 @@ class TestController extends CommonController
         $this->assign('info', (int)$_GET['id']);
 
 
-
         $this->display('corporation');
     }
 
@@ -125,7 +103,7 @@ class TestController extends CommonController
         $M = M('Corporation');
         $info = $M->where("id=" . $id)->find();
 
-        $FRlist= $M->where("sjid=" . $info['sjid'])->select();
+        $FRlist = $M->where("sjid=" . $info['sjid'])->select();
 
         foreach ($FRlist as $num => $v) {
             $v['startTime'] = date('Y/m/d', $v['startTime']);
@@ -139,14 +117,14 @@ class TestController extends CommonController
         $this->assign('info', $info['sjid']);
 
 
-
         $this->display('corporation');
     }
 
     /**
      * 在历任法人上面点击编辑
      */
-    public function editCorporationDetail(){
+    public function editCorporationDetail()
+    {
 
         if (IS_POST) {
             header('Content-Type:application/json; charset=utf-8');
@@ -158,6 +136,20 @@ class TestController extends CommonController
             $detail['endTime'] = date('Y/m/d', $detail['endTime']);
             $this->assign('info', $detail);
             $this->display('editCorporation');
+        }
+    }
+
+    /**
+     * 删除法人代表
+     */
+    public function deleteCorporation()
+    {
+        $M = M('Corporation');
+        $id = i('get.id');
+        if ($M->where(array('id' => $id))->delete()) {
+            $this->success('法人代表删除成功！');
+        } else {
+            $this->error('法人代表删除失败！');
         }
     }
 
@@ -184,7 +176,6 @@ class TestController extends CommonController
 
     private function getSelectOption($info, $fieldname, $condition)
     {
-        //$cycle = $config->where("pid = 5")->field("dname")->order('dsort')->select();
         $result = D('Config')->getConfigA($condition);
         $info[$fieldname] = "";
         foreach ($result as $v) {
