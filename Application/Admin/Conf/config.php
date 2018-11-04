@@ -6,7 +6,7 @@ return array(
         
     'UPLOAD_PATH' =>file_get_contents('http://127.0.0.1:8080/upload/1.php'),
     'SHAREDATA_URL' =>file_get_contents('http://127.0.0.1:8080/upload/1.php').'\sharedata',
-    'PAGE_SIZE' =>1,
+    'PAGE_SIZE' =>20,
     'DEFAULT_FILTER' => 'strip_tags,trim',
     
     'ADV_PICPATH'=>'Advertising',
@@ -30,7 +30,8 @@ return array(
     'NEWS_ICO_WIDTH'=>'180',
     'NEWS_ICO_HEIGHT'=>'100',
 
-    'SHARE_FILEPATH'=>'Sharedata',
+    'SHARE_FILEPATH'=>'Sharedata',//共享文件目录
+    'SCHEDULE_FILEPATH'=>'Schedule',//项目进度上传文件目录
     
     'USER_AUTH_ON' => true,
     'USER_AUTH_TYPE' => 1, 
@@ -60,7 +61,7 @@ return array(
     'sqlFileSize' => 5242880, 
         
         
-    
+    'PositionArray' => array(1=>'局长',2=>'科长',3=>'科员'),
     'TMPL_PARSE_STRING' => array(
         '__STATIC__' => __ROOT__ . '/Public',
         '__IMG__'    => __ROOT__ . '/Public/Admin/Img',
