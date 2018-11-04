@@ -94,3 +94,11 @@ Application/Admin/conf/config.php文件
 
 2018年11月1日21:32:39
 修改内容：完善法人代表流程及各个细节
+
+2018-11-4
+增加审计项目进度管理
+新增ScheduleControll.class.php
+       ScheduleModel.class.php
+及相应模板文件
+修改admin/comm/conf/config.php文件
+增加审计项目节点文件名称参数
