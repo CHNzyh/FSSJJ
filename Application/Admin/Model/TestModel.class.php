@@ -344,11 +344,11 @@ class TestModel extends Model
         $M = M('Sjobject');
         $sql = "SELECT DISTINCT * FROM on_sjobject DX WHERE ((".$currentTime."-2013+1)%DX.SJZQ=0) ";
         for($i = 0;$i<count($info);$i++){
+            $sql .= " UNION ";
+            $sql .=" select * from on_sjobject DX where ((".$currentTime."-2013+1)%DX.SJZQ =".$i.") ";
             for ($j=1; $j<=(int)$info[$i]["dname"]; $j++) {
-                $sql .= " UNION ";
-                $sql .= " SELECT * FROM on_sjobject DX WHERE ((".$currentTime."-2013+1)%DX.SJZQ =".$j.")"
-                ." AND (SELECT startTime FROM on_situation WHERE FROM_UNIXTIME(startTime,'%Y') = ("
-                    .$currentTime."-".$j.") limit 1) IS NULL ";
+                $sql.=" AND (select startTime from on_situation where FROM_UNIXTIME(startTime,'%Y') = ("
+                    .$currentTime."-".$j.") limit 1) is NULL ";
             }
         }
 
