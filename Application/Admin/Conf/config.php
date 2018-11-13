@@ -32,7 +32,15 @@ return array(
 
     'SHARE_FILEPATH'=>'Sharedata',//共享文件目录
     'SCHEDULE_FILEPATH'=>'Schedule',//项目进度上传文件目录
-    
+    'SCHEDULE_FILENAME'=>array(
+        'file_1' => '文件一',
+        'file_2' => '文件二',
+        'file_3' => '文件三',
+        'file_4' => '文件四',
+        'file_5' => '文件五',
+        'file_6' => '文件六',
+        'file_7' => '文件七'     
+    ),
     'USER_AUTH_ON' => true,
     'USER_AUTH_TYPE' => 1, 
     'USER_AUTH_KEY' => 'authId', 
