@@ -330,7 +330,6 @@ class TestModel extends Model
         $data['page'] = $pConf['show'];
         $data['list'] = $list;
         C('TOKEN_ON', false);
-
         return $data;
     }
 
@@ -338,7 +337,7 @@ class TestModel extends Model
      * 生成审计计划报表
      * $info 包含周期的数组（1,2,3,4,5）
      */
-    public function buildSJPlan($info){
+    public function buildSJPlan($info,$data = array()){
         //当前年度
         $currentTime = date("Y");
         $M = M('Sjobject');
@@ -351,10 +350,12 @@ class TestModel extends Model
                     .$currentTime."-".$j.") limit 1) is NULL ";
             }
         }
+        $list = $M->query($sql);
+        C('TOKEN_ON', false);
+        $data['list'] = $list;
 
+        return $data;
 
-        print_r($sql);
-        die();
     }
 
     public function opStatus()
