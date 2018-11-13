@@ -18,26 +18,28 @@
         <include file="Common:left"/>
         <div id="Right">
             <div class="Item hr clearfix">
-
-
-                <div class="current">
-                    <eq name="ACTION_NAME" value="index">审计对象列表</eq>
-                    <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                <div class="Item hr clearfix">
+                    <div class="current">审计计划列表</div>
                 </div>
-                <div class="search">
-                    <form action="{:U('search')}" method='post'>
-                        搜索字段：
-                        <select name="field">
-                            <option value="cname"
-                            <eq name="keys.field" value="cname">selected="selected"</eq>
-                            >企业名称</option>
-                        </select>
-                        &nbsp;&nbsp;关键字：
-                        <input type="text" value="{$keys.keyword}" name="keyword" class="input"
-                               placeholder="搜索对应字段关键字"/>
-                        &nbsp;&nbsp;<button class="btn">筛选</button>
-                    </form>
-                </div>
+
+                <!--<div class="current">-->
+                    <!--<eq name="ACTION_NAME" value="sjPlan">审计计划列表</eq>-->
+                    <!--<eq name="ACTION_NAME" value="search">搜索结果</eq>-->
+                <!--</div>-->
+                <!--<div class="search">-->
+                    <!--<form action="{:U('search')}" method='post'>-->
+                        <!--搜索字段：-->
+                        <!--<select name="field">-->
+                            <!--<option value="cname"-->
+                            <!--<eq name="keys.field" value="cname">selected="selected"</eq>-->
+                            <!--&gt;企业名称</option>-->
+                        <!--</select>-->
+                        <!--&nbsp;&nbsp;关键字：-->
+                        <!--<input type="text" value="{$keys.keyword}" name="keyword" class="input"-->
+                               <!--placeholder="搜索对应字段关键字"/>-->
+                        <!--&nbsp;&nbsp;<button class="btn">筛选</button>-->
+                    <!--</form>-->
+                <!--</div>-->
 
 
             </div>
@@ -54,11 +56,6 @@
                 <tr>
                     <td>ID</td>
                     <td>名称</td>
-                    <!--<td>区域类型</td>-->
-                    <!--<td>级别</td>-->
-                    <!--<td>预算单位</td>-->
-                    <!--<td>等级</td>-->
-                    <!--<td>审计周期</td>-->
                     <td width="150">操作</td>
                 </tr>
                 </thead>
@@ -66,27 +63,9 @@
                     <tr align="center" aid="{$vo.id}">
                         <td>{$vo.id}</td>
                         <td>{$vo.name}</td>
-                        <!--<td>{$vo.area_type}</td>-->
-                        <!--<td>{$vo.leval_type}</td>-->
-                        <!--<td>{$vo.unit}</td>-->
-                        <!--<td>{$vo.leval}</td>-->
-                        <!--<td>{$vo.cycle}</td>-->
-                        <!--<td>-->
-                            <!--<if condition="$vo.cstatus eq 1">启用-->
-                                <!--<else/>-->
-                                <!--禁用-->
-                            <!--</if>-->
-                        <!--</td>-->
                         <td>
-                            <!--[ <a href="javascript:void(0);" class="opStatus" val="{$vo.cstatus}">-->
-                            <!--<if condition="$vo.cstatus eq 1">禁用-->
-                                <!--<else/>-->
-                                <!--启用-->
-                            <!--</if>-->
-                        <!--</a> ]-->
                             [ <a href="__URL__/editSjObject?id={$vo.id}">编辑</a> ]
 
-                            <!--[ <a href="__URL__/manageSjObject?id={$vo.id}&name={$vo.name}">管理审计情况</a> ]-->
                         </td>
                     </tr>
                 </volist>

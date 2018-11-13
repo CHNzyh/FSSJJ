@@ -55,7 +55,7 @@ class TestController extends CommonController
         $this->assign('list', $data['list']);
         $this->assign('keys', $data['keys']);
         $this->assign('page', $data['page']);
-        $this->display('index');
+        $this->display('sjPlan');
     }
 
 
