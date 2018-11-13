@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>审计项目进度管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='审计项目进度管理 > 项目列表';
+        </php>
+        <include file="Common:intoHead" />
+    <js href="--PUBLIC--/Js/laydate.js"/>        
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">                        
+						<div class="current">
+                            <eq name="ACTION_NAME" value="index">项目列表</eq>
+                            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                        </div>
+                       <div class="search">
+                            <form action="{:U('search')}" method='get'>
+                            部门：
+                            <if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position eq 1)">
+                            <select name="department" id="department" style="width:90px" onchange="onchangeShow(this.value)">
+                               {$dp.pidOption}
+                            </select>                            
+                            <else />
+                            
+                            {$dp[$did]['dname']}
+                            <input type="hidden" value="{$Think.session.my_info.department}" name="department" />
+                            </if>
+                            人员：
+							<if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position neq 3)">
+                            <select name="user" id="user">
+                            <option value="0">全部人员</option>
+                            <volist name="user" id="vo">
+                            <option value="{$vo.aid}"<eq name="vo.aid" value="$keys.user"> selected</eq>>{$vo.realname}</option>
+                            </volist>
+                            </select>
+							<else />                            
+                            {:session('my_info.nickname')}
+                            <input type="hidden" value="{$Think.session.my_info.aid}" name="user" />
+							</if>
+                            开始时间：
+                            <input class="laydate-icon" id="s_stime" style="width:80px; margin-right:10px;" name="s_stime" type="text" size="40" value="{$keys.s_stime}" />
+                            结束时间：
+                            <input class="laydate-icon" id="s_etime" style="width:80px;" name="s_etime" type="text" size="40" value="{$keys.s_etime}" />
+搜索字段：
+							<select name="field">
+              					<option value="s_name" <eq name="keys.field" value="s_name">selected="selected"</eq>>文件名称</option>                              </select>
+                            &nbsp;&nbsp;关键字：
+                                <input type="text" value="{$keys.keyword}" style="width:120px" name="keyword" class="input" placeholder="搜索对应字段关键字" />
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                      </div>
+                    </div>
+					
+					<eq name="ACTION_NAME" value="search">
+                       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+
+                       <tr><Td>
+                        搜索的关键词<span class="keyword">{$keys.keyword}</span>找到<span class="keyword">{$keys.count}</span>条
+                       </td>
+                   </tr>
+                       </table>
+                        
+                    </eq>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td width="5%">序号</td>
+                                <td width="15%">项目名称</td>
+                                <td width="7%">所科室</td>
+                                <td width="150">{$Think.config.SCHEDULE_FILENAME.file_1}</td>
+                                <td width="150">{$Think.config.SCHEDULE_FILENAME.file_2}</td>
+                                <td width="150">{$Think.config.SCHEDULE_FILENAME.file_3}</td>
+                                <td width="150">{$Think.config.SCHEDULE_FILENAME.file_4}</td>
+                                <td width="150">{$Think.config.SCHEDULE_FILENAME.file_5}</td>
+                                <td width="150">{$Think.config.SCHEDULE_FILENAME.file_6}</td>
+                                <td width="150">{$Think.config.SCHEDULE_FILENAME.file_7}</td>
+                                <td width="100">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo" key="k">
+							<assign name="status" value="1" />
+                            <tr align="center">
+                            	<td>{$k}</td>
+                                <td align="left" >{$vo.s_name}</td>
+                                <td>{$vo.dname}</td>
+                                <td><notempty name="vo.s_file_1_url">{$vo.s_file_1_time|date='Y-m-d',###}<br /><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_aid'])">[删除]</if> <a href="__URL__/getfile?id={$vo.id}&filenum=1&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"]."1")</php>" target="_blank">[下载]</a><else />[<a href="{:U('/Schedule/uploadfile/',array('id'=>$vo['id'],'filenum'=>1))}">上传</a>]<assign name="status" value="0" /></notempty>&nbsp;</td>                                
+                                <td><notempty name="vo.s_file_2_url">{$vo.s_file_2_time|date='Y-m-d',###}<br /><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_aid'])">[删除]</if> <a href="__URL__/getfile?id={$vo.id}&filenum=2&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"]."2")</php>" target="_blank">[下载]</a><else /><eq name="status" value="1">[<a href="{:U('/Schedule/uploadfile/',array('id'=>$vo['id'],'filenum'=>2))}">上传</a>]<assign name="status" value="0" /></eq></notempty>&nbsp;</td>
+                                <td><notempty name="vo.s_file_3_url">{$vo.s_file_3_time|date='Y-m-d',###}<br /><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_aid'])">[删除]</if> <a href="__URL__/getfile?id={$vo.id}&filenum=3&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"]."3")</php>" target="_blank">[下载]</a><else /><eq name="status" value="1">[<a href="{:U('/Schedule/uploadfile/',array('id'=>$vo['id'],'filenum'=>3))}">上传</a>]<assign name="status" value="0" /></eq></notempty>&nbsp;</td>
+                                <td><notempty name="vo.s_file_4_url">{$vo.s_file_4_time|date='Y-m-d',###}<br /><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_aid'])">[删除]</if> <a href="__URL__/getfile?id={$vo.id}&filenum=4&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"]."4")</php>" target="_blank">[下载]</a><else /><eq name="status" value="1">[<a href="{:U('/Schedule/uploadfile/',array('id'=>$vo['id'],'filenum'=>4))}">上传</a>]<assign name="status" value="0" /></eq></notempty>&nbsp;</td>
+                                <td><notempty name="vo.s_file_5_url">{$vo.s_file_5_time|date='Y-m-d',###}<br /><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_aid'])">[删除]</if> <a href="__URL__/getfile?id={$vo.id}&filenum=5&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"]."5")</php>" target="_blank">[下载]</a><else /><eq name="status" value="1">[<a href="{:U('/Schedule/uploadfile/',array('id'=>$vo['id'],'filenum'=>5))}">上传</a>]<assign name="status" value="0" /></eq></notempty>&nbsp;</td>
+                                <td><notempty name="vo.s_file_6_url">{$vo.s_file_6_time|date='Y-m-d',###}<br /><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_aid'])">[删除]</if> <a href="__URL__/getfile?id={$vo.id}&filenum=6&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"]."6")</php>" target="_blank">[下载]</a><else /><eq name="status" value="1">[<a href="{:U('/Schedule/uploadfile/',array('id'=>$vo['id'],'filenum'=>6))}">上传</a>]<assign name="status" value="0" /></eq></notempty>&nbsp;</td>
+                                <td><notempty name="vo.s_file_7_url">{$vo.s_file_7_time|date='Y-m-d',###}<br /><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_aid'])">[删除]</if> <a href="__URL__/getfile?id={$vo.id}&filenum=7&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"]."7")</php>" target="_blank">[下载]</a><else /><eq name="status" value="1">[<a href="{:U('/Schedule/uploadfile/',array('id'=>$vo['id'],'filenum'=>7))}">上传</a>]<assign name="status" value="0" /></eq></notempty>&nbsp;</td>
+                                <td><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_aid'])">[ <a href="{:U('/Schedule/editSchedule/',array('id'=>$vo['id']))}">编辑</a> ] [ <a link="{:U('/Schedule/delSchedule/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.s_name}" class="del">删除 </a> ]</if></td>
+                            </tr>
+                        </volist>
+						<tr><td colspan="15" align="right" class="page">{$page}</td></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        
+ <script type="text/javascript">
+	$(function(){		
+		
+		$(".del").click(function(){
+			var delLink=$(this).attr("link");
+			popup.confirm('你真的打算删除【<b>'+$(this).attr("name")+'</b>】吗?','温馨提示',function(action){
+				if(action == 'ok'){
+					top.window.location.href=delLink;
+				}
+			});
+			return false;
+		});
+	  
+		
+	});
+
+ <if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position eq 1)">			
+	function onchangeShow(oneId){			
+		$.ajax({ 
+			//url : "__URL__/getAdmin", 
+			url : "{:U('/Ks/a')}", 
+			data : {did : oneId}, // 参数 
+			type : "post", 
+			cache : false, 
+			dataType : "json", //返回json数据 
+			error: function(){ 
+				alert('error'); 
+
+			// error: function(XMLHttpRequest, textStatus, errorThrown) {
+			//      alert(XMLHttpRequest.status);
+			//      alert(XMLHttpRequest.readyState);
+			//      alert(textStatus)
+			}, 
+			success:onchangecallback 
+		}); 
+	} 
+	function onchangecallback(data){ 
+	
+		document.all['user'].options.length = 0; //清空原有的option 
+		var str=""; 
+		str+="<option value='0'>全部人员</option>" 
+		if(data!=null){
+			for(var i=0;i<data.length;i++){ 
+				str+="<option value='"+data[i].aid+"'>"+data[i].realname+"</option>" 
+			} 
+		}
+		$("#user").html(str); 
+	} 
+
+</if>
+
+	var start = {
+		elem: '#s_stime',
+		format: 'YYYY-MM-DD',
+		min: '1900-01-01', //设定最小日期为当前日期
+		max: '2099-06-16', //最大日期
+		istime: false,
+		istoday: false,
+		choose: function(datas){
+			 end.min = datas; //开始日选好后，重置结束日的最小日期
+			 end.start = datas //将结束日的初始值设定为开始日
+		}
+	};
+	var end = {
+		elem: '#s_etime',
+		format: 'YYYY-MM-DD',
+		min: '1900-01-01',
+		max: '2099-06-16',
+		istime: false,
+		istoday: true,
+		choose: function(datas){
+		start.max = datas; //结束日选好后，重置开始日的最大日期
+		}
+	};
+	laydate(start);
+	laydate(end);
+			
+
+
+        </script>        
+    </body>
+</html>
