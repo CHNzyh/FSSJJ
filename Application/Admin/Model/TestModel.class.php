@@ -12,7 +12,6 @@ class TestModel extends Model
 
     public function _initialize()
     {
-
         $this->log = D('Log');
     }
 
@@ -337,9 +336,25 @@ class TestModel extends Model
 
     /**
      * 生成审计计划报表
+     * $info 包含周期的数组（1,2,3,4,5）
      */
-    public function buildSJPlan($data = array()){
+    public function buildSJPlan($info){
+        //当前年度
+        $currentTime = date("Y");
+        $M = M('Sjobject');
+        $sql = "SELECT DISTINCT * FROM on_sjobject DX WHERE ((".$currentTime."-2013+1)%DX.SJZQ=0) ";
+        for($i = 0;$i<count($info);$i++){
+            $sql .= " UNION ";
+            $sql .=" select * from on_sjobject DX where ((".$currentTime."-2013+1)%DX.SJZQ =".$i.") ";
+            for ($j=1; $j<=(int)$info[$i]["dname"]; $j++) {
+                $sql.=" AND (select startTime from on_situation where FROM_UNIXTIME(startTime,'%Y') = ("
+                    .$currentTime."-".$j.") limit 1) is NULL ";
+            }
+        }
 
+
+        print_r($sql);
+        die();
     }
 
     public function opStatus()

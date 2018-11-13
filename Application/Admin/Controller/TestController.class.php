@@ -49,7 +49,9 @@ class TestController extends CommonController
      * 生成审计计划列表
      */
     public function buildSJPlan(){
-        $data = D('Test')->buildSJPlan();
+        $info['cstatus'] = 1;
+        $info = D('Config')->getConfigA('pid = 5');
+        $data = D('Test')->buildSJPlan($info);
         $this->assign('list', $data['list']);
         $this->assign('keys', $data['keys']);
         $this->assign('page', $data['page']);
@@ -72,8 +74,8 @@ class TestController extends CommonController
             $sql = "select * from on_sjobject as SJ left join on_sjobjectdetail as DETAIL  ON DETAIL.pid=SJ.id  where SJ.id =" . (int)$_GET['id'];
             $sjobjectArray = $sjobject->query($sql);
             $info = $sjobjectArray[0];
-            $info = $this->getSelectOption($info, 'sjzq', 'pid=4');
-            $info = $this->getSelectOption($info, 'bsjdwfl', 'pid=5');
+            $info = $this->getSelectOption($info, 'sjzq', 'pid=5');
+            $info = $this->getSelectOption($info, 'bsjdwfl', 'pid=4');
             $info = $this->getSelectOption($info, 'yslb', 'pid=6');
             $this->assign('title', '添加审计对象');
             $this->assign("info", $info);
