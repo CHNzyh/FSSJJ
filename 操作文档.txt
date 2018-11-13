@@ -110,3 +110,9 @@ Application/Admin/conf/config.php文件
 
 2018年11月11日15:35:36
 修改内容：增加生成审计计划算法
+
+2018-11-13
+修改内容：增加审计项目进度管理
+新增：ScheduleController.class.php,ScheduleModel.class.php
+修改Application/Admin/comm/conf/config.php文件
+增加审计节点信息
