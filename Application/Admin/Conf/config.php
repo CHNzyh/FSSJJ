@@ -41,6 +41,7 @@ return array(
         'file_6' => '文件六',
         'file_7' => '文件七'     
     ),
+    
     'USER_AUTH_ON' => true,
     'USER_AUTH_TYPE' => 1, 
     'USER_AUTH_KEY' => 'authId', 
