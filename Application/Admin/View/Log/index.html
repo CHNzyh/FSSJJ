@@ -34,11 +34,11 @@
                         <div class="search">
                             <form action="{:U('search')}" method='get'>
                             部门：
-                            <select name="department" id="department" style="width:90px" onchange="onchangeShow(this.value)">
+                            <select name="department" id="department" style="width:150px" onchange="onchangeShow(this.value)">
                                {$dp.pidOption}
                             </select>                            
                             人员：
-                            <select name="user" id="user">
+                            <select name="user" id="user" style="width:150px">
                             <option value="0">全部人员</option>
                             <volist name="user" id="vo">
                             <option value="{$vo.aid}"<eq name="vo.aid" value="$keys.user"> selected</eq>>{$vo.realname}</option>
