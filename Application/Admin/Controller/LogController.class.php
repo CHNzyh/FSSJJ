@@ -40,48 +40,47 @@ Class LogController extends Controller{
 
 	public function search()
 	{
-		$log = M('Log');
+            $log = M('Log');
 
 
- 		$keys = I('get.');
-        $where = array('id>0');
+            $keys = I('get.');
+            $where = array('a.id>0');
 
-        if(!empty($keys)){	        
-
-
-	        $where = ($keys['user']>0)?array_merge(array('userid='.$keys['user']),$where):$where;
-	        $where = ($keys['pbtime']!='')?array_merge(array('ltime>='.strtotime($keys['pbtime'])),$where):$where;
-	        $where = ($keys['petime']!='')?array_merge(array('ltime<='.strtotime($keys['petime'])),$where):$where;
-    	}
+            if(!empty($keys)){	   
+                $where = ($keys['department']>0)?array_merge(array('a.did='.$keys['department']),$where):$where;
+                $where = ($keys['user']>0)?array_merge(array('a.userid='.$keys['user']),$where):$where;
+                $where = ($keys['pbtime']!='')?array_merge(array('a.ltime>='.strtotime($keys['pbtime'])),$where):$where;
+                $where = ($keys['petime']!='')?array_merge(array('a.ltime<='.strtotime($keys['petime'])),$where):$where;
+            }
 		
 
-        $count = $log->join('__ADMIN__ ON __LOG__.userid=__ADMIN__.aid')->where($where)->order('ltime desc')->count();
-        $pConf = page($count,C('PAGE_SIZE')); 
+            $count = $log->alias('a')->join('__DEPARTMENT__ b ON a.did= b.id')->join('__ADMIN__ c ON a.userid= c.aid')->where($where)->order('ltime desc')->count();
+            $pConf = page($count,C('PAGE_SIZE')); 
 
-		$list = $log->join('__ADMIN__ ON __LOG__.userid=__ADMIN__.aid')->where($where)->limit($pConf['first'], $pConf['list'])->order('ltime desc')->select();
-		
-        $this->list=$list;
+            $list = $log->alias('a')->join('__DEPARTMENT__ b ON a.did= b.id')->join('__ADMIN__ c ON a.userid= c.aid')->where($where)->limit($pConf['first'], $pConf['list'])->order('ltime desc')->select();
 
-
-
-        $keys['count']=$count;
-        $this->keys=$keys;
-        $this->page = $pConf['show'];
-        C('TOKEN_ON',false);
-
-		if($keys['department']>0){
-				$user = $this->getAdmin(array('department='.$keys['department']));
-				$condition = array('pid'=>$keys['department']);
-		}
-		$dp = D('Department')->getDepartmentarray($condition,'全部部门');
+            $this->list=$list;
 
 
-        $this->assign('dp',$dp);
-        $this->assign('user',$user);
 
-        $this->assign('keys',$keys);
+            $keys['count']=$count;
+            $this->keys=$keys;
+            $this->page = $pConf['show'];
+            C('TOKEN_ON',false);
 
-		$this->display('index');
+            if($keys['department']>0){
+                    $user = $this->getAdmin(array('department='.$keys['department']));
+                    $condition = array('pid'=>$keys['department']);
+            }
+            $dp = D('Department')->getDepartmentarray($condition,'全部部门');
+
+
+            $this->assign('dp',$dp);
+            $this->assign('user',$user);
+
+            $this->assign('keys',$keys);
+           
+            $this->display('index');
 	}
 
 	//增加日志 
@@ -178,6 +177,22 @@ private function show_menu() {
             return $sub_menu;
         } else {
             return $sub_menu[] = array('url' => '#', 'title' => "该菜单组不存在");
+        }
+    }
+    
+     public function getAdmin($condition=array())
+    {
+       
+        $condition = array_merge(array('aid>10'),$condition);
+        if(I('post.did')>0)
+            $condition = array_merge(array('department='.I('post.did'),'status=1'),$condition);
+        $result = D('Admin')->getAdmin($condition);
+
+        if(IS_POST){            
+           header('Content-Type:application/json; charset=utf-8');
+            echo json_encode($result);
+        }else{
+            return $result;
         }
     }
 	
