@@ -16,6 +16,7 @@ class LogModel extends Model{
 		$datas['actname'] = ACTION_NAME;
 		//$datas['ip'] = get_client_ip();
 		$datas['userid'] = session('my_info.aid');
+                $datas['did'] = session('my_info.department');
 		$datas['lcontent'] = $this->content;
 		//$datas['ltime'] = time();
 
