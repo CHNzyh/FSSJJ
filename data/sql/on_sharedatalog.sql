@@ -1,4 +1,4 @@
-/*
+﻿/*
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
@@ -16,10 +16,10 @@ Date: 2018-10-22 15:10:49
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `on_saredatalog`
+-- Table structure for `on_sharedatalog`
 -- ----------------------------
-DROP TABLE IF EXISTS `on_saredatalog`;
-CREATE TABLE `on_saredatalog` (
+DROP TABLE IF EXISTS `on_sharedatalog`;
+CREATE TABLE `on_sharedatalog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `s_id` int(11) DEFAULT NULL COMMENT '下载文件ID',
   `s_did` int(11) DEFAULT '0' COMMENT '下载人所属部门',
@@ -29,5 +29,5 @@ CREATE TABLE `on_saredatalog` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of on_saredatalog
+-- Records of on_sharedatalog
 -- ----------------------------
