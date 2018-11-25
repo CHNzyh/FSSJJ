@@ -116,3 +116,7 @@ Application/Admin/conf/config.php文件
 新增：ScheduleController.class.php,ScheduleModel.class.php
 修改Application/Admin/comm/conf/config.php文件
 增加审计节点信息
+
+2018-11-25
+修改内容：修改部门管理，由原来支持多级部门改为一级部门
+修改内容：DepartmentModel.class.php,edit.html,index.html
