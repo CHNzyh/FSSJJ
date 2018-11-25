@@ -13,10 +13,10 @@ class DepartmentModel extends Model{
 	public function searchDepartment(){
 		$result = M('Department')->select();
 
-		$cat = new Category("Department", array("id", "pid", "dname", "fullname"));
-                
-		$temp = $cat->getList('',0,'dsort');
-                
+//		$cat = new Category("Department", array("id", "pid", "dname", "fullname"));
+//                
+//		$temp = $cat->getList('',0,'dsort');
+                $temp = $result;
 		return $temp;
 
 
@@ -100,12 +100,14 @@ class DepartmentModel extends Model{
        
         $cat = new Category('Department', array('id', 'pid', 'dname', 'fullname'));
         $list = $cat->getList();
+        
         $info['pidOption'] = '<option value="0">'.$title.'</option>';               
         foreach ($list as $k => $v) {
             $disabled = $v['id'] == $info['id'] ? ' disabled="disabled"' : "";
             $selected = $v['id'] == $info['pid'] ? ' selected="selected"' : "";
             $info['pidOption'].='<option value="' . $v['id'] . '"' . $selected . $disabled . '>' . $v['fullname'] . '</option>';
         }
+        
         return $info;
      }	
 
