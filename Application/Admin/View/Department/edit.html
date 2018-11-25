@@ -42,12 +42,14 @@
                                     </select>
                                     如果禁用了将无法使用本部门</td>
                             </tr>
+							<!--
                             <tr>
                               <th>父级组ID：</th>
                               <td><select name="pid" style="min-width: 80px;">
                                 {$info.pidOption}
                               </select></td>
                             </tr>
+							-->
                             <tr>
                               <th>显示排序：</th>
                               <td><input class="input" name="dsort" type="text" size="40" value="{$info.dsort}" /></td>
@@ -57,6 +59,7 @@
                                 <td><textarea name="dcontent" rows="5" cols="57">{$info.dcontent}</textarea></td>
                             </tr>
                         </table>
+						<input type="hidden" name="pid" value="0"
                         <input type="hidden" name="id" value="{$info.id}"/>
                     </form>
                     <div class="commonBtnArea">
