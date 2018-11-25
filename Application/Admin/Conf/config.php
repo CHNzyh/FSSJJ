@@ -29,7 +29,8 @@ return array(
     'NEWS_PICPATH'=>'News',
     'NEWS_ICO_WIDTH'=>'180',
     'NEWS_ICO_HEIGHT'=>'100',
-
+    
+    'TASK_FILEPATH'=> 'Task', //综合任务目录
     'SHARE_FILEPATH'=>'Sharedata',//共享文件目录
     'SCHEDULE_FILEPATH'=>'Schedule',//项目进度上传文件目录
     'SCHEDULE_FILENAME'=>array(
