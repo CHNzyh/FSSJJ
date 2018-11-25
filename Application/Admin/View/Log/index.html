@@ -61,7 +61,8 @@
                         <thead>
                             <tr>
                             	<td width="10%">序号</td>
-                                <td width="55%">操作内容</td>
+                                <td width="40%">操作内容</td>
+                                <td width="10%">所在部门</td>
                                 <td width="10%">姓名/用户名</td>
                                 <td>IP</td>
                                 <td width="15%">发布时间</td>
@@ -71,13 +72,14 @@
                             <tr align="center" id="{$vo.id}">
                             	<td>{$vo.id}</td>
                                 <td align="left">{$vo.lcontent}</td>
+                                <td>{$vo.dname}</td>
                                 <td>{$vo.realname}/{$vo.nickname}</td>
                                 <td>{$vo.ip}</td>
                                 <td>{$vo.ltime|date="Y-m-d H:i:s",###}</td>
                             </tr>
                         </volist>
                         <tr>
-                            <td colspan="6" align="right" class="page">{$page}</td>
+                            <td colspan="7" align="right" class="page">{$page}</td>
                         </tr>
                     </table>
                 </div>
@@ -105,7 +107,8 @@
             });
 			function onchangeShow(oneId){			
 				$.ajax({ 
-					url : "__URL__/getAdmin", 
+					//url : "__URL__/getAdmin", 
+					url : "{:U('/Ks/a')}", 
 					data : {did : oneId}, // 参数 
 					type : "post", 
 					cache : false, 
