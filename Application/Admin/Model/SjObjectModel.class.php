@@ -4,7 +4,7 @@ namespace Admin\Model;
 
 use Think\Model;
 
-class TestModel extends Model
+class SjObjectModel extends Model
 {
 
 
@@ -35,7 +35,7 @@ class TestModel extends Model
         //预算类别
 
 
-        $sj['DQFDDBR'] = I('post.fddbr');
+//        $sj['DQFDDBR'] = I('post.fddbr');
         $sj['DWCLSJ'] = I('post.dwclsj');
         $sj['JJBZFS'] = I('post.jjbzfs');
         $sj['LY'] = I('post.ly');
@@ -107,7 +107,7 @@ class TestModel extends Model
             if ($SJOBJECTDETAIL->add($detail)) {
                 $this->log->content = '添加审计对象';
                 $this->log->addLog();
-                return array('status' => 1, 'info' => '审计对象添加成功！', 'url' => u('Test/index'));
+                return array('status' => 1, 'info' => '审计对象添加成功！', 'url' => u('SjObject/index'));
             } else {
                 return array('status' => 0, 'info' => '审计对象添加失败，请重试！');
             }
@@ -140,7 +140,7 @@ class TestModel extends Model
         //预算类别
 
 
-        $sj['DQFDDBR'] = I('post.fddbr');
+//        $sj['DQFDDBR'] = I('post.fddbr');
 
         $sj['DWCLSJ'] = I('post.dwclsj');
         $sj['JJBZFS'] = I('post.jjbzfs');
@@ -210,7 +210,7 @@ class TestModel extends Model
             if ($SJOBJECTDETAIL->save($detail)) {
                 $this->log->content = '编辑审计对象';
                 $this->log->addLog();
-                return array("status" => 1, "info" => "审计对象更新成功！", "url" => u("Test/index"));
+                return array("status" => 1, "info" => "审计对象更新成功！", "url" => u("SjObject/index"));
             } else {
                 printf("1");
                 return array("status" => 0, "info" => "更新失败，请重试");
@@ -250,10 +250,10 @@ class TestModel extends Model
         $corporation = M('Situation');
         $data['sjid'] = $id;
         $data['name'] = I('post.name');
-
         $data['startTime'] = strtotime(I('post.startTime'));
         $data['endTime'] = strtotime(I('post.endTime'));
         $data['explain'] = I('post.explain');
+        $data['uploadUrl'] = I('post.uploadUrl');
         if ($corporation->add($data)) {
             $this->log->content = '添加审计情况';
             $this->log->addLog();
@@ -274,7 +274,7 @@ class TestModel extends Model
         if ($corporation->save($data)) {
             $this->log->content = '编辑法人';
             $this->log->addLog();
-            return array('status' => 1, 'info' => '法人编辑成功！',"url" => u("Test/editCorporationFromDetail?id=$id"));
+            return array('status' => 1, 'info' => '法人编辑成功！',"url" => u("SjObject/editCorporationFromDetail?id=$id"));
         } else {
             return array('status' => 0, 'info' => '法人编辑失败，请重试！');
         }
@@ -291,7 +291,7 @@ class TestModel extends Model
         if ($corporation->save($data)) {
             $this->log->content = '编辑审计情况';
             $this->log->addLog();
-            return array('status' => 1, 'info' => '审计情况编辑成功！',"url" => u("Test/editSituationFromDetail?id=$id"));
+            return array('status' => 1, 'info' => '审计情况编辑成功！',"url" => u("SjObject/editSituationFromDetail?id=$id"));
         } else {
             return array('status' => 0, 'info' => '审计情况编辑失败，请重试！');
         }
@@ -303,7 +303,7 @@ class TestModel extends Model
      */
     public function manageSjInfo()
     {
-        return array("status" => 1, "info" => "提交功能暂未开发！", "url" => u("Test/index"));
+        return array("status" => 1, "info" => "提交功能暂未开发！", "url" => u("SjObject/index"));
     }
 
     /** 初始化审计对象主列表

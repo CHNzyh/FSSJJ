@@ -5,13 +5,13 @@ namespace Admin\Controller;
 use Org\Util\ArrayList;
 use Think\Controller;
 
-class TestController extends CommonController
+class SjObjectController extends CommonController
 {
 
     public function index()
     {
 
-        $data = D('Test')->searchSjobject();
+        $data = D('SjObject')->searchSjobject();
         $this->assign('list', $data['list']);
         $this->assign('keys', $data['keys']);
         $this->assign('page', $data['page']);
@@ -32,7 +32,7 @@ class TestController extends CommonController
             $this->checkToken();
             header('Content-Type:application/json; charset=utf-8');
 
-            echo json_encode(D("Test")->addSjObject());
+            echo json_encode(D("SjObject")->addSjObject());
 
         } else {
             $info['cstatus'] = 1;
@@ -51,7 +51,7 @@ class TestController extends CommonController
     public function buildSJPlan(){
         $info['cstatus'] = 1;
         $info = D('Config')->getConfigA('pid = 5');
-        $data = D('Test')->buildSJPlan($info);
+        $data = D('SjObject')->buildSJPlan($info);
         $this->assign('list', $data['list']);
         $this->assign('keys', $data['keys']);
         $this->assign('page', $data['page']);
@@ -67,9 +67,8 @@ class TestController extends CommonController
         if (IS_POST) {
             // $this->checkToken();
             header('Content-Type:application/json; charset=utf-8');
-            echo json_encode(D("Test")->editSjObject());
+            echo json_encode(D("SjObject")->editSjObject());
         } else {
-
             $sjobject = M("Sjobject");
             $sql = "select * from on_sjobject as SJ left join on_sjobjectdetail as DETAIL  ON DETAIL.pid=SJ.id  where SJ.id =" . (int)$_GET['id'];
             $sjobjectArray = $sjobject->query($sql);
@@ -192,7 +191,7 @@ class TestController extends CommonController
 
         if (IS_POST) {
             header('Content-Type:application/json; charset=utf-8');
-            echo json_encode(D("Test")->editCorporationDetail((int)$_GET['id']));
+            echo json_encode(D("SjObject")->editCorporationDetail((int)$_GET['id']));
         } else {
             $M = M('Corporation');
             $detail = $M->where("id=" . (int)$_GET['id'])->find();
@@ -210,7 +209,7 @@ class TestController extends CommonController
     {
         if (IS_POST) {
             header('Content-Type:application/json; charset=utf-8');
-            echo json_encode(D("Test")->editSituationDetail((int)$_GET['id']));
+            echo json_encode(D("SjObject")->editSituationDetail((int)$_GET['id']));
         } else {
             $M = M('Situation');
             $detail = $M->where("id=" . (int)$_GET['id'])->find();
@@ -256,7 +255,7 @@ class TestController extends CommonController
     {
         if (IS_POST) {
             header('Content-Type:application/json; charset=utf-8');
-            echo json_encode(D("Test")->addCorporation((int)$_GET['id']));
+            echo json_encode(D("SjObject")->addCorporation((int)$_GET['id']));
         } else {
             $this->assign('id', (int)$_GET['id']);
             $this->display('addCorporation');
@@ -270,9 +269,11 @@ class TestController extends CommonController
     {
         if (IS_POST) {
             header('Content-Type:application/json; charset=utf-8');
-            echo json_encode(D("Test")->addSituation((int)$_GET['id']));
+            echo json_encode(D("SjObject")->addSituation((int)$_GET['id']));
         } else {
             $this->assign('id', (int)$_GET['id']);
+            $info['url']='/'.C('SITUATION_FILEPATH').'/'.date('Y-m-d',  time()).'/';
+            $this->assign('info',$info);
             $this->display('addSituation');
         }
     }
@@ -287,6 +288,26 @@ class TestController extends CommonController
             $info[$fieldname] .= '<option value="' . $v['dname'] . '"' . $selected . '>' . $v['dname'] . '</option>';
         }
         return $info;
+    }
+
+    /*
+   加密获取下载文件
+   */
+    public function getfile($id,$url)
+    {
+            $result = D('Situation')->where('id='.$id)->field('uploadUrl')->find();
+            $FileAddress='upload'.$result['uploadUrl'];
+            $DownloadName=str_replace('/','',strrchr($FileAddress,'/'));
+            if(file_exists($FileAddress) && $file=fopen($FileAddress,"r")) //首先要判断文件是否存在，如果文件跟本不存在的话，后边的代码也是白费。
+            {
+                Header("content-type:application/octet-stream"); //声明文件类型，这里是为了让客户端下载它，而不是打开它，所以声明为未知二进制文件。否则客户端会根据其文件类型在线打开它。
+                Header("content-Length:".filesize($FileAddress)); //声明文件的大小，告诉客户端这个文件的大小，否则客户端下载的时候看不到进度。
+                Header("content-disposition:attachment;filename=".$DownloadName); //声明文件名，这里就是告诉客户端它要下载的文件的名字，否则名字就会是你php文件的名字。
+                echo fread($file,filesize($FileAddress)); //这里就是将加载的文件echo出来，因此这个php文件不能出现其他任何的文字，就是说这里若是出现了任何其他的输出的话都会输出到客户端下载的文件里。
+                fclose($file); //最后关闭句柄。
+            }else{
+                echo '<script language="javascript">alert("无法下载");window.opener=null;window.close();</script>';
+            }
     }
 
 }

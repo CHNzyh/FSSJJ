@@ -29,6 +29,7 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
                 <thead>
                 <tr>
+                    <td>id</td>
                     <td>名称</td>
                     <td>开始时间</td>
                     <td>结束时间</td>
@@ -37,11 +38,13 @@
                 </thead>
                 <volist name="FRlist" id="vo">
                     <tr align="center" aid="{$vo.id}">
+                        <td>{$vo.id}</td>
                         <td>{$vo.name}</td>
                         <td>{$vo.startTime}</td>
                         <td>{$vo.endTime}</td>
                         <td>
                             [ <a href="__URL__/editSituationDetail?id={$vo.id}">编辑</a> ]
+                            [ <a href="__URL__/getfile?id={$vo.id}&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"])</php>" target="_blank">下载</a> ]
                             [ <a link="{:U('/test/deleteSituation/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.name}" class="del">删除 </a> ]
                         </td>
                     </tr>

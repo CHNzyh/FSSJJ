@@ -33,6 +33,7 @@ return array(
     'TASK_FILEPATH'=> 'Task', //综合任务目录
     'SHARE_FILEPATH'=>'Sharedata',//共享文件目录
     'SCHEDULE_FILEPATH'=>'Schedule',//项目进度上传文件目录
+    'SITUATION_FILEPATH'=>'Situation',//审计情况上传目录
     'SCHEDULE_FILENAME'=>array(
         'file_1' => '文件一',
         'file_2' => '文件二',
