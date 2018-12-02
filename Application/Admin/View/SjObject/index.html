@@ -26,12 +26,35 @@
                 </div>
                 <div class="search">
                     <form action="{:U('search')}" method='post'>
+                        部门：
+                        <if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position eq 1)">
+                            <!--<select name="department" id="department" style="width:90px" onchange="onchangeShow(this.value)">-->
+                            <select name="department" id="department" style="width:90px" onchange="onchangeShow(this.value)">
+                                {$dp.pidOption}
+                            </select>
+                            <else />
+
+                            {$dp[$did]['dname']}
+                            <input type="hidden" value="{$Think.session.my_info.department}" name="department" />
+                        </if>
+                        <!--人员：-->
+                        <!--<if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position neq 3)">-->
+                            <!--<select type="hidden" name="user" id="user">-->
+                                <!--<option value="0">全部人员</option>-->
+                                <!--<volist name="user" id="vo">-->
+                                    <!--<option value="{$vo.aid}"<eq name="vo.aid" value="$keys.user"> selected</eq>>{$vo.realname}</option>-->
+                                <!--</volist>-->
+                            <!--</select>-->
+                            <!--<else />-->
+                            <!--{:session('my_info.nickname')}-->
+                            <!--<input type="hidden" value="{$Think.session.my_info.aid}" name="user" />-->
+                        <!--</if>-->
                         搜索字段：
-                        <select name="field">
-                            <option value="cname"
-                            <eq name="keys.field" value="cname">selected="selected"</eq>
-                            >企业名称</option>
-                        </select>
+                            <select name="field">
+                                <option value="name" <eq name="keys.field" value="name">selected="selected"</eq>>名称</option>
+                                <option value="NSRBM" <eq name="keys.field" value="NSRBM">selected="selected"</eq>>纳税人编码</option>
+                                <option value="LY" <eq name="keys.field" value="LY">selected="selected"</eq>>领域</option>
+                            </select>
                         &nbsp;&nbsp;关键字：
                         <input type="text" value="{$keys.keyword}" name="keyword" class="input"
                                placeholder="搜索对应字段关键字"/>
@@ -42,12 +65,12 @@
 
             </div>
 
-            <eq name="ACTION_NAME" value="search">
-                <div class="seamsg">
-                    搜索的关键词<span class="keyword">{$keys.keyword}</span>在<span
-                        class="keyword">{$keys.field}</span>字段内找到<span class="keyword">{$keys.count}</span>条
-                </div>
-            </eq>
+            <!--<eq name="ACTION_NAME" value="search">-->
+                <!--<div class="seamsg">-->
+                    <!--搜索的关键词<span class="keyword">{$keys.keyword}</span>在<span-->
+                        <!--class="keyword">{$keys.field}</span>字段内找到<span class="keyword">{$keys.count}</span>条-->
+                <!--</div>-->
+            <!--</eq>-->
 
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
                 <thead>
@@ -119,6 +142,41 @@
         });
 
     });
+
+    <if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position eq 1)">
+        function onchangeShow(oneId){
+            $.ajax({
+                //url : "__URL__/getAdmin",
+                url : "{:U('/Ks/a')}",
+                data : {did : oneId}, // 参数
+                type : "post",
+                cache : false,
+                dataType : "json", //返回json数据
+                error: function(){
+                    alert('error');
+
+                    // error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    //      alert(XMLHttpRequest.status);
+                    //      alert(XMLHttpRequest.readyState);
+                    //      alert(textStatus)
+                },
+//                success:onchangecallback
+            });
+        }
+        function onchangecallback(data){
+
+            document.all['user'].options.length = 0; //清空原有的option
+            var str="";
+            str+="<option value='0'>全部人员</option>"
+            if(data!=null){
+                for(var i=0;i<data.length;i++){
+                    str+="<option value='"+data[i].aid+"'>"+data[i].realname+"</option>"
+                }
+            }
+            $("#user").html(str);
+        }
+
+    </if>
 </script>
 <include file="Common:foot"/>
 </body>

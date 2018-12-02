@@ -10,11 +10,47 @@ class SjObjectController extends CommonController
 
     public function index()
     {
-
         $data = D('SjObject')->searchSjobject();
+
+//        $where = array('a.id>0');
+        $keys =$data['keys'];
+        if(session('my_info.position')==3)
+            $keys['user'] = session('my_info.aid');
+//        if(!empty($keys)){
+//            $where = ($keys['keyword']!='')?array_merge(array('a.'.$keys[field]=>array('LIKE','%'.$keys['keyword'].'%')),$where):$where;
+//            $where = ($keys['department']>0)?array_merge(array('a.s_did='.$keys['department']),$where):$where;
+//            $where = ($keys['user']>0)?array_merge(array('a.s_aid='.$keys['user']),$where):$where;
+//            $where = ($keys['s_stime']!='')?array_merge(array('s_stime>='.strtotime($keys['s_stime'])),$where):$where;
+//            $where = ($keys['s_etime']!='')?array_merge(array('s_etime<='.strtotime($keys['s_etime'])),$where):$where;
+//        }
+
+//        if(session('my_info.aid')>10 && session('my_info.position')>1)
+//            $where['a.s_did'] = session('my_info.department');
+
+
+        if(session('my_info.aid')==10||session('my_info.position')==1){//AID=10为超级管理员
+            if($keys['department']>0){
+//                $user = $this->getAdmin(array('department='.$keys['department']));
+                $condition = array('pid'=>$keys['department']);
+            }
+
+            $dp = D('Department')->getDepartmentarray($condition,'全部部门');
+
+        }else{
+
+            $dp = D('Department')->getDepartment();
+
+//            $user = $this->getAdmin(array('department='.session('my_info.department')));
+        }
+
+        C('TOKEN_ON', false);
+        $this->assign('did',session('my_info.department'));
+        $this->assign('dp',$dp);
+//        $this->assign('user',$user);
+        $this->assign('keys',$keys);
         $this->assign('list', $data['list']);
-        $this->assign('keys', $data['keys']);
         $this->assign('page', $data['page']);
+
         $this->display('index');
     }
 
@@ -308,6 +344,9 @@ class SjObjectController extends CommonController
             }else{
                 echo '<script language="javascript">alert("无法下载");window.opener=null;window.close();</script>';
             }
+    }
+
+    public function getSsarchKV(){
     }
 
 }
