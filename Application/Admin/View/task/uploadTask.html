@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$title}-综合任务管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='综合任务管理 > '.$title ;
+        </php>
+    <include file="Common:intoHead" />
+	<js href="--PUBLIC--/Js/laydate.js"/>
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr clearfix">
+                        <div class="current">{$title}</div>
+                    </div>
+                    <form action="" method="post" name="uploadTask" id="uploadTask">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                          <tr>
+                            <th width="120">任务名称：</th>
+                            <td>{$info.t_name}</td>
+                          </tr>
+                          <tr>
+                            <th>所属科室：</th>
+                            <td>{$dp.dname}</td>
+                          </tr>
+                          <tr>
+                            <th>上传人员：</th>
+                            <td>{:session('my_info.nickname')}&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>文件目录：</th>
+                            <td>
+                                <input type="text" name="url" disabled="disabled" id="url" value="{$info.t_url}" class="input" size="40" />
+                              &nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>有效开始时间：</th>
+                            <td>{$info.t_stime|date='Y-m-d',###}</td>
+                          </tr>
+                          <tr>
+                            <th>有效结束时间：</th>
+                            <td>{$info.t_etime|date='Y-m-d',###}</td>
+                          </tr>
+                          
+                          
+						  <tr>
+						  <th>上传文件：</th>
+						  <td id="fileBox">
+								  <input id="upFile" type="file" multiple="true">
+                                    <div class="clearfix"></div>
+                                    <ul id="uploadImageList" class="clearfix">
+                                        <notempty name="info[t_furl]">
+                                        <li class="photo">{$info.t_furl}
+                                        <div class="imper">
+                                        <a class="delImg" imgurl="{$info.t_furl}" href="javascript:;"></a><a class="bigImg" href="/upload{$info.t_furl}"  target="_blank"></a></div>                                        
+                                        </li>
+                                        </notempty>
+                                    </ul>						    </td>
+						  </tr>
+                            
+                          <tr>
+							<th>备注：</th>
+							<td>{$info.t_content}</td>
+                          </tr>
+                        </table>
+						<input type="hidden" name="t_furl" id="t_furl" value="{$info.t_furl}" />
+                        <input type="hidden" name="id" id="id" value="{$info.id}"/>
+						<input type="hidden" name="t_id" id="t_id" value="{$info.t_id}"/>
+						<input type="submit" />
+                    </form>
+                    <div class="commonBtnArea">
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+<script type="text/javascript">
+    $(".submit").click(function(){
+      //  if($.trim($("input[name='s_name']").val())==''){
+//            popup.alert("文件名称不能为空！");
+//            return false;
+//        }
+//        if($.trim($("input[name='s_company']").val())==''){
+//            popup.alert("数据提供单位名称不能为空！");
+//            return false;
+//        }
+//        if($.trim($("input[name='s_linkman']").val())==''){
+//            popup.alert("数据提供人名称不能为空！");
+//            return false;
+//		}
+//        if($.trim($("input[name='s_stime']").val())==''){
+//            popup.alert("有效开始时间不能为空！");
+//            return false;
+//        }	
+//        if($.trim($("input[name='s_etime']").val())==''){
+//            popup.alert("有效结束时间不能为空！");
+//            return false;
+//        }			
+//        if($.trim($("input[name='t_furl']").val())==''){
+//            popup.alert("还没有上传要共享的文件！");
+//            return false;
+//        }
+            commonAjaxSubmit();
+    });
+</script>
+<css href="--PUBLIC--/uploadify/uploadify.css"/>
+<js href="--PUBLIC--/uploadify/jquery.uploadify.min.js"/>
+<script type="text/javascript">
+var newsId = "{$info.id}";
+    $(function(){
+	
+        //上传初始化变量
+        var uplode_url = '{:U("Upload/upShareFile")}';//PHP处理脚本地址
+        var uplode_path = '__PUBLIC__'; //插件公共目录
+        var sid = '{:session_id()}';//sessionID
+        var upPathRoot="{$upWholeUrl}"; //图片上传根目录完整路径
+        var uploadPath ="/upload/"; //文件上传根目录
+
+        // 链接图标上传
+        $('#upFile').uploadify({
+            swf      : uplode_path+'/uploadify/uploadify.swf', //加载swf
+            uploader : uplode_url, //PHP处理脚本地址
+            width : 118,    //上传按钮宽度
+            height : 33,    //上传按钮高度
+            multi:false,      //是否允许同时上传多文件，可设定true或false。
+            fileTypeDesc : 'Image Files',                 //类型描述
+            'removeCompleted' : true,    //是否自动消失
+
+            fileTypeExts : '*',     //允许选择类型
+            fileExt : '*',          //允许上传类型
+            fileSizeLimit : '50MB',       //允许上传最大值
+            buttonText :'<div class="btn up_but"><div class="up_but_ico"></div>上传文件</div>',  //按钮的文字
+            formData : {'session_id' : sid,'url':$('#url').val()},
+
+            onUploadSuccess : function(file, data, response) { //成功上传返回
+                eval('var data = ' + data);
+				
+                if (data.status) {
+				
+                    $('#fileBox #uploadImageList').remove();
+                    //插入到image标签内，显示图片的缩略图
+                    $('#fileBox').append('<div class="cuitclear"></div><ul id="uploadImageList" class="clearfix"><notempty name="info[picture]"><li class="photo">'+data.path+'<div class="imper"><a class="delImg" imgurl="'+data.path+'" href="javascript:;"></a><a class="bigImg" href="'+uploadPath+data.path+'"  target="_blank"></a></div></li></ul>');
+					$('#t_furl').attr('value',data.path);
+                    popup.success(data.msg);
+                    setTimeout(function(){
+                        popup.close("asyncbox_success");
+                    },1000);
+                } else {
+                    popup.error(data.msg);
+                    setTimeout(function(){
+                        popup.close("asyncbox_success");
+                    },2000);
+                }
+
+            }
+        });
+        //链接图片上传_end
+         // 文章图片删除
+        var delUrl = "{:U('Task/del_file')}";
+        $(document).on("click",".delImg",function(){
+            var delImgUrl = $(this).attr('imgurl');
+            var delDiv = $(this);
+            $.post(delUrl,{'id':newsId,'imgUrl':delImgUrl},function(data){      //ajax后台
+                if (data.status) {
+                    delDiv.parents('.photo').fadeOut().remove();
+					$('#t_furl').attr('value','');
+					$('#id').attr('value',0);
+                    popup.success(data.msg);
+                    setTimeout(function(){
+                        popup.close("asyncbox_success");
+                    },1000);
+                } else {
+                    alert(data.msg);
+                }
+            },'json');        
+        });
+        // 文章片删除_end
+        $("#checkNewsTitle").click(function(){
+            $.getJSON("__URL__/checkNewsTitle", { title:$("#title").val(),id:"{$info.id}"}, function(json){
+                $("#checkNewsTitle").css("color",json.status==1?"#0f0":"#f00").html(json.info);
+            });
+        });
+        
+		
+		
+    });
+	
+	
+var start = {
+    elem: '#s_stime',
+    format: 'YYYY/MM/DD',
+    min: '1900-01-01', //设定最小日期为当前日期
+    max: '2099-06-16', //最大日期
+    istime: false,
+    istoday: true,
+    choose: function(datas){
+         end.min = datas; //开始日选好后，重置结束日的最小日期
+         end.start = datas //将结束日的初始值设定为开始日
+    }
+};
+var end = {
+    elem: '#s_etime',
+    format: 'YYYY/MM/DD',
+    min: '1900-01-01',
+    max: '2099-06-16',
+    istime: false,
+    istoday: true,
+    choose: function(datas){
+	start.max = datas; //结束日选好后，重置开始日的最大日期
+    }
+};
+laydate(start);
+laydate(end);
+	
+</script>
+
+</body>
+</html>

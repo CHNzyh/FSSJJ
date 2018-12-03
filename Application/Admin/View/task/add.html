@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$title}-综合任务管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='综合任务管理 > '.$title ;
+        </php>
+    <include file="Common:intoHead" />
+	<js href="--PUBLIC--/Js/laydate.js"/>
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr clearfix">
+                        <div class="current">{$title}</div>
+                    </div>
+                    <form action="" method="post" name="sharedata" id="sharedata">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                          <tr>
+                            <th width="120">任务名称：</th>
+                            <td><input name="t_name" id="t_name" type="text" class="input" size="40" value="{$info.t_name}" /></td>
+                          </tr>
+                          <tr>
+                            <th>任务科室：</th>
+                            <td>
+							
+							<volist name="dp" id="vo" key="k">
+							<input name="t_dname[]" type="checkbox" id="t_dname_{$vo.id}" value="{$vo.id}" checked="checked" />&nbsp;<label for="t_dname_{$vo.id}" style="cursor:pointer">{$vo.dname}</label>&nbsp;&nbsp;
+							</volist>
+							</td>
+                          </tr>
+                          <tr>
+                            <th>上传人员：</th>
+                            <td>{:session('my_info.nickname')}&nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>文件目录：</th>
+                            <td>
+                                <input type="text" name="t_url" readonly="readonly" id="t_url" value="{$info.t_url}" class="input" size="40" />
+                              &nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>有效开始时间：</th>
+                            <td><input class="laydate-icon" id="t_stime" style="width:200px; margin-right:10px;" name="t_stime" type="text" size="40" value="{$info.s_stime|date='Y-m-d',###}" /></td>
+                          </tr>
+                          <tr>
+                            <th>有效结束时间：</th>
+                            <td><input class="laydate-icon" id="t_etime" style="width:200px;" name="t_etime" type="text" size="40" value="{$info.s_etime|date='Y-m-d',###}" /></td>
+                          </tr>
+                            <tr>
+                                <th>备注：</th>
+                                <td><textarea name="t_content" rows="6" cols="70">{$info.t_content1}</textarea><input type="submit" /></td>
+                            </tr>
+                        </table>						
+                        <input type="hidden" name="id" value="{$info.id}"/>
+                    </form>
+                    <div class="commonBtnArea">
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+<script type="text/javascript">
+    $(".submit").click(function(){
+        if($.trim($("input[name='t_name']").val())==''){
+            popup.alert("任务名称不能为空！");
+            return false;
+        }
+        if($.trim($("input[name='t_stime']").val())==''){
+            popup.alert("有效开始时间不能为空！");
+            return false;
+        }	
+        if($.trim($("input[name='t_etime']").val())==''){
+            popup.alert("有效结束时间不能为空！");
+            return false;
+        }			
+            commonAjaxSubmit();
+    });
+
+
+ 
+</script>
+<script type="text/javascript">
+	
+var start = {
+    elem: '#s_stime',
+    format: 'YYYY/MM/DD',
+    min: '1900-01-01', //设定最小日期为当前日期
+    max: '2099-06-16', //最大日期
+    istime: false,
+    istoday: true,
+    choose: function(datas){
+         end.min = datas; //开始日选好后，重置结束日的最小日期
+         end.start = datas //将结束日的初始值设定为开始日
+    }
+};
+var end = {
+    elem: '#s_etime',
+    format: 'YYYY/MM/DD',
+    min: '1900-01-01',
+    max: '2099-06-16',
+    istime: false,
+    istoday: true,
+    choose: function(datas){
+	start.max = datas; //结束日选好后，重置开始日的最大日期
+    }
+};
+laydate(start);
+laydate(end);
+
+
+</script>
+
+</body>
+</html>
