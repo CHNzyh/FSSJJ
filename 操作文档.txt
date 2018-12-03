@@ -119,4 +119,14 @@ Application/Admin/conf/config.php文件
 
 2018-11-25
 修改内容：修改部门管理，由原来支持多级部门改为一级部门
-修改内容：DepartmentModel.class.php,edit.html,index.html
+修改文件：DepartmentModel.class.php,edit.html,index.html
+
+修改内容：on_log表增加部门ID，增加日志功能中显示部门
+修改文件：logController.class.php,LogModel.Class.php
+
+2018-12-4
+增加内容：综合任务管理
+增加文件：TaskController.class.php,TaskModel.class.php,TaskcontentModel.class.php
+未完成，进度70%
+还差完成任务时的判断，如果该部门不在任务列表中就无需完成任务。
+在删除上传文件时，同时修改综合任务主表中的完成任务部门和完成数量字段，也要修改任务状态字段。
