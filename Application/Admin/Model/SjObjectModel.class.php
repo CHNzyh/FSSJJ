@@ -22,6 +22,8 @@ class SjObjectModel extends Model
     public function addSjObject()
     {
         $SJOBJECT = M("Sjobject");
+        $sj['did'] = session('my_info.department');
+        $sj['modify_time'] = time();
         $sj['FRDWDM'] = I('post.frdwdm');
         $sj['name'] = I('post.name');
         $sj['FRDWQC'] = I('post.frdwqc');
@@ -48,10 +50,10 @@ class SjObjectModel extends Model
         $sj['TXHM_YZBM'] = I('post.yzbm');
 
 
-        $datas['time'] = time();
         if ($id = $SJOBJECT->add($sj)) {
             $SJOBJECTDETAIL = M("Sjobjectdetail");
             $detail['pid'] = $id;
+            $detail['modify_time'] = time();
             $detail['XZQH_JC'] = I('post.jc');
             $detail['XZQH_JC'] = I('post.jc');
             $detail['XZQH_JWH'] = I('post.jwh');
@@ -126,13 +128,14 @@ class SjObjectModel extends Model
     {
         $SJOBJECT = M("Sjobject");
         $id = I('post.id');
+        $sj['did'] = session('my_info.department');
         $sj['id'] = $id;
         $sj['name'] = I('post.name');
         $sj['FRDWDM'] = I('post.frdwdm');
         $sj['FRDWQC'] = I('post.frdwqc');
         $sj['NSRBM'] = I('post.nsrbm');
         $sj['DWCLSJ'] = I('post.dwclsj');
-
+        $sj['modify_time'] = time();
         //录入时间
         //被审计单位分类
         //审计周期
@@ -156,6 +159,7 @@ class SjObjectModel extends Model
         if ($SJOBJECT->save($sj)) {
             $SJOBJECTDETAIL = M("Sjobjectdetail");
             $detail['pid'] = $id;
+            $detail['modify_time'] = time();
 //            $sj['SJXXQK'] = I('post.sjxxqk');
             $detail['XZQH_JC'] = I('post.jc');
             $detail['XZQH_JWH'] = I('post.jwh');
@@ -233,6 +237,7 @@ class SjObjectModel extends Model
         $data['endTime'] = strtotime(I('post.endTime'));
         $data['corporation'] = I('post.corporation');
         $data['explain'] = I('post.explain');
+        $data['modify_time'] = time();
         if ($corporation->add($data)) {
             $this->log->content = '添加法人';
             $this->log->addLog();
@@ -254,6 +259,7 @@ class SjObjectModel extends Model
         $data['endTime'] = strtotime(I('post.endTime'));
         $data['explain'] = I('post.explain');
         $data['uploadUrl'] = I('post.uploadUrl');
+        $data['modify_time'] = time();
         if ($corporation->add($data)) {
             $this->log->content = '添加审计情况';
             $this->log->addLog();
@@ -263,7 +269,8 @@ class SjObjectModel extends Model
         }
     }
 
-    public function editCorporationDetail($id){
+    public function editCorporationDetail($id)
+    {
         $corporation = M('Corporation');
         $data['id'] = $id;
 
@@ -271,27 +278,30 @@ class SjObjectModel extends Model
         $data['endTime'] = strtotime(I('post.endTime'));
         $data['corporation'] = I('post.corporation');
         $data['explain'] = I('post.explain');
+        $data['modify_time'] = time();
         if ($corporation->save($data)) {
             $this->log->content = '编辑法人';
             $this->log->addLog();
-            return array('status' => 1, 'info' => '法人编辑成功！',"url" => u("SjObject/editCorporationFromDetail?id=$id"));
+            return array('status' => 1, 'info' => '法人编辑成功！', "url" => u("SjObject/editCorporationFromDetail?id=$id"));
         } else {
             return array('status' => 0, 'info' => '法人编辑失败，请重试！');
         }
     }
 
-    public function editSituationDetail($id){
+    public function editSituationDetail($id)
+    {
         $corporation = M('Situation');
         $data['id'] = $id;
-        $data['name'] =I('post.name');
+        $data['name'] = I('post.name');
 
         $data['startTime'] = strtotime(I('post.startTime'));
         $data['endTime'] = strtotime(I('post.endTime'));
         $data['explain'] = I('post.explain');
+        $data['modify_time'] = time();
         if ($corporation->save($data)) {
             $this->log->content = '编辑审计情况';
             $this->log->addLog();
-            return array('status' => 1, 'info' => '审计情况编辑成功！',"url" => u("SjObject/editSituationFromDetail?id=$id"));
+            return array('status' => 1, 'info' => '审计情况编辑成功！', "url" => u("SjObject/editSituationFromDetail?id=$id"));
         } else {
             return array('status' => 0, 'info' => '审计情况编辑失败，请重试！');
         }
@@ -318,6 +328,15 @@ class SjObjectModel extends Model
             $keys = I('post.');
 
             $where = array($keys[field] => array('LIKE', '%' . $keys['keyword'] . '%'));
+
+            $did = $keys['department'];
+            if (!empty($did)) {
+                $where = array_merge(array('did=' . $keys['department']), $where);
+            }
+        } else {
+            if (session('my_info.position') > 0) {
+                $where = array('did=' . session('my_info.position'));
+            }
         }
 
         $count = $M->where($where)->count();
@@ -337,17 +356,18 @@ class SjObjectModel extends Model
      * 生成审计计划报表
      * $info 包含周期的数组（1,2,3,4,5）
      */
-    public function buildSJPlan($info,$data = array()){
+    public function buildSJPlan($info, $data = array())
+    {
         //当前年度
         $currentTime = date("Y");
         $M = M('Sjobject');
-        $sql = "SELECT DISTINCT * FROM on_sjobject DX WHERE ((".$currentTime."-2013+1)%DX.SJZQ=0) ";
-        for($i = 0;$i<count($info);$i++){
+        $sql = "SELECT DISTINCT * FROM on_sjobject DX WHERE ((" . $currentTime . "-2013+1)%DX.SJZQ=0) ";
+        for ($i = 0; $i < count($info); $i++) {
             $sql .= " UNION ";
-            $sql .=" select * from on_sjobject DX where ((".$currentTime."-2013+1)%DX.SJZQ =".$i.") ";
-            for ($j=1; $j<=(int)$info[$i]["dname"]; $j++) {
-                $sql.=" AND (select startTime from on_situation where FROM_UNIXTIME(startTime,'%Y') = ("
-                    .$currentTime."-".$j.") limit 1) is NULL ";
+            $sql .= " select * from on_sjobject DX where ((" . $currentTime . "-2013+1)%DX.SJZQ =" . $i . ") ";
+            for ($j = 1; $j <= (int)$info[$i]["dname"]; $j++) {
+                $sql .= " AND (select startTime from on_situation where FROM_UNIXTIME(startTime,'%Y') = ("
+                    . $currentTime . "-" . $j . ") limit 1) is NULL ";
             }
         }
         $list = $M->query($sql);
