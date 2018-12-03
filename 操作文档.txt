@@ -129,4 +129,4 @@ Application/Admin/conf/config.php文件
 增加文件：TaskController.class.php,TaskModel.class.php,TaskcontentModel.class.php
 未完成，进度70%
 还差完成任务时的判断，如果该部门不在任务列表中就无需完成任务。
-在删除上传文件时，同时修改综合任务主表中的完成任务部门和完成数量字段，也要修改任务状态字段。
+在删除上传文件时，同时修改综合任务主表中的完成任务部门和完成数量字段，也要修改任务状态字段。 
