@@ -38,10 +38,9 @@ class TaskcontentModel extends Model{
 
         if($datas['id']==0){
             if ($this->taskcontent->add($datas)) {
-                $this->task->modifyTask($datas['t_id'],'increase');//修改综合任务完成情况
+                $this->task->modifyTask($datas['t_id'],'increase',$datas['t_did']);//修改综合任务完成情况
                 $this->log->content = '添加综合任务上传文件';
-                $this->log->addLog();
-                $this->task->modifyTask($datas['t_id'],'increase');//修改综合任务完成情况
+                $this->log->addLog();                
                 return array('status' => 1, 'info' => '添加综合任务上传文件成功！', 'url' => u('Task/index'));
             } else {
                 return array('status' => 0, 'info' => '添加失败，请重试！');
@@ -60,7 +59,10 @@ class TaskcontentModel extends Model{
      * 删除综合任务文件同时删除数据记录
      */
     public function delTaskcontent($id) {
-        if($this->taskcontent->where("id=" . $id)->delete()){
+       $result = $this->gettaskcontent($id);
+       @unlink(C('UPLOAD_PATH').$result['t_furl']);
+        if($this->taskcontent->where("id=" . $id)->delete()){            
+            $this->task->modifyTask($datas['t_id'],'reduce',$datas['t_did']);//修改综合任务完成情况
             $this->log->content = '删除综合任务上传文件';
             $this->log->addLog();
             return true;

@@ -36,6 +36,7 @@ class TaskModel extends Model{
         $datas['t_dname']=$d;
         $datas['t_dsum']=$i;
         $datas['t_time']=time();
+        $datas['t_dename']= '';
         if ($this->task->add($datas)) {
             $this->log->content = '添加综合任务';
             $this->log->addLog();
@@ -70,20 +71,23 @@ class TaskModel extends Model{
           */
          if($info['t_dname']!=$datas['t_dname']){
              //$noid='';
+             
              foreach (explode(',',$info['t_dname']) as $v=>$k){                 
                 //$noid.=(strpos($datas['t_dname'],$k)>-1)?'':str_replace('|','',$k).',';                  
                  if(strpos($datas['t_dname'],$k)>-1){                     
                  }else{
-                     
+                     $info['t_dename']=  str_replace($k, '', $info['t_dename']);
                      $this->delTaskContent($datas['id'],str_replace('|','',$k));
                  }
              }
+             $datas['t_dename']=$info['t_dename'];
          }
          //$noid = substr($noid,0,strlen($noid)-1);
         
 
          $datas['t_dsum']=$i;
          $datas['t_utime']=time();
+
          //unset($datas['__jvfnet__']);
          if ($this->task->save($datas)) {
              $this->log->content = '修改综合任务';
@@ -94,10 +98,29 @@ class TaskModel extends Model{
          }         
     }
     
+    public function delTask($id) {
+        $info = $this->getTask($id);
+        if($info){
+            $result = D('Taskcontent')->where(array('t_id'=>$id))->select();
+            foreach ($result as $v=>$k){
+                @unlink(C('UPLOAD_PATH').$k['t_furl']);
+            }
+            D('Taskcontent')->where(array('t_id'=>$id))->delete();
+            $this->task->where(array('id'=>$id))->delete();
+            $this->log->content = '删除综合任务部门文件。';
+            $this->log->addLog();
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+    
     public function delTaskContent($id,$did){        
        $result = $this->getTaskContent($id,$did);
+       $this->modifyTask($id, 'reduce',$did);//减少任务表中的部门和状态
        @unlink(C('UPLOAD_PATH').$result['t_furl']);
-        if (D('Taskcontent')->where(array('t_id'=>$id,'t_did'=>$did))->delete()) {
+        if (D('Taskcontent')->where(array('t_id'=>$id,'t_did'=>$did))->delete()) {            
             $this->log->content = '删除综合任务部门文件。';
             $this->log->addLog();
             return true;
@@ -119,20 +142,28 @@ class TaskModel extends Model{
     /*
      * 修改综合任务完成状态
      */
-    public function modifyTask($id,$active){
+    public function modifyTask($id,$active,$did){
         if($active=='increase'){//增加完成部门
             $info = $this->getTask($id);
-            if(strpos($info['t_dename'],'|'.session('my_info.department').'|')!==FALSE){
+            if(strpos($info['t_dename'],'|'.$did.'|')!==FALSE){
                 
             }else{
-                $info['t_dename'].='|'.session('my_info.department').'|,';
+                $info['t_dename'].='|'.$did.'|,';
                 $info['t_dename'] = substr($info['t_dename'],0,strlen($info['t_dename'])-1);
                 $info['t_desum']++;
                 $info['t_status']=($info['t_dsum']==$info['t_desum'])?1:0;
                 $this->task->save($info);
             }
         }  else {//减少完成部门
+            $info = $this->getTask($id);
             
+            if(strpos($info['t_dename'],'|'.$did.'|')!==FALSE){
+                $info['t_dename']= str_replace('|'.$did.'|,','',$info['t_dename']);                
+                $info['t_desum']--;
+                $info['t_desum'] = ($info['t_desum']<0)?0:$info['t_desum'];
+                $info['t_status']=0;
+                $this->task->save($info);
+            }
         }
     }
 }
