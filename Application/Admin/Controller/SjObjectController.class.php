@@ -72,9 +72,9 @@ class SjObjectController extends CommonController
 
         } else {
             $info['cstatus'] = 1;
-            $info = $this->getSelectOption($info, 'sjzq', 'pid=4');
-            $info = $this->getSelectOption($info, 'bsjdwfl', 'pid=5');
-            $info = $this->getSelectOption($info, 'yslb', 'pid=6');
+            $info = $this->getSelectOption($info, 'SJZQ', 'pid=4');
+            $info = $this->getSelectOption($info, 'BSJDWFL', 'pid=5');
+            $info = $this->getSelectOption($info, 'YSLB', 'pid=6');
             $this->assign('info', $info);
             $this->assign('title', '添加审计对象');
             $this->display('addObject');
@@ -109,9 +109,9 @@ class SjObjectController extends CommonController
             $sql = "select * from on_sjobject as SJ left join on_sjobjectdetail as DETAIL  ON DETAIL.pid=SJ.id  where SJ.id =" . (int)$_GET['id'];
             $sjobjectArray = $sjobject->query($sql);
             $info = $sjobjectArray[0];
-            $info = $this->getSelectOption($info, 'sjzq', 'pid=5');
-            $info = $this->getSelectOption($info, 'bsjdwfl', 'pid=4');
-            $info = $this->getSelectOption($info, 'yslb', 'pid=6');
+            $info = $this->getSelectOption($info, 'SJZQ', 'pid=5');
+            $info = $this->getSelectOption($info, 'BSJDWFL', 'pid=4');
+            $info = $this->getSelectOption($info, 'YSLB', 'pid=6');
             $this->assign('title', '添加审计对象');
             $this->assign("info", $info);
 
@@ -318,9 +318,9 @@ class SjObjectController extends CommonController
     private function getSelectOption($info, $fieldname, $condition)
     {
         $result = D('Config')->getConfigA($condition);
-        $info[$fieldname] = "";
+        $ori = $info[$fieldname];
         foreach ($result as $v) {
-            $selected = $v['dname'] == $info[$fieldname] ? ' selected="selected"' : "";
+            $selected = $v['dname'] == $ori ? ' selected="selected"' : "";
             $info[$fieldname] .= '<option value="' . $v['dname'] . '"' . $selected . '>' . $v['dname'] . '</option>';
         }
         return $info;

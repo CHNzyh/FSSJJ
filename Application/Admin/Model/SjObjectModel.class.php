@@ -29,6 +29,9 @@ class SjObjectModel extends Model
         $sj['FRDWQC'] = I('post.frdwqc');
         $sj['NSRBM'] = I('post.nsrbm');
         $sj['DWCLSJ'] = I('post.dwclsj');
+        $sj['BSJDWFL'] = I('post.BSJDWFL');
+        $sj['SJZQ'] = I('post.SJZQ');
+        $sj['YSLB'] = I('post.YSLB');
 
         //录入时间
         //被审计单位分类
@@ -135,6 +138,9 @@ class SjObjectModel extends Model
         $sj['FRDWQC'] = I('post.frdwqc');
         $sj['NSRBM'] = I('post.nsrbm');
         $sj['DWCLSJ'] = I('post.dwclsj');
+        $sj['BSJDWFL'] = I('post.BSJDWFL');
+        $sj['SJZQ'] = I('post.SJZQ');
+        $sj['YSLB'] = I('post.YSLB');
         $sj['modify_time'] = time();
         //录入时间
         //被审计单位分类
@@ -334,8 +340,8 @@ class SjObjectModel extends Model
                 $where = array_merge(array('did=' . $keys['department']), $where);
             }
         } else {
-            if (session('my_info.position') > 0) {
-                $where = array('did=' . session('my_info.position'));
+            if (session('my_info.department') > 0) {
+                $where = array('did=' . session('my_info.department'));
             }
         }
 
@@ -361,19 +367,33 @@ class SjObjectModel extends Model
         //当前年度
         $currentTime = date("Y");
         $M = M('Sjobject');
-        $sql = "SELECT DISTINCT * FROM on_sjobject DX WHERE ((" . $currentTime . "-2013+1)%DX.SJZQ=0) ";
-        for ($i = 0; $i < count($info); $i++) {
-            $sql .= " UNION ";
-            $sql .= " select * from on_sjobject DX where ((" . $currentTime . "-2013+1)%DX.SJZQ =" . $i . ") ";
-            for ($j = 1; $j <= (int)$info[$i]["dname"]; $j++) {
-                $sql .= " AND (select startTime from on_situation where FROM_UNIXTIME(startTime,'%Y') = ("
-                    . $currentTime . "-" . $j . ") limit 1) is NULL ";
+        if (session('my_info.department') > 0) {
+            $sql = "SELECT DISTINCT * FROM on_sjobject DX 
+                WHERE ((" . $currentTime . "-2013+1)%DX.SJZQ=0) 
+                AND  did = " . session('my_info.department') . " ";
+            for ($i = 0; $i < count($info); $i++) {
+                $sql .= " UNION ";
+                $sql .= " select * from on_sjobject DX where ((" . $currentTime . "-2013+1)%DX.SJZQ =" . $i . ") AND 
+                 did = ".session('my_info.department') ." ";
+                for ($j = 1; $j <= (int)$info[$i]["dname"]; $j++) {
+                    $sql .= " AND (select startTime from on_situation where FROM_UNIXTIME(startTime,'%Y') = ("
+                        . $currentTime . "-" . $j . ") limit 1) is NULL ";
+                }
+            }
+        } else {
+            $sql = "SELECT DISTINCT * FROM on_sjobject DX WHERE ((" . $currentTime . "-2013+1)%DX.SJZQ=0)  ";
+            for ($i = 0; $i < count($info); $i++) {
+                $sql .= " UNION ";
+                $sql .= " select * from on_sjobject DX where ((" . $currentTime . "-2013+1)%DX.SJZQ =" . $i . ") ";
+                for ($j = 1; $j <= (int)$info[$i]["dname"]; $j++) {
+                    $sql .= " AND (select startTime from on_situation where FROM_UNIXTIME(startTime,'%Y') = ("
+                        . $currentTime . "-" . $j . ") limit 1) is NULL ";
+                }
             }
         }
         $list = $M->query($sql);
         C('TOKEN_ON', false);
         $data['list'] = $list;
-
         return $data;
 
     }
