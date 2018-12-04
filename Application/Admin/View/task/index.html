@@ -83,7 +83,7 @@
                                 <td>{$vo[t_desum]/$vo[t_dsum]*100|round}%&nbsp;</td>
                                 <td>{$vo.t_stime|date='Y-m-d',###}</td>
                                 <td>{$vo.t_etime|date='Y-m-d',###}</td>                                
-                                <td><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_uid'])">[ <a href="{:U('/Task/editTask/',array('id'=>$vo['id']))}">编辑</a> ] [ <a link="{:U('/Task/delTask/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.s_name}" class="del">删除 </a> ]<else /><a href="{:U('/Task/uploadTask/',array('id'=>$vo['id']))}"  name="{$vo.s_name}">完成任务</a></if></td>
+                                <td><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_uid'])">[ <a href="{:U('/Task/editTask/',array('id'=>$vo['id']))}">编辑</a> ] [ <a link="{:U('/Task/delTask/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.t_name}" class="del">删除 </a> ]<else /><a href="{:U('/Task/uploadTask/',array('id'=>$vo['id']))}"  name="{$vo.s_name}">完成任务</a></if></td>
                             </tr>
                         </volist>
 						<tr><td colspan="10" align="right" class="page">{$page}</td></td></tr>

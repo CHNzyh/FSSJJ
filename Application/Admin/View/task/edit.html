@@ -54,13 +54,14 @@
                           </tr>
                             <tr>
                                 <th>备注：</th>
-                                <td><textarea name="t_content" rows="6" cols="70">{$info.t_content}</textarea><input type="submit" /></td>
+                                <td><textarea name="t_content" rows="6" cols="70">{$info.t_content}</textarea></td>
                             </tr>
                         </table>						
                         <input type="hidden" name="id" value="{$info.id}"/>
                     </form>
                     <div class="commonBtnArea">
                         <button class="btn submit">提交</button>
+						<input type="button" value="返回" class="btn" onclick="window.history.back();" />  
                     </div>
                 </div>
             </div>
