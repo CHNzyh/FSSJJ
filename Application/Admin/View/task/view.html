@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$title}-综合任务管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='综合任务管理 > '.$title ;
+        </php>
+    <include file="Common:intoHead" />
+	<js href="--PUBLIC--/Js/laydate.js"/>
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr clearfix">
+                        <div class="current">{$title}</div>
+                    </div>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                          <tr>
+                            <th width="120">任务名称：</th>
+                            <td>{$info.t_name}</td>
+                          </tr>
+                          <tr>
+                            <th>任务科室：</th>
+                            <td>
+							
+							<volist name="result" id="vo" key="k">
+							{$vo.dname} 上传文件 <a href="__URL__/getfile?id={$vo.id}&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"])</php>" target="_blank">[下载]</a><br />
+							
+							</volist>
+							</td>
+                          </tr>
+                         
+                          <tr>
+                            <th>文件目录：</th>
+                            <td>
+                                <input type="text" name="t_url" disabled="disabled" id="t_url" value="{$info.t_url}" class="input" size="40" />
+                              &nbsp;</td>
+                          </tr>
+                          <tr>
+                            <th>有效开始时间：</th>
+                            <td>{$info.t_stime|date='Y-m-d',###}</td>
+                          </tr>
+                          <tr>
+                            <th>有效结束时间：</th>
+                            <td>{$info.t_etime|date='Y-m-d',###}</td>
+                          </tr>
+                            <tr>
+                                <th>备注：</th>
+                                <td>{$info.t_content}</td>
+                            </tr>
+                        </table>						
+                    <div class="commonBtnArea">
+						<input type="button" value="返回" class="btn" onclick="window.history.back();" />  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+
+</body>
+</html>

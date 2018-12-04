@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>综合任务管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='综合任务管理 > 已完成综合任务列表';
+        </php>
+        <include file="Common:intoHead" />
+    <js href="--PUBLIC--/Js/laydate.js"/>        
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr clearfix">                        
+						<div class="current">
+                            <eq name="ACTION_NAME" value="complete">已完成综合任务列表</eq>
+                            <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                        </div>
+                       <div class="search">
+                            <form action="{:U('complete')}" method='get'>
+                            部门：
+                            <if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position eq 1)">
+                            <select name="department" id="department" style="width:150px" >
+                               {$dp.pidOption}
+                            </select>                            
+                            <else />
+                            
+                            {$dp[$did]['dname']}
+                            <input type="hidden" value="{$Think.session.my_info.department}" name="department" />
+                            </if>
+                            
+搜索字段：
+							<select name="field">
+              					<option value="t_name" <eq name="keys.field" value="t_name">selected="selected"</eq>>任务名称</option>
+								<option value="t_content" <eq name="keys.field" value="t_content">selected="selected"</eq>>备注内容</option>
+                                
+                                    
+                              </select>
+                            &nbsp;&nbsp;关键字：
+                                <input type="text" value="{$keys.keyword}" style="width:120px" name="keyword" class="input" placeholder="搜索对应字段关键字" />
+                                &nbsp;&nbsp;<button class="btn">筛选</button>
+                            </form>
+                      </div>
+                    </div>
+					
+					<eq name="ACTION_NAME" value="search">
+                       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+
+                       <tr><Td>
+                        搜索的关键词<span class="keyword">{$keys.keyword}</span>找到<span class="keyword">{$keys.count}</span>条
+                       </td>
+                   </tr>
+                       </table>
+                        
+                    </eq>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td>序号</td>
+                                <td>任务名称</td>
+                                <td>开始时间 </td>
+                                <td>结束时间</td>
+                                <td width="150">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo" key="k">
+                            <tr align="center">
+                            	<td>{$k}</td>
+                                <td align="left" class="tree" style="cursor: pointer;">{$vo.t_name}</td>
+                                <td>{$vo.t_stime|date='Y-m-d',###}</td>
+                                <td>{$vo.t_etime|date='Y-m-d',###}</td>                                
+                                <td><a href="{:U('/Task/viewTask/',array('id'=>$vo['id']))}"  name="{$vo.s_name}">查看任务</a></td>
+                            </tr>
+                        </volist>
+						<tr><td colspan="10" align="right" class="page">{$page}</td></td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        
+    </body>
+</html>
