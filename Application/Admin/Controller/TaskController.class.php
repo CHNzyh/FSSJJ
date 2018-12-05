@@ -32,10 +32,13 @@ class TaskController extends CommonController{
          if(session('my_info.aid')>10 && session('my_info.position')>1){
           $where = array_merge(array('a.t_did ='.session('my_info.department')),$where);
         }
+        $dp = D('Department')->where('id in ('.str_replace('|', '', $info['t_dname']).') and id not in('.  str_replace('|','',str_replace('||', ',', $info['t_dename'])).')')->field('id,dname')->select();
         $result = D('Taskcontent')->alias('a')->join('__DEPARTMENT__ b ON a.t_did= b.id')->join('__ADMIN__ c ON a.t_uid= c.aid')->field('a.*,b.dname,c.nickname')->where($where)->select();
         
+        $this->assign('dp',$dp);
         $this->assign('info',$info);
         $this->assign('result',$result);
+        $this->assign('title','查看综合任务');
         $this->display('view');
         
     }
@@ -51,10 +54,10 @@ class TaskController extends CommonController{
              foreach($dp as $v=>$k){
                 $dp[$v][ck]=1;                               
             }
-            
+            $info = $this->getSelectOption($info, 't_class', 'pid=24');
             $info['t_url']='/'.C('TASK_FILEPATH').'/'.date('Y-m-d',  time()).'/';
-            $info['s_stime'] = time();
-            $info['s_etime'] = strtotime("+1 month");
+            $info['t_stime'] = time();
+            $info['t_etime'] = strtotime("+1 month");
            
             $this->assign('info',$info);
             $this->assign('dp',$dp);
@@ -84,8 +87,10 @@ class TaskController extends CommonController{
                    $dp[$v][ck]=1;
                }                
             }
-           
+            
+           $info = $this->getSelectOption($info, 't_class', 'pid=24');
            // $info['url']='/'.C('SHARE_FILEPATH').'/'.$dp['dename'].'/'.date('Y-m-d',  time()).'/';
+          
             $this->assign('info',$info);
             $this->assign('dp',$dp);
             $this->assign('title','修改综合任务');
@@ -130,14 +135,17 @@ class TaskController extends CommonController{
     public function search($active='index'){
        
         $M = M('Task');
+        
         $keys = I('get.');
+        
         $where = array('a.id>0');
         if(session('my_info.position')==3)
             $keys['user'] = session('my_info.aid');
         if(!empty($keys)){	        
 
                 $where = ($keys['keyword']!='')?array_merge(array('a.'.$keys[field]=>array('LIKE','%'.$keys['keyword'].'%')),$where):$where;
-                $where = ($keys['department']>0)?array_merge(array('a.t_dname like \'%|'.$keys['department'].'|%\''),$where):$where;       
+                $where = ($keys['department']>0)?array_merge(array('a.t_dname like \'%|'.$keys['department'].'|%\''),$where):$where;
+                $where = ($keys['t_class']!='全部任务类型'&&$keys['t_class']!='')?array_merge(array('a.t_class '=>$keys['t_class']),$where):$where;
 //                $where = ($keys['t_stime']!='')?array_merge(array('a.t_stime>='.strtotime($keys['t_stime'])),$where):$where;
 //                $where = ($keys['t_etime']!='')?array_merge(array('a.t_etime<='.strtotime($keys['t_etime'])),$where):$where;
         }
@@ -166,7 +174,7 @@ class TaskController extends CommonController{
         $pConf = page($count,C('PAGE_SIZE')); 
         $list=$M->alias('a')->where($where)->order('a.id desc')->limit($pConf['first'], $pConf['list'])->select();
         $this->list=$list;
-                
+       // echo $M->_sql();
         $keys['count']=$count;
         $this->keys=$keys;
         $this->page = $pConf['show'];
@@ -174,20 +182,16 @@ class TaskController extends CommonController{
         C('TOKEN_ON',false);
 
         if(session('my_info.aid')==10||session('my_info.position')==1){//AID=10为超级管理员
-                if($keys['department']>0){
-                        $user = $this->getAdmin(array('department='.$keys['department']));
-                        $condition = array('pid'=>$keys['department']);
-                }
-                
-                $dp = D('Department')->getDepartmentarray($condition,'全部部门');
-                
-        }else{
-            
-                $dp = D('Department')->getDepartment();
-
-                $user = $this->getAdmin(array('department='.session('my_info.department')));
+            if($keys['department']>0){
+                $user = $this->getAdmin(array('department='.$keys['department']));
+                $condition = array('pid'=>$keys['department']);
+            }                
+            $dp = D('Department')->getDepartmentarray($condition,'全部部门');                
+        }else{            
+            $dp = D('Department')->getDepartment();
+            $user = $this->getAdmin(array('department='.session('my_info.department')));
         }
-
+        $keys = $this->getSelectOption($keys, 't_class', 'pid=24');
 
         $this->list=$list;
         $this->assign('did',session('my_info.department'));
@@ -265,5 +269,18 @@ class TaskController extends CommonController{
             }else{
                     echo '<script language="javascript">alert("无法下载");window.opener=null;window.close();</script>';
             }
+    }
+    
+    private function getSelectOption($info,$fieldname,$condition){
+        $result = D('Config')->getConfigA($condition);
+        //$info[$fieldname] = "";
+        $k='';
+        $k = '<option value="全部任务类型">全部任务类型</option>';    
+        foreach ($result as $v) {
+            $selected = $v['dname'] == $info[$fieldname] ? ' selected="selected"' : "";
+            $k .= '<option value="' . $v['dname'] . '"' . $selected . '>' . $v['dname'] . '</option>';
+        }
+        $info[$fieldname] = $k;
+        return $info;
     }
 }

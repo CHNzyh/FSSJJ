@@ -75,8 +75,7 @@ class SharedataController extends CommonController{
         $where = array('a.id>0');
         if(session('my_info.position')==3)
             $keys['user'] = session('my_info.aid');
-        if(!empty($keys)){	        
-
+        if(!empty($keys)){	
                 $where = ($keys['keyword']!='')?array_merge(array('a.'.$keys[field]=>array('LIKE','%'.$keys['keyword'].'%')),$where):$where;
                 $where = ($keys['department']>0)?array_merge(array('a.s_did='.$keys['department']),$where):$where;
                 $where = ($keys['user']>0)?array_merge(array('a.s_uid='.$keys['user']),$where):$where;
@@ -87,7 +86,6 @@ class SharedataController extends CommonController{
         if(session('my_info.aid')>10 && session('my_info.position')>1)
           $where['a.s_did'] = session('my_info.department');
         
-            
         $count = $M->alias('a')->join('__DEPARTMENT__ b ON a.s_did= b.id')->join('__ADMIN__ c ON a.s_uid= c.aid')->where($where)->count();
         $pConf = page($count,C('PAGE_SIZE')); 
         $list=$M->alias('a')->join('__DEPARTMENT__ b ON a.s_did= b.id')->join('__ADMIN__ c ON a.s_uid= c.aid')->field('a.*,b.dname,c.nickname')->where($where)->order('a.id desc')->limit($pConf['first'], $pConf['list'])->select();
@@ -189,6 +187,10 @@ class SharedataController extends CommonController{
                     $log = D('log');
                     $log->content='下载共享文件：'.$result['s_name'];
                     $log->addLog();
+                    $log = D('sharedatalog');
+                    $log->content='下载共享文件：'.$result['s_name'];
+                    $log->addLog($id);
+                    die();
                 }else{
                     echo '<script language="javascript">alert("无法下载");window.opener=null;window.close();</script>';
                 }                
