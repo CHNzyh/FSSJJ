@@ -34,18 +34,14 @@
                             {$dp[$did]['dname']}
                             <input type="hidden" value="{$Think.session.my_info.department}" name="department" />
                             </if>
-                            <!--
-							
-                            开始时间：
-                            <input class="laydate-icon" id="t_stime" style="width:80px; margin-right:10px;" name="t_stime" type="text" size="40" value="{$keys.t_stime}" />
-                            结束时间：
-                            <input class="laydate-icon" id="t_etime" style="width:80px;" name="t_etime" type="text" size="40" value="{$keys.t_etime}" />
-							-->
-搜索字段：
+							任务类型：
+							<select name="t_class" id="t_class" style="width:150px" >
+                               {$keys.t_class}
+                            </select>   
+							搜索字段：
 							<select name="field">
               					<option value="t_name" <eq name="keys.field" value="t_name">selected="selected"</eq>>任务名称</option>
 								<option value="t_content" <eq name="keys.field" value="t_content">selected="selected"</eq>>备注内容</option>
-                                
                                     
                               </select>
                             &nbsp;&nbsp;关键字：
@@ -71,6 +67,7 @@
                                 <td>序号</td>
                                 <td>任务名称</td>
                                 <td>进度</td>
+                                <td>任务类型</td>
                                 <td>开始时间 </td>
                                 <td>结束时间</td>
                                 <td width="150">操作</td>
@@ -79,14 +76,15 @@
                         <volist name="list" id="vo" key="k">
                             <tr align="center">
                             	<td>{$k}</td>
-                                <td align="left" class="tree" style="cursor: pointer;">{$vo.t_name}</td>
+                                <td align="left" class="tree" style="cursor: pointer;"><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_uid'])"><a href="{:U('/Task/viewTask/',array('id'=>$vo['id']))}" title="{$vo.t_name}">{$vo.t_name}</a><else /> {$vo.t_name}</if></td>
                                 <td>{$vo[t_desum]/$vo[t_dsum]*100|round}%&nbsp;</td>
+                                <td><a href="?t_class={$vo['t_class']}">{$vo[t_class]}</a>&nbsp;</td>
                                 <td>{$vo.t_stime|date='Y-m-d',###}</td>
                                 <td>{$vo.t_etime|date='Y-m-d',###}</td>                                
                                 <td><if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.aid eq $vo['s_uid'])">[ <a href="{:U('/Task/editTask/',array('id'=>$vo['id']))}">编辑</a> ] [ <a link="{:U('/Task/delTask/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.t_name}" class="del">删除 </a> ]<else /><a href="{:U('/Task/uploadTask/',array('id'=>$vo['id']))}"  name="{$vo.s_name}">完成任务</a></if></td>
                             </tr>
                         </volist>
-						<tr><td colspan="10" align="right" class="page">{$page}</td></td></tr>
+						<tr><td colspan="11" align="right" class="page">{$page}</td></td></tr>
                     </table>
                 </div>
             </div>

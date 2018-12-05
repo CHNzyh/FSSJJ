@@ -26,13 +26,15 @@
                             <td><input name="t_name" id="t_name" type="text" class="input" size="40" value="{$info.t_name}" /></td>
                           </tr>
                           <tr>
+                            <th>任务类型：</th>
+                            <td><select name="t_class" style="min-width: 80px;">{$info.t_class}</select>&nbsp;</td>
+                          </tr>
+                          <tr>
                             <th>任务科室：</th>
                             <td>
 							
 							<volist name="dp" id="vo" key="k">
-							<input name="t_dname[]" type="checkbox" id="t_dname_{$vo.id}" value="{$vo.id}" <eq name="vo['ck']" value="1">checked="checked"</eq> />&nbsp;<label for="t_dname_{$vo.id}" style="cursor:pointer">{$vo.dname}</label>&nbsp;&nbsp;
-							</volist>
-							</td>
+							<input name="t_dname[]" type="checkbox" id="t_dname_{$vo.id}" value="{$vo.id}" <eq name="vo['ck']" value="1">checked="checked"</eq> />&nbsp;<label for="t_dname_{$vo.id}" style="cursor:pointer">{$vo.dname}</label>&nbsp;&nbsp;							</volist>							</td>
                           </tr>
                           <tr>
                             <th>上传人员：</th>

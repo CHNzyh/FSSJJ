@@ -25,16 +25,25 @@
                             <td>{$info.t_name}</td>
                           </tr>
                           <tr>
-                            <th>任务科室：</th>
+                            <th>完成任务科室：</th>
                             <td>
 							
 							<volist name="result" id="vo" key="k">
-							{$vo.dname} 上传文件 <a href="__URL__/getfile?id={$vo.id}&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"])</php>" target="_blank">[下载]</a><br />
+							{$vo.dname}-{$vo.nickname} 于 [{$vo.t_time|date='Y-m-d H:i',###}] 上传文件 <a href="__URL__/getfile?id={$vo.id}&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"])</php>" target="_blank">[下载]</a><br />
 							
 							</volist>
 							</td>
                           </tr>
-                         
+						  <if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position eq 1) OR ($Think.session.my_info.aid eq $info['t_uid'])">
+                          <tr>
+                            <th>未完成任务科室：</th>
+                            <td>							
+							<volist name="dp" id="vo" key="k">
+							<b>{$vo.dname}</b> <br />							
+							</volist>
+							</td>
+                          </tr>
+						  </if>
                           <tr>
                             <th>文件目录：</th>
                             <td>
