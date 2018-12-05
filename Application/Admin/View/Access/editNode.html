@@ -25,13 +25,15 @@
                         <tr>
                             <th width="120">名称：</th>
                             <td><input name="name" type="text" class="input" size="40" value="{$info.name}"/>
-                                英文，为MODEL_NAME的时候首字母大写
-                            </td>
+                                英文，为MODEL_NAME的时候首字母大写                            </td>
                         </tr>
                         <tr>
                             <th>显示名：</th>
-                            <td><input class="input" name="title" type="text" size="40" value="{$info.title}"/> 中英文均可
-                            </td>
+                            <td><input class="input" name="title" type="text" size="40" value="{$info.title}"/> 中英文均可                            </td>
+                        </tr>
+                        <tr>
+                          <th>&nbsp;</th>
+                          <td><input class="input" name="ctrlname" type="text" size="40" value="{$info.ctrlname}"/></td>
                         </tr>
                         <tr>
                             <th>父级节点：</th>
@@ -45,8 +47,7 @@
                                 ><label for="menu1" style="cursor:pointer" title="显示">显示</label>&nbsp;
                                 <input type="radio" name="menu" id="menu2" value="0"
                                 <if condition="$info.menu eq 0"> checked</if>
-                                ><label for="menu2" style="cursor:pointer" title="不显示">不显示</label>
-                            </td>
+                                ><label for="menu2" style="cursor:pointer" title="不显示">不显示</label>                            </td>
                         </tr>
                         <tr>
                             <th>状态：</th>
@@ -58,14 +59,12 @@
                                     <option value="1">启用</option>
                                     <option value="0" selected>禁用</option>
                                 </if>
-                            </select> 如果禁用那么只有超级管理员才可以访问，其他用户都无权访问
-                            </td>
+                            </select> 如果禁用那么只有超级管理员才可以访问，其他用户都无权访问                            </td>
                         </tr>
                         <tr>
                             <th>类型：</th>
                             <td><select name="level" style="min-width: 80px;">{$info.levelOption}</select>
-                                项目（GROUP_NAME; 模块(MODEL_NAME); 操作（ACTION_NAME）
-                            </td>
+                                项目（GROUP_NAME; 模块(MODEL_NAME); 操作（ACTION_NAME）                            </td>
                         </tr>
                         <tr>
                             <th>显示排序：</th>
