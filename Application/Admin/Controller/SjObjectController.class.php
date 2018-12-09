@@ -13,8 +13,8 @@ class SjObjectController extends CommonController
         $data = D('SjObject')->searchSjobject();
 
 //        $where = array('a.id>0');
-        $keys =$data['keys'];
-        if(session('my_info.position')==3)
+        $keys = $data['keys'];
+        if (session('my_info.position') == 3)
             $keys['user'] = session('my_info.aid');
 //        if(!empty($keys)){
 //            $where = ($keys['keyword']!='')?array_merge(array('a.'.$keys[field]=>array('LIKE','%'.$keys['keyword'].'%')),$where):$where;
@@ -28,26 +28,26 @@ class SjObjectController extends CommonController
 //            $where['a.s_did'] = session('my_info.department');
 
 
-        if(session('my_info.aid')==10||session('my_info.position')==1){//AID=10为超级管理员
-            if($keys['department']>0){
-                $user = $this->getAdminForSJObject(array('department='.$keys['department']));
-                $condition = array('pid'=>$keys['department']);
+        if (session('my_info.aid') == 10 || session('my_info.position') == 1) {//AID=10为超级管理员
+            if ($keys['department'] > 0) {
+                $user = $this->getAdminForSJObject(array('department=' . $keys['department']));
+                $condition = array('pid' => $keys['department']);
             }
 
-            $dp = D('Department')->getDepartmentarray($condition,'全部部门');
+            $dp = D('Department')->getDepartmentarray($condition, '全部部门');
 
-        }else{
+        } else {
 
             $dp = D('Department')->getDepartment();
 
-            $user = $this->getAdminForSJObject(array('department='.session('my_info.department')));
+            $user = $this->getAdminForSJObject(array('department=' . session('my_info.department')));
         }
 
         C('TOKEN_ON', false);
-        $this->assign('did',session('my_info.department'));
-        $this->assign('dp',$dp);
-        $this->assign('user',$user);
-        $this->assign('keys',$keys);
+        $this->assign('did', session('my_info.department'));
+        $this->assign('dp', $dp);
+        $this->assign('user', $user);
+        $this->assign('keys', $keys);
         $this->assign('list', $data['list']);
         $this->assign('page', $data['page']);
 
@@ -59,7 +59,8 @@ class SjObjectController extends CommonController
         $this->index();
     }
 
-    public function searchPastPlan(){
+    public function searchPastPlan()
+    {
 
     }
 
@@ -86,9 +87,27 @@ class SjObjectController extends CommonController
     }
 
     /**
+     * 重置审计计划
+     * 实现原理为删除审计计划表和历年审计计划表中当年的部分
+     * 然后重新走生成流程
+     */
+    public function resetPlan()
+    {
+        $current = M('current_plan');
+        $past = M('past_plan');
+
+        $current->where("id like '%%'")->delete();
+        $past->where("sj_year = " . date("Y"))->delete();
+
+        $this->buildSJPlan();
+    }
+
+
+    /**
      * 生成审计计划列表
      */
-    public function buildSJPlan(){
+    public function buildSJPlan()
+    {
         $info['cstatus'] = 1;
         $info = D('Config')->getConfigA('pid = 5');
         $data = D('SjObject')->buildSJPlan($info);
@@ -103,7 +122,8 @@ class SjObjectController extends CommonController
     /**
      * 生成审计计划列表
      */
-    public function buildSJPlanByCondition(){
+    public function buildSJPlanByCondition()
+    {
         $info['cstatus'] = 1;
         $info = D('Config')->getConfigA('pid = 5');
         $data = D('SjObject')->buildSJPlanByCondition($info);
@@ -113,6 +133,30 @@ class SjObjectController extends CommonController
         $this->assign('keys', $data['keys']);
         $this->assign('page', $data['page']);
         $this->display('sjPlan');
+    }
+
+    /**
+     * 查看审计对象   适用于在审计计划界面跳转过来的
+     */
+    public function watchSjObject()
+    {
+        if (IS_POST) {
+            // $this->checkToken();
+            header('Content-Type:application/json; charset=utf-8');
+            echo json_encode(D("SjObject")->editSjObject());
+        } else {
+            $sjobject = M("Sjobject");
+            $sql = "select * from on_sjobject as SJ left join on_sjobjectdetail as DETAIL  ON DETAIL.pid=SJ.id  where SJ.id =" . (int)$_GET['id'];
+            $sjobjectArray = $sjobject->query($sql);
+            $info = $sjobjectArray[0];
+            $info = $this->getSelectOption($info, 'SJZQ', 'pid=5');
+            $info = $this->getSelectOption($info, 'BSJDWFL', 'pid=4');
+            $info = $this->getSelectOption($info, 'YSLB', 'pid=6');
+            $this->assign('title', '添加审计对象');
+            $this->assign("info", $info);
+
+            $this->display('editForPlan');
+        }
     }
 
 
@@ -329,8 +373,8 @@ class SjObjectController extends CommonController
             echo json_encode(D("SjObject")->addSituation((int)$_GET['id']));
         } else {
             $this->assign('id', (int)$_GET['id']);
-            $info['url']='/'.C('SITUATION_FILEPATH').'/'.date('Y-m-d',  time()).'/';
-            $this->assign('info',$info);
+            $info['url'] = '/' . C('SITUATION_FILEPATH') . '/' . date('Y-m-d', time()) . '/';
+            $this->assign('info', $info);
             $this->display('addSituation');
         }
     }
@@ -350,24 +394,25 @@ class SjObjectController extends CommonController
     /*
    加密获取下载文件
    */
-    public function getfile($id,$url)
+    public function getfile($id, $url)
     {
-            $result = D('Situation')->where('id='.$id)->field('uploadUrl')->find();
-            $FileAddress='upload'.$result['uploadUrl'];
-            $DownloadName=str_replace('/','',strrchr($FileAddress,'/'));
-            if(file_exists($FileAddress) && $file=fopen($FileAddress,"r")) //首先要判断文件是否存在，如果文件跟本不存在的话，后边的代码也是白费。
-            {
-                Header("content-type:application/octet-stream"); //声明文件类型，这里是为了让客户端下载它，而不是打开它，所以声明为未知二进制文件。否则客户端会根据其文件类型在线打开它。
-                Header("content-Length:".filesize($FileAddress)); //声明文件的大小，告诉客户端这个文件的大小，否则客户端下载的时候看不到进度。
-                Header("content-disposition:attachment;filename=".$DownloadName); //声明文件名，这里就是告诉客户端它要下载的文件的名字，否则名字就会是你php文件的名字。
-                echo fread($file,filesize($FileAddress)); //这里就是将加载的文件echo出来，因此这个php文件不能出现其他任何的文字，就是说这里若是出现了任何其他的输出的话都会输出到客户端下载的文件里。
-                fclose($file); //最后关闭句柄。
-            }else{
-                echo '<script language="javascript">alert("无法下载");window.opener=null;window.close();</script>';
-            }
+        $result = D('Situation')->where('id=' . $id)->field('uploadUrl')->find();
+        $FileAddress = 'upload' . $result['uploadUrl'];
+        $DownloadName = str_replace('/', '', strrchr($FileAddress, '/'));
+        if (file_exists($FileAddress) && $file = fopen($FileAddress, "r")) //首先要判断文件是否存在，如果文件跟本不存在的话，后边的代码也是白费。
+        {
+            Header("content-type:application/octet-stream"); //声明文件类型，这里是为了让客户端下载它，而不是打开它，所以声明为未知二进制文件。否则客户端会根据其文件类型在线打开它。
+            Header("content-Length:" . filesize($FileAddress)); //声明文件的大小，告诉客户端这个文件的大小，否则客户端下载的时候看不到进度。
+            Header("content-disposition:attachment;filename=" . $DownloadName); //声明文件名，这里就是告诉客户端它要下载的文件的名字，否则名字就会是你php文件的名字。
+            echo fread($file, filesize($FileAddress)); //这里就是将加载的文件echo出来，因此这个php文件不能出现其他任何的文字，就是说这里若是出现了任何其他的输出的话都会输出到客户端下载的文件里。
+            fclose($file); //最后关闭句柄。
+        } else {
+            echo '<script language="javascript">alert("无法下载");window.opener=null;window.close();</script>';
+        }
     }
 
-    public function getSsarchKV(){
+    public function getSsarchKV()
+    {
     }
 
 }

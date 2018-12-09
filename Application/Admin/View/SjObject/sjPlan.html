@@ -18,14 +18,11 @@
         <include file="Common:left"/>
         <div id="Right">
             <div class="Item hr clearfix">
+
                 <div class="Item hr clearfix">
                     <div class="current">审计计划列表</div>
                 </div>
 
-                <div class="current">
-                    <eq name="ACTION_NAME" value="sjPlan">审计计划列表</eq>
-                    <eq name="ACTION_NAME" value="search">搜索结果</eq>
-                </div>
                 <div class="search">
                     <form action="{:U('buildSJPlanByCondition')}" method='post'>
                         搜索字段：
@@ -51,18 +48,11 @@
             </eq>
 
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
-                <!--<thead>-->
-                <!--<tr>-->
-                    <!--<td>ID</td>-->
-                    <!--<td>名称</td>-->
-                    <!--<td width="150">操作</td>-->
-                <!--</tr>-->
-                <!--</thead>-->
                 {$pg}
-                <tr>
-                    <td colspan="9" align="right" class="page">{$page}</td>
-                    </td></tr>
             </table>
+            <div class="commonBtnArea">
+                <a class="btn" href="__URL__/resetPlan">重新生成</a>
+            </div>
         </div>
     </div>
 </div>

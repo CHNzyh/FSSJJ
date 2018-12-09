@@ -514,17 +514,27 @@ class SjObjectModel extends Model
             $pgs = '';
 //            $pastBean .= "%" . $z['dname'] . "%,";
             foreach ($data[$z['dname']] as $v => $k) {
+                if($hasCreated==false){
+                    $id = $k['id'];
+                }else{
+                    $id = $k['sj_id'];
+                }
+
 
                 if (($i / 6) == intval($i / 6)) {
-                    if ($i > 6) {
+                    if ($i >= 6) {
+                        $i = 0;
                         $pgs .= '</tr>';
                     }
-                    $pgs .= '<tr><td>' . $k['name'] . '</td>';
+                    $pgs .= '<tr><td><a href="'.U('watchSjObject',array('id'=>$id)).'">' . $k['name'] . '</a></td>';
                 } else {
-                    $pgs .= '<td>' . $k['name'] . '</td>';
+                    $pgs .= '<td><a href="'.U('watchSjObject',array('id'=>$id)).'">' . $k['name'] . '</a></td>';
                 }
                 $pastBean .= "" . $k['id'] . ",";
                 $i++;
+            }
+            for($k=1;$k<=6-$i;$k++){
+                $pgs .= '<td>&nbsp;</td>';
             }
             $pgg .= $pgs . '</tr>';
         }
