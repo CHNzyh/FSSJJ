@@ -21,8 +21,16 @@ class SjObjectModel extends Model
      */
     public function addSjObject()
     {
+
+        $where['FRDWDM'] = I('post.frdwdm');
+
+        if (M('Sjobject')->where($where)->count() != 0) {
+            return array('status' => 0, 'info' => '法人单位代码重复，请重新填写');
+        }
+
         $SJOBJECT = M("Sjobject");
         $sj['did'] = session('my_info.department');
+        $sj['aid'] = session('my_info.aid');
         $sj['modify_time'] = time();
         $sj['FRDWDM'] = I('post.frdwdm');
         $sj['name'] = I('post.name');
@@ -129,9 +137,16 @@ class SjObjectModel extends Model
      */
     public function editSjObject()
     {
-        $SJOBJECT = M("Sjobject");
         $id = I('post.id');
+
+        if (M('Sjobject')->where("FRDWDM = '" . I('post.frdwdm') . "' AND id!='" . $id . "'")->count() != 0) {
+            return array('status' => 0, 'info' => '法人单位代码重复，请重新填写');
+        }
+
+        $SJOBJECT = M("Sjobject");
         $sj['did'] = session('my_info.department');
+        $sj['aid'] = session('my_info.aid');
+
         $sj['id'] = $id;
         $sj['name'] = I('post.name');
         $sj['FRDWDM'] = I('post.frdwdm');
@@ -336,12 +351,22 @@ class SjObjectModel extends Model
             $where = array($keys[field] => array('LIKE', '%' . $keys['keyword'] . '%'));
 
             $did = $keys['department'];
+
             if (!empty($did)) {
                 $where = array_merge(array('did=' . $keys['department']), $where);
             }
+
+            $aid = $keys['user'];
+            if (!empty($aid)) {
+                $where = array_merge(array('aid=' . $keys['user']), $where);
+            }
         } else {
-            if (session('my_info.department') > 0) {
+            /**
+             * 如果不是超级管理员  那么进入时要筛选权限内的信息出来
+             */
+            if (session('my_info.aid') != 10 && session('my_info.department') > 0) {
                 $where = array('did=' . session('my_info.department'));
+                $where = array_merge(array('aid=' . session('my_info.aid')), $where);
             }
         }
 
@@ -359,28 +384,99 @@ class SjObjectModel extends Model
     }
 
     /**
+     * 生成过往年份的审计计划报表
+     * @param $info
+     */
+    public function buildSJPlanByCondition($info, $data = array())
+    {
+        if (IS_POST) {
+            $keys = I('post.');
+            //如果是年份的话  那么就去读取历年表
+            if ($keys['field'] == "year") {
+                $M = M("past_plan");
+                $valus = $keys['keyword'];
+                $plan = $M->query("select * from on_past_plan where sj_year = '" . $valus . "'");
+                $str = $plan[0]['sj_id_bean'];
+                $idList = split(",", $str);
+                $sql = "select * from on_sjobject where id in (";
+                foreach ($idList as $v) {
+                    if (!empty($v)) {
+                        $sql .= $v . ",";
+                    }
+                }
+                $sql = substr($sql, 0, strlen($sql) - 1);
+                $sql.=")";
+                $list = $M->query($sql);
+            } else {
+                //如果是其他字段搜索  就需要复合查询
+                $M = M("past_plan");
+                $valus = $keys['keyword'];
+                $plan = $M->query("select * from on_past_plan where sj_year = '" . date("Y") . "'");
+                $str = $plan[0]['sj_id_bean'];
+                $idList = split(",", $str);
+                $sql = "select * from on_sjobject where id in (";
+                foreach ($idList as $v) {
+                    if (!empty($v)) {
+                        $sql .= $v . ",";
+                    }
+                }
+                $sql = substr($sql, 0, strlen($sql) - 1);
+                $sql.=")";
+                $sql.= " AND ".$keys['field']." like '%".$valus."%' ";
+                $list = $M->query($sql);
+            }
+            print_r($sql);
+
+            C('TOKEN_ON', false);
+            //4.这里把审计计划列表按照周期分组并拼成html
+            foreach ($list as $v => $k) {
+                $data[$k['SJZQ']][] = $k;
+            }
+            foreach ($info as $j => $z) {
+                $i = 0;
+                $pgg .= '<tr><td colspan="6">' . $z['dname'] . '年一审</td></tr>';
+                $pgs = '';
+//            $pastBean .= "%" . $z['dname'] . "%,";
+                foreach ($data[$z['dname']] as $v => $k) {
+
+                    if (($i / 6) == intval($i / 6)) {
+                        if ($i > 6) {
+                            $pgs .= '</tr>';
+                        }
+                        $pgs .= '<tr><td>' . $k['name'] . '</td>';
+                    } else {
+                        $pgs .= '<td>' . $k['name'] . '</td>';
+                    }
+                    $i++;
+                }
+                $pgg .= $pgs . '</tr>';
+            }
+            $data['keys'] = $keys;
+            $data['list'] = $list;
+            $data['pg'] = $pgg;
+            return $data;
+        }
+    }
+
+    /**
      * 生成审计计划报表
      * $info 包含周期的数组（1,2,3,4,5）
      */
     public function buildSJPlan($info, $data = array())
     {
-        //当前年度
-        $currentTime = date("Y");
-        $M = M('Sjobject');
-        if (session('my_info.department') > 0) {
-            $sql = "SELECT DISTINCT * FROM on_sjobject DX 
-                WHERE ((" . $currentTime . "-2013+1)%DX.SJZQ=0) 
-                AND  did = " . session('my_info.department') . " ";
-            for ($i = 0; $i < count($info); $i++) {
-                $sql .= " UNION ";
-                $sql .= " select * from on_sjobject DX where ((" . $currentTime . "-2013+1)%DX.SJZQ =" . $i . ") AND 
-                 did = ".session('my_info.department') ." ";
-                for ($j = 1; $j <= (int)$info[$i]["dname"]; $j++) {
-                    $sql .= " AND (select startTime from on_situation where FROM_UNIXTIME(startTime,'%Y') = ("
-                        . $currentTime . "-" . $j . ") limit 1) is NULL ";
-                }
-            }
+        $current = M('current_plan');
+        $past = M('past_plan');
+        $hasCreated = false;
+        //1.先从当前审计计划表里面找   如果有直接读表
+        $count = $current->count();
+        if ($count != 0) {
+            $hasCreated = true;
+            $list = $current->query("select * from on_current_plan");
         } else {
+            //2.如果没有  则生成一个审计计划
+            //当前年度
+            $currentTime = date("Y");
+            $M = M('Sjobject');
             $sql = "SELECT DISTINCT * FROM on_sjobject DX WHERE ((" . $currentTime . "-2013+1)%DX.SJZQ=0)  ";
             for ($i = 0; $i < count($info); $i++) {
                 $sql .= " UNION ";
@@ -390,10 +486,57 @@ class SjObjectModel extends Model
                         . $currentTime . "-" . $j . ") limit 1) is NULL ";
                 }
             }
+            $list = $M->query($sql);
+            $plan = array();
+            $planCount = 0;
+            //3.生成完成后  把新生成的插入到当前审计计划表里面
+            foreach ($list as $v => $k) {
+                $bean['sj_id'] = $k['id'];
+                $bean['name'] = $k['name'];
+                $bean['SJZQ'] = $k['SJZQ'];
+                $bean['sj_year'] = date('Y');
+                $plan[$planCount] = $bean;
+                $planCount++;
+            }
+            $current->addAll($plan);
         }
-        $list = $M->query($sql);
+
+
         C('TOKEN_ON', false);
+        $pastBean = "";
+        //4.这里把审计计划列表按照周期分组并拼成html
+        foreach ($list as $v => $k) {
+            $data[$k['SJZQ']][] = $k;
+        }
+        foreach ($info as $j => $z) {
+            $i = 0;
+            $pgg .= '<tr><td colspan="6">' . $z['dname'] . '年一审</td></tr>';
+            $pgs = '';
+//            $pastBean .= "%" . $z['dname'] . "%,";
+            foreach ($data[$z['dname']] as $v => $k) {
+
+                if (($i / 6) == intval($i / 6)) {
+                    if ($i > 6) {
+                        $pgs .= '</tr>';
+                    }
+                    $pgs .= '<tr><td>' . $k['name'] . '</td>';
+                } else {
+                    $pgs .= '<td>' . $k['name'] . '</td>';
+                }
+                $pastBean .= "" . $k['id'] . ",";
+                $i++;
+            }
+            $pgg .= $pgs . '</tr>';
+        }
+        //5.如果没有生成过审计计划   这里还要插入历年审计计划表里面
+        if ($hasCreated == false) {
+            $pastPlan['sj_year'] = date('Y');
+            $pastPlan['sj_id_bean'] = $pastBean;
+            $past->where("sj_year = '" . date('Y') . "'")->delete();
+            $past->add($pastPlan);
+        }
         $data['list'] = $list;
+        $data['pg'] = $pgg;
         return $data;
 
     }

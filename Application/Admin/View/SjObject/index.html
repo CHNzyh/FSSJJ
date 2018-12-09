@@ -37,18 +37,18 @@
                             {$dp[$did]['dname']}
                             <input type="hidden" value="{$Think.session.my_info.department}" name="department" />
                         </if>
-                        <!--人员：-->
-                        <!--<if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position neq 3)">-->
-                            <!--<select type="hidden" name="user" id="user">-->
-                                <!--<option value="0">全部人员</option>-->
-                                <!--<volist name="user" id="vo">-->
-                                    <!--<option value="{$vo.aid}"<eq name="vo.aid" value="$keys.user"> selected</eq>>{$vo.realname}</option>-->
-                                <!--</volist>-->
-                            <!--</select>-->
-                            <!--<else />-->
-                            <!--{:session('my_info.nickname')}-->
-                            <!--<input type="hidden" value="{$Think.session.my_info.aid}" name="user" />-->
-                        <!--</if>-->
+                        人员：
+                        <if condition="($Think.session.my_info.aid eq 10) OR ($Think.session.my_info.position neq 3)">
+                            <select type="hidden" name="user" id="user">
+                                <option value="0">全部人员</option>
+                                <volist name="user" id="vo">
+                                    <option value="{$vo.aid}"<eq name="vo.aid" value="$keys.user"> selected</eq>>{$vo.realname}</option>
+                                </volist>
+                            </select>
+                            <else />
+                            {:session('my_info.nickname')}
+                            <input type="hidden" value="{$Think.session.my_info.aid}" name="user" />
+                        </if>
                         搜索字段：
                             <select name="field">
                                 <option value="name" <eq name="keys.field" value="name">selected="selected"</eq>>名称</option>
@@ -160,7 +160,7 @@
                     //      alert(XMLHttpRequest.readyState);
                     //      alert(textStatus)
                 },
-//                success:onchangecallback
+                success:onchangecallback
             });
         }
         function onchangecallback(data){

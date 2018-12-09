@@ -3,12 +3,15 @@
 namespace Admin\Controller;
 use Think\Controller;
 use Org\Util\Rbac;
-class CommonController extends Controller {
+
+class CommonController extends Controller
+{
 
     public $loginMarked;
 
 
-    public function _initialize() {
+    public function _initialize()
+    {
         // header("Content-Type:text/html; charset=utf-8");
         // header('Content-Type:application/json; charset=utf-8');
         $systemConfig = include APP_PATH . 'Common/Conf/systemConfig.php';
@@ -19,30 +22,30 @@ class CommonController extends Controller {
             $systemConfig['TOKEN']['member_timeout'] = 3600;
             set_config("systemConfig", $systemConfig, APP_PATH . "Common/Conf/");
             if (is_dir(WEB_ROOT . "install/")) {
-                
+
             }
         }
-        $this->lock_id = C('LOCK_ID'); 
+        $this->lock_id = C('LOCK_ID');
         $this->loginMarked = md5($systemConfig['TOKEN']['admin_marked']);
         $this->checkLogin();
-        
+
         if (C('USER_AUTH_ON') && !in_array(CONTROLLER_NAME, explode(',', C('NOT_AUTH_MODULE')))) {
-           
+
             if (!RBAC::AccessDecision()) {
-                
+
                 if (!$_SESSION [C('USER_AUTH_KEY')]) {
-                    
+
                     redirect(C('USER_AUTH_GATEWAY'));
 
                 }
-                
+
                 if (C('RBAC_ERROR_PAGE')) {
-                    
+
                     redirect(C('RBAC_ERROR_PAGE'));
                 } else {
                     if (C('GUEST_AUTH_ON')) {
                         $this->assign('jumpUrl', C('USER_AUTH_GATEWAY'));
-                    }    
+                    }
                     $this->error(L('_VALID_ACCESS_'));
                 }
             }
@@ -52,17 +55,17 @@ class CommonController extends Controller {
          * 增加对特定菜单的显示，通过转换CONTROLLER_NAME内容。
          */
         $ctlname = CONTROLLER_NAME;
-        switch ($ctlname){
+        switch ($ctlname) {
             case 'Config':
                 $ctlname = 'Access';
                 break;
-            
-        }        
-        $menu =  $this->show_menu($ctlname);
+
+        }
+        $menu = $this->show_menu($ctlname);
 
 
-        $this->upWholeUrl = __ROOT__.trim(C('UPLOADS_PICPATH'),'.');
-        $this->assign("menu",$menu['menu']);
+        $this->upWholeUrl = __ROOT__ . trim(C('UPLOADS_PICPATH'), '.');
+        $this->assign("menu", $menu['menu']);
         //$this->assign("sub_menu", $this->show_sub_menu());
         $this->assign("sub_menu", $menu['sub_menu']);
         $this->assign("my_info", $_SESSION['my_info']);
@@ -72,17 +75,19 @@ class CommonController extends Controller {
 
     }
 
-    protected function getQRCode($url = NULL) {
+    protected function getQRCode($url = NULL)
+    {
         if (IS_POST) {
             $this->assign("QRcodeUrl", "");
         } else {
 
             $url = empty($url) ? C('WEB_ROOT') . U(CONTROLLER_NAME . '/' . ACTION_NAME) : $url;
-            
+
         }
     }
 
-    public function checkLogin() {
+    public function checkLogin()
+    {
         if (isset($_COOKIE[$this->loginMarked])) {
             $cookie = explode("_", $_COOKIE[$this->loginMarked]);
             $timeout = C("TOKEN");
@@ -100,16 +105,17 @@ class CommonController extends Controller {
                 }
             }
         } else {
-             //echo $this->loginMarked;
-             //print_r($_COOKIE);
+            //echo $this->loginMarked;
+            //print_r($_COOKIE);
             //$this->redirect("Public/index");
             $this->error("登录超时，请重新登录", U("Public/index"));
         }
         return TRUE;
     }
 
-    
-    protected function checkToken() {
+
+    protected function checkToken()
+    {
         if (IS_POST) {
             if (!M("Admin")->autoCheckToken($_POST)) {
                 die(json_encode(array('status' => 0, 'info' => '重复提交数据')));
@@ -118,47 +124,47 @@ class CommonController extends Controller {
         }
     }
 
-    
-    private function show_menu($ctlname) {
+
+    private function show_menu($ctlname)
+    {
         $node = D('Node')->where('level=2 and menu=1')->order('sort,id')->relation(true)->select();
 
         $module = '';
         $node_id = '';
         $accessList = $_SESSION['_ACCESS_LIST'];
 
-       
-        foreach($accessList as $key => $value){
+
+        foreach ($accessList as $key => $value) {
             foreach ($value as $key1 => $value1) {
-                $module .= ','.$key1;
+                $module .= ',' . $key1;
                 foreach ($value1 as $key2 => $value2) {
-                    $node_id .= ','.$value2;
+                    $node_id .= ',' . $value2;
                 }
             }
-            
+
         }
-        
+
         foreach ($node as $key => $value) {
-            
-            if(!in_array(strtoupper($value['name']),explode(',',$module)) && $_SESSION['authId']!=10){
 
-                unset($node[$key]);               
-            }else{
+            if (!in_array(strtoupper($value['name']), explode(',', $module)) && $_SESSION['authId'] != 10) {
+
+                unset($node[$key]);
+            } else {
                 foreach ($value['node'] as $key1 => $value1) {
-                    if(!in_array(strtoupper($value1['id']),explode(',',$node_id)) && $_SESSION['authId']!=10){
+                    if (!in_array(strtoupper($value1['id']), explode(',', $node_id)) && $_SESSION['authId'] != 10) {
 
-                    unset($node[$key]['node'][$key1]);               
+                        unset($node[$key]['node'][$key1]);
                     }
                 }
             }
         }
 
-            
+
         //$cache = C('admin_big_menu');
         $cache = $node;
         $count = count($cache);
-        
 
-        
+
         $i = 1;
         $menu = "";
 
@@ -166,33 +172,34 @@ class CommonController extends Controller {
         foreach ($cache as $key => $value) {
             if ($i == 1) {
                 $css = ($value['name'] == $ctlname) ? "fisrt_current" : "fisrt";
-                $menu.='<li class="' . $css . '"><span><a href="' . U($value['name'] . '/index') . '">' . $value['title'] . '</a></span></li>';
+                $menu .= '<li class="' . $css . '"><span><a href="' . U($value['name'] . '/index') . '">' . $value['title'] . '</a></span></li>';
             } else if ($i == $count) {
                 $css = $value['name'] == $ctlname ? "end_current" : "end";
-                $menu.='<li class="' . $css . '"><span><a href="' . U($value['name'] . '/index') . '">' . $value['title'] . '</a></span></li>';
+                $menu .= '<li class="' . $css . '"><span><a href="' . U($value['name'] . '/index') . '">' . $value['title'] . '</a></span></li>';
             } else {
                 $css = $value['name'] == $ctlname ? "current" : "";
-                $menu.='<li class="' . $css . '"><span><a href="' . U($value['name'] . '/index') . '">' . $value['title'] . '</a></span></li>';
+                $menu .= '<li class="' . $css . '"><span><a href="' . U($value['name'] . '/index') . '">' . $value['title'] . '</a></span></li>';
             }
-            if($value['name'] == $ctlname){
-                
+            if ($value['name'] == $ctlname) {
+
                 foreach ($value['node'] as $key1 => $value1) {
                     //2018-10-21节点控制新增操作类选项
-                    $url = ($value1['ctrlname']!='')?U($value1['ctrlname'].'/'.$value1['name']):U($ctlname.'/'.$value1['name']);
-                    
+                    $url = ($value1['ctrlname'] != '') ? U($value1['ctrlname'] . '/' . $value1['name']) : U($ctlname . '/' . $value1['name']);
+
                     //$sub_menu[] = array('url'=>U(CONTROLLER_NAME.'/'.$value1['name']),'title'=>$value1['title']);
-                    $sub_menu[] = array('url'=>$url,'title'=>$value1['title']);
+                    $sub_menu[] = array('url' => $url, 'title' => $value1['title']);
                 }
             }
             $i++;
         }
-       
-        $result = array('menu'=>$menu,'sub_menu'=>$sub_menu);
+
+        $result = array('menu' => $menu, 'sub_menu' => $sub_menu);
         return $result;
     }
 
-    
-    private function show_sub_menu() {
+
+    private function show_sub_menu()
+    {
         $big = CONTROLLER_NAME == "Index" ? "Common" : CONTROLLER_NAME;
         $cache = C('admin_sub_menu');
 
@@ -210,19 +217,30 @@ class CommonController extends Controller {
         }
     }
 
-    public function getAdmin($condition=array())
+    public function getAdmin($condition = array())
     {
-        $condition = array_merge(array('aid>10'),$condition);
-        if(I('post.did')>0)
-            $condition = array_merge(array('department='.I('post.did'),'status=1'),$condition);
+        $condition = array_merge(array('aid>10'), $condition);
+        if (I('post.did') > 0)
+            $condition = array_merge(array('department=' . I('post.did'), 'status=1'), $condition);
         $result = D('Admin')->getAdmin($condition);
-        
-        if(IS_POST){            
-           header('Content-Type:application/json; charset=utf-8');
+
+        if (IS_POST) {
+            header('Content-Type:application/json; charset=utf-8');
             echo json_encode($result);
-        }else{
+        } else {
             return $result;
         }
     }
 
-}?>
+    public function getAdminForSJObject($condition = array())
+    {
+        $condition = array_merge(array('aid>10'), $condition);
+        if (I('post.did') > 0)
+            $condition = array_merge(array('department=' . I('post.did'), 'status=1'), $condition);
+        $result = D('Admin')->getAdmin($condition);
+        return $result;
+    }
+
+}
+
+?>

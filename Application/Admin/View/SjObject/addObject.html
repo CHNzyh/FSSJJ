@@ -10,6 +10,8 @@
         $currentNav ='审计对象管理 > '.$title;
     </php>
     <include file="Common:intoHead"/>
+
+    <js href="--PUBLIC--/Js/jquery-validate.js"/>
 </head>
 <body>
 <div class="wrap">
@@ -489,10 +491,56 @@
 <include file="Common:foot"/>
 <script type="text/javascript">
     $(".submit").click(function () {
-//        if ($.trim($("input[name='cname']").val()) == '') {
-//            popup.alert("企业名称不能为空！");
-//            return false;
-//        }
+        if ($.trim($("input[name='name']").val()) == '') {
+            popup.alert("名称不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='frdwdm']").val()) == '') {
+            popup.alert("法人单位代码不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='frdwqc']").val()) == '') {
+            popup.alert("法人单位全称不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='nsrbm']").val()) == '') {
+            popup.alert("纳税人编码不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='dwclsj']").val()) == '') {
+            popup.alert("单位成立时间不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='jjbzfs']").val()) == '') {
+            popup.alert("经费保障方式不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='ly']").val()) == '') {
+            popup.alert("领域不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='xz']").val()) == '') {
+            popup.alert("乡（镇）不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='jdbsc']").val()) == '') {
+            popup.alert("街道办事处不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='sdxm']").val()) == '') {
+            popup.alert("省地县码（地域）不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='dhhm']").val()) == '') {
+            popup.alert("电话号码不能为空！");
+            return false;
+        }
+        if ($.trim($("input[name='yzbm']").val()) == '') {
+            popup.alert("邮政编码不能为空！");
+            return false;
+        }
+
+
         commonAjaxSubmit();
     });
 </script>

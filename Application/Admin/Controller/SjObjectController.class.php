@@ -30,7 +30,7 @@ class SjObjectController extends CommonController
 
         if(session('my_info.aid')==10||session('my_info.position')==1){//AID=10为超级管理员
             if($keys['department']>0){
-//                $user = $this->getAdmin(array('department='.$keys['department']));
+                $user = $this->getAdminForSJObject(array('department='.$keys['department']));
                 $condition = array('pid'=>$keys['department']);
             }
 
@@ -40,13 +40,13 @@ class SjObjectController extends CommonController
 
             $dp = D('Department')->getDepartment();
 
-//            $user = $this->getAdmin(array('department='.session('my_info.department')));
+            $user = $this->getAdminForSJObject(array('department='.session('my_info.department')));
         }
 
         C('TOKEN_ON', false);
         $this->assign('did',session('my_info.department'));
         $this->assign('dp',$dp);
-//        $this->assign('user',$user);
+        $this->assign('user',$user);
         $this->assign('keys',$keys);
         $this->assign('list', $data['list']);
         $this->assign('page', $data['page']);
@@ -57,6 +57,10 @@ class SjObjectController extends CommonController
     public function search()
     {
         $this->index();
+    }
+
+    public function searchPastPlan(){
+
     }
 
     /**
@@ -72,8 +76,8 @@ class SjObjectController extends CommonController
 
         } else {
             $info['cstatus'] = 1;
-            $info = $this->getSelectOption($info, 'SJZQ', 'pid=4');
-            $info = $this->getSelectOption($info, 'BSJDWFL', 'pid=5');
+            $info = $this->getSelectOption($info, 'SJZQ', 'pid=5');
+            $info = $this->getSelectOption($info, 'BSJDWFL', 'pid=4');
             $info = $this->getSelectOption($info, 'YSLB', 'pid=6');
             $this->assign('info', $info);
             $this->assign('title', '添加审计对象');
@@ -88,7 +92,24 @@ class SjObjectController extends CommonController
         $info['cstatus'] = 1;
         $info = D('Config')->getConfigA('pid = 5');
         $data = D('SjObject')->buildSJPlan($info);
+
         $this->assign('list', $data['list']);
+        $this->assign('pg', $data['pg']);
+        $this->assign('keys', $data['keys']);
+        $this->assign('page', $data['page']);
+        $this->display('sjPlan');
+    }
+
+    /**
+     * 生成审计计划列表
+     */
+    public function buildSJPlanByCondition(){
+        $info['cstatus'] = 1;
+        $info = D('Config')->getConfigA('pid = 5');
+        $data = D('SjObject')->buildSJPlanByCondition($info);
+
+        $this->assign('list', $data['list']);
+        $this->assign('pg', $data['pg']);
         $this->assign('keys', $data['keys']);
         $this->assign('page', $data['page']);
         $this->display('sjPlan');

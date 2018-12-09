@@ -22,24 +22,23 @@
                     <div class="current">审计计划列表</div>
                 </div>
 
-                <!--<div class="current">-->
-                    <!--<eq name="ACTION_NAME" value="sjPlan">审计计划列表</eq>-->
-                    <!--<eq name="ACTION_NAME" value="search">搜索结果</eq>-->
-                <!--</div>-->
-                <!--<div class="search">-->
-                    <!--<form action="{:U('search')}" method='post'>-->
-                        <!--搜索字段：-->
-                        <!--<select name="field">-->
-                            <!--<option value="cname"-->
-                            <!--<eq name="keys.field" value="cname">selected="selected"</eq>-->
-                            <!--&gt;企业名称</option>-->
-                        <!--</select>-->
-                        <!--&nbsp;&nbsp;关键字：-->
-                        <!--<input type="text" value="{$keys.keyword}" name="keyword" class="input"-->
-                               <!--placeholder="搜索对应字段关键字"/>-->
-                        <!--&nbsp;&nbsp;<button class="btn">筛选</button>-->
-                    <!--</form>-->
-                <!--</div>-->
+                <div class="current">
+                    <eq name="ACTION_NAME" value="sjPlan">审计计划列表</eq>
+                    <eq name="ACTION_NAME" value="search">搜索结果</eq>
+                </div>
+                <div class="search">
+                    <form action="{:U('buildSJPlanByCondition')}" method='post'>
+                        搜索字段：
+                        <select name="field">
+                            <option value="name" <eq name="keys.field" value="name">selected="selected"</eq>>名称</option>
+                            <option value="year" <eq name="keys.field" value="year">selected="selected"</eq>>年度</option>
+                        </select>
+                        &nbsp;&nbsp;关键字：
+                        <input type="text" value="{$keys.keyword}" name="keyword" class="input"
+                               placeholder="搜索对应字段关键字"/>
+                        &nbsp;&nbsp;<button class="btn">筛选</button>
+                    </form>
+                </div>
 
 
             </div>
@@ -52,23 +51,14 @@
             </eq>
 
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
-                <thead>
-                <tr>
-                    <td>ID</td>
-                    <td>名称</td>
-                    <td width="150">操作</td>
-                </tr>
-                </thead>
-                <volist name="list" id="vo">
-                    <tr align="center" aid="{$vo.id}">
-                        <td>{$vo.id}</td>
-                        <td>{$vo.name}</td>
-                        <td>
-                            [ <a href="__URL__/editSjObject?id={$vo.id}">编辑</a> ]
-
-                        </td>
-                    </tr>
-                </volist>
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<td>ID</td>-->
+                    <!--<td>名称</td>-->
+                    <!--<td width="150">操作</td>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                {$pg}
                 <tr>
                     <td colspan="9" align="right" class="page">{$page}</td>
                     </td></tr>
