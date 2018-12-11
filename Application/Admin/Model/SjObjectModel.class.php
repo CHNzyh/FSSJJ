@@ -429,28 +429,40 @@ class SjObjectModel extends Model
 
             C('TOKEN_ON', false);
             //4.这里把审计计划列表按照周期分组并拼成html
-            foreach ($list as $v => $k) {
-                $data[$k['SJZQ']][] = $k;
-            }
-            foreach ($info as $j => $z) {
-                $i = 0;
-                $pgg .= '<tr><td colspan="6">' . $z['dname'] . '年一审</td></tr>';
-                $pgs = '';
+  //4.这里把审计计划列表按照周期分组并拼成html
+        foreach ($list as $v => $k) {
+            $data[$k['SJZQ']][] = $k;
+        }
+        foreach ($info as $j => $z) {
+            $i = 0;
+            $pgg .= '<tr><td colspan="6">' . $z['dname'] . '年一审</td></tr>';
+            $pgs = '';
 //            $pastBean .= "%" . $z['dname'] . "%,";
-                foreach ($data[$z['dname']] as $v => $k) {
-
-                    if (($i / 6) == intval($i / 6)) {
-                        if ($i > 6) {
-                            $pgs .= '</tr>';
-                        }
-                        $pgs .= '<tr><td>' . $k['name'] . '</td>';
-                    } else {
-                        $pgs .= '<td>' . $k['name'] . '</td>';
-                    }
-                    $i++;
+            foreach ($data[$z['dname']] as $v => $k) {
+                if($hasCreated==false){
+                    $id = $k['id'];
+                }else{
+                    $id = $k['sj_id'];
                 }
-                $pgg .= $pgs . '</tr>';
+
+
+                if (($i / 6) == intval($i / 6)) {
+                    if ($i >= 6) {
+                        $i = 0;
+                        $pgs .= '</tr>';
+                    }
+                    $pgs .= '<tr><td><a href="'.U('watchSjObject',array('id'=>$id)).'">' . $k['name'] . '</a></td>';
+                } else {
+                    $pgs .= '<td><a href="'.U('watchSjObject',array('id'=>$id)).'">' . $k['name'] . '</a></td>';
+                }
+                $pastBean .= "" . $k['id'] . ",";
+                $i++;
             }
+            for($k=1;$k<=6-$i;$k++){
+                $pgs .= '<td>&nbsp;</td>';
+            }
+            $pgg .= $pgs . '</tr>';
+        }
             $data['keys'] = $keys;
             $data['list'] = $list;
             $data['pg'] = $pgg;
