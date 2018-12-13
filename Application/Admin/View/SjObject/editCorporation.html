@@ -24,7 +24,7 @@
                 <div class="Item hr clearfix">
                     <div class="current">添加审计对象</div>
                 </div>
-                <form action="" method="post">
+                <form action="" method="post" name="sharedata" id="sharedata">
                     <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
 
                         <tr>
@@ -51,10 +51,14 @@
 
                     </table>
                     <input type="hidden" name="id" value="{$info.id}"/>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit" visiable = "false">确定</button>
+                        <input type="button" value="返回" class="btn" onclick="window.history.back();" />
+                    </div>
                 </form>
-                <div class="commonBtnArea" >
-                    <button class="btn submit" visiable = "false">确定</button>
-                </div>
+                <!--<div class="commonBtnArea" >-->
+                    <!--<button class="btn submit" visiable = "false">确定</button>-->
+                <!--</div>-->
 
             </div>
         </div>
@@ -63,9 +67,6 @@
 <div class="clear"></div>
 <include file="Common:foot"/>
 <script type="text/javascript">
-    $(".submit").click(function () {
-        commonAjaxSubmit();
-    });
 
     var start = {
         elem: '#startTime',
@@ -92,6 +93,45 @@
     };
     laydate(start);
     laydate(end);
+
+    //验证开始
+    $(function(){
+        $("#sharedata").validate({
+            //
+            submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form
+
+                commonAjaxSubmit();
+            },
+            rules : {
+                corporation: {
+                    required : true
+                },
+                startTime : {
+                    required : true
+                },
+                endTime : {
+                    required : true
+                }
+
+            },
+            messages : {
+                corporation: {
+                    required : '名称不能为空'
+                },
+                startTime : {
+                    required : '开始时间不能为空'
+                },
+                endTime : {
+                    required : '结束时间不能为空'
+                },
+
+            }
+        });
+
+    });
+
+
+    //验证结束
 </script>
 </body>
 </html>

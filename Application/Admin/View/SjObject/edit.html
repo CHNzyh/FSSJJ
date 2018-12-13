@@ -22,7 +22,7 @@
                 <div class="Item hr clearfix">
                     <div class="current">添加审计对象</div>
                 </div>
-                <form action="" method="post">
+                <form action="" method="post" name="projectedit" id="projectedit">
                     <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
                         <tr>
                             <th width="120">名称：</th>
@@ -30,7 +30,8 @@
                         </tr>
                         <tr>
                             <th width="120">法人单位代码：</th>
-                            <td><input name="frdwdm" type="text" class="input" size="40" value="{$info.FRDWDM}"/></td>
+                            <td><input name="frdwdm" type="text" class="input" size="40" value="{$info.FRDWDM}"
+                                       onBlur="offlight(this.parentNode.parentNode)"/></td>
                         </tr>
 
                         <tr>
@@ -518,11 +519,11 @@
 
 
                     <input type="hidden" name="id" value="{$info.id}"/>
+                    <div class="commonBtnArea">
+                        <input type="submit" value="提交" class="btn"/>
+                    </div>
                 </form>
 
-                <div class="commonBtnArea">
-                    <button class="btn submit">提交</button>
-                </div>
             </div>
         </div>
     </div>
@@ -530,59 +531,110 @@
 <div class="clear"></div>
 <include file="Common:foot"/>
 <script type="text/javascript">
-    $(".submit").click(function () {
-        if ($.trim($("input[name='name']").val()) == '') {
-            popup.alert("名称不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='frdwdm']").val()) == '') {
-            popup.alert("法人单位代码不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='frdwqc']").val()) == '') {
-            popup.alert("法人单位全称不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='nsrbm']").val()) == '') {
-            popup.alert("纳税人编码不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='dwclsj']").val()) == '') {
-            popup.alert("单位成立时间不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='jjbzfs']").val()) == '') {
-            popup.alert("经费保障方式不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='ly']").val()) == '') {
-            popup.alert("领域不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='xz']").val()) == '') {
-            popup.alert("乡（镇）不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='jdbsc']").val()) == '') {
-            popup.alert("街道办事处不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='sdxm']").val()) == '') {
-            popup.alert("省地县码（地域）不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='dhhm']").val()) == '') {
-            popup.alert("电话号码不能为空！");
-            return false;
-        }
-        if ($.trim($("input[name='yzbm']").val()) == '') {
-            popup.alert("邮政编码不能为空！");
-            return false;
-        }
+    //验证开始
+    $(function(){
+        $("#projectedit").validate({
+            //
+            submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form
 
+                commonAjaxSubmit();
+            },
+            rules : {
+                name: {
+                    required : true
+                },
+                frdwdm : {
+                    required : true,
+                    remote : {
+                        url : '{:U('checkcode')}',
+                        type : 'post',
+                        dataType : 'json',
+                        data : {
+                            frdwdm : function () {
+                                return $('#frdwdm').val();
+                            }
+                        }
+                    }
 
-        commonAjaxSubmit();
+                },
+                dwclsj : {
+                    required : true
+                },
+                frdwqc : {
+                    required : true
+                },
+                nsrbm : {
+                    required : true
+                },
+                xz : {
+                    required : true
+                },
+                jdbsc : {
+                    required : true
+                },
+                sdxm : {
+                    required : true
+                },
+                dhhm : {
+                    required : true
+                },
+                yzbm : {
+                    required : true
+                },
+                ly : {
+                    required : true
+                },
+                jjbzfs : {
+                    required : true
+                }
+
+            },
+            messages : {
+                name: {
+                    required : '名称不能为空'
+                },
+                frdwdm : {
+                    required : '法人单位代码不能为空',
+                    remote : '该法人单位代码已经存在！'
+                },
+                dwclsj : {
+                    required : '单位成立时间不能为空'
+                },
+                frdwqc : {
+                    required : '法人单位全称不能为空'
+                },
+                nsrbm : {
+                    required : '纳税人编码不能为空'
+                },
+                xz : {
+                    required : '乡（镇）不能为空'
+                },
+                jdbsc : {
+                    required : '街道办事处不能为空'
+                },
+                sdxm : {
+                    required : '省地县码（地域）不能为空'
+                },
+                dhhm : {
+                    required : '电话号码不能为空'
+                },
+                yzbm : {
+                    required : '邮政编码不能为空'
+                },
+                ly : {
+                    required : '领域不能为空'
+                },
+                jjbzfs : {
+                    required : '纳税人编码不能为空'
+                }
+            }
+        });
+
     });
+
+
+    //验证结束
+
 </script>
 </body>
 </html>

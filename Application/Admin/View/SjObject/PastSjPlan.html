@@ -20,12 +20,14 @@
             <div class="Item hr clearfix">
 
                 <div class="Item hr clearfix">
-                    <div class="current">审计计划列表</div>
+                    <div class="current">历年审计计划列表</div>
                 </div>
 
                 <div class="search">
-                    <form action="{:U('buildSJPlanByCondition')}" method='post'>
-                        搜索字段：
+                    <form action="{:U('pastPlan')}" method='post'>
+                        &nbsp;&nbsp;年份：
+                        <select name="year" style="min-width: 80px;">{$year.year}</select>
+                        &nbsp;&nbsp;搜索字段：
                         <select name="field">
                             <option value="name" <eq name="keys.field" value="name">selected="selected"</eq>>名称</option>
                             <option value="BSJDWFL" <eq name="keys.field" value="BSJDWFL">selected="selected"</eq>>被审计单位分类</option>

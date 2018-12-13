@@ -44,11 +44,11 @@
                             <!--<td><input name="time" type="text" class="input" size="40" value="{$info.time}"/></td>-->
                         </tr>
 
-                        <tr>
-                            <th width="120">审计情况：</th>
-                            <td><input name="situation" type="text" class="input" size="40" value="{$info.situation}"/>
-                            </td>
-                        </tr>
+                        <!--<tr>-->
+                            <!--<th width="120">审计情况：</th>-->
+                            <!--<td><input name="situation" type="text" class="input" size="40" value="{$info.situation}"/>-->
+                            <!--</td>-->
+                        <!--</tr>-->
                         <tr>
                             <th>文件目录：</th>
                             <td><input type="hidden" id="filepath_1" value="{$filepath}" />
@@ -79,10 +79,11 @@
                     </table>
                     <input type="hidden" name="uploadUrl" id="uploadUrl" value="{$info.uploadUrl}" />
                     <input type="hidden" name="id" value="{$info.id}"/>
+                    <div class="commonBtnArea">
+                        <input type="submit" value="提交" class="btn"/>
+                        <input type="button" value="返回" class="btn" onclick="window.history.back();" />
+                    </div>
                 </form>
-                <div class="commonBtnArea">
-                    <button class="btn submit">提交</button>
-                </div>
             </div>
         </div>
     </div>
@@ -90,9 +91,6 @@
 <div class="clear"></div>
 <include file="Common:foot"/>
 <script type="text/javascript">
-    $(".submit").click(function () {
-        commonAjaxSubmit();
-    });
 
     function showupload(){
         top1 = document.body.scrollHeight/2-300;
@@ -210,6 +208,45 @@
 
 
     });
+
+    //验证开始
+    $(function(){
+        $("#sharedata").validate({
+            //
+            submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form
+
+                commonAjaxSubmit();
+            },
+            rules : {
+                name: {
+                    required : true
+                },
+                startTime : {
+                    required : true
+                },
+                endTime : {
+                    required : true
+                }
+
+            },
+            messages : {
+                name: {
+                    required : '名称不能为空'
+                },
+                startTime : {
+                    required : '开始时间不能为空'
+                },
+                endTime : {
+                    required : '结束时间不能为空'
+                },
+
+            }
+        });
+
+    });
+
+
+    //验证结束
 </script>
 </body>
 </html>

@@ -24,9 +24,9 @@ class SjObjectModel extends Model
 
         $where['FRDWDM'] = I('post.frdwdm');
 
-        if (M('Sjobject')->where($where)->count() != 0) {
-            return array('status' => 0, 'info' => '法人单位代码重复，请重新填写');
-        }
+//        if (M('Sjobject')->where($where)->count() != 0) {
+//            return array('status' => 0, 'info' => '法人单位代码重复，请重新填写');
+//        }
 
         $SJOBJECT = M("Sjobject");
         $sj['did'] = session('my_info.department');
@@ -262,7 +262,7 @@ class SjObjectModel extends Model
         if ($corporation->add($data)) {
             $this->log->content = '添加法人';
             $this->log->addLog();
-            return array('status' => 1, 'info' => '法人添加成功！');
+            return array('status' => 1, 'info' => '法人添加成功！', "url" => u("SjObject/editCorporation?id=$id"));
         } else {
             return array('status' => 0, 'info' => '法人添加失败，请重试！');
         }
@@ -284,7 +284,7 @@ class SjObjectModel extends Model
         if ($corporation->add($data)) {
             $this->log->content = '添加审计情况';
             $this->log->addLog();
-            return array('status' => 1, 'info' => '审计情况添加成功！');
+            return array('status' => 1, 'info' => '审计情况添加成功！', "url" => u("SjObject/editSituation?id=$id"));
         } else {
             return array('status' => 0, 'info' => '审计情况添加失败，请重试！');
         }
@@ -405,7 +405,7 @@ class SjObjectModel extends Model
                     }
                 }
                 $sql = substr($sql, 0, strlen($sql) - 1);
-                $sql.=")";
+                $sql .= ")";
                 $list = $M->query($sql);
             } else {
                 //如果是其他字段搜索  就需要复合查询
@@ -421,15 +421,100 @@ class SjObjectModel extends Model
                     }
                 }
                 $sql = substr($sql, 0, strlen($sql) - 1);
-                $sql.=")";
-                $sql.= " AND ".$keys['field']." like '%".$valus."%' ";
+                $sql .= ")";
+                $sql .= " AND " . $keys['field'] . " like '%" . $valus . "%' ";
                 $list = $M->query($sql);
             }
-            print_r($sql);
 
             C('TOKEN_ON', false);
             //4.这里把审计计划列表按照周期分组并拼成html
-  //4.这里把审计计划列表按照周期分组并拼成html
+            //4.这里把审计计划列表按照周期分组并拼成html
+            foreach ($list as $v => $k) {
+                $data[$k['SJZQ']][] = $k;
+            }
+            foreach ($info as $j => $z) {
+                $i = 0;
+                $pgg .= '<tr><td colspan="6">' . $z['dname'] . '年一审</td></tr>';
+                $pgs = '';
+//            $pastBean .= "%" . $z['dname'] . "%,";
+                foreach ($data[$z['dname']] as $v => $k) {
+                    if ($hasCreated == false) {
+                        $id = $k['id'];
+                    } else {
+                        $id = $k['sj_id'];
+                    }
+
+
+                    if (($i / 6) == intval($i / 6)) {
+                        if ($i >= 6) {
+                            $i = 0;
+                            $pgs .= '</tr>';
+                        }
+                        $pgs .= '<tr><td><a href="' . U('watchSjObject', array('id' => $id)) . '">' . $k['name'] . '</a></td>';
+                    } else {
+                        $pgs .= '<td><a href="' . U('watchSjObject', array('id' => $id)) . '">' . $k['name'] . '</a></td>';
+                    }
+                    $pastBean .= "" . $k['id'] . ",";
+                    $i++;
+                }
+                for ($k = 1; $k <= 6 - $i; $k++) {
+                    $pgs .= '<td>&nbsp;</td>';
+                }
+                $pgg .= $pgs . '</tr>';
+            }
+            $data['keys'] = $keys;
+            $data['list'] = $list;
+            $data['pg'] = $pgg;
+            return $data;
+        }
+    }
+
+    /**
+     * 创建往年审计计划表
+     * @param $info
+     * @param $currentYear
+     * @param array $data
+     * @return array
+     */
+    public function buildPastSJPlan($info, $currentYear, $data = array())
+    {
+        if (IS_POST) {
+            $keys = I('post.');
+            //如果是其他字段搜索  就需要复合查询
+            $M = M("past_plan");
+            $valus = $keys['keyword'];
+            $plan = $M->query("select * from on_past_plan where sj_year = '" . $keys['year'] . "'");
+            $str = $plan[0]['sj_id_bean'];
+            $idList = split(",", $str);
+            $sql = "select * from on_sjobject where id in (";
+            foreach ($idList as $v) {
+                if (!empty($v)) {
+                    $sql .= $v . ",";
+                }
+            }
+            $sql = substr($sql, 0, strlen($sql) - 1);
+            $sql .= ")";
+            $sql .= " AND " . $keys['field'] . " like '%" . $valus . "%' ";
+            $list = $M->query($sql);
+        } else {
+            $keys = I('post.');
+            $M = M("past_plan");
+            $plan = $M->query("select * from on_past_plan where sj_year = '" . $currentYear . "'");
+            $str = $plan[0]['sj_id_bean'];
+            $idList = split(",", $str);
+            $sql = "select * from on_sjobject where id in (";
+            foreach ($idList as $v) {
+                if (!empty($v)) {
+                    $sql .= $v . ",";
+                }
+            }
+            $sql = substr($sql, 0, strlen($sql) - 1);
+            $sql .= ")";
+            $list = $M->query($sql);
+        }
+        C('TOKEN_ON', false);
+        //4.这里把审计计划列表按照周期分组并拼成html
+        //4.这里把审计计划列表按照周期分组并拼成html
         foreach ($list as $v => $k) {
             $data[$k['SJZQ']][] = $k;
         }
@@ -439,9 +524,9 @@ class SjObjectModel extends Model
             $pgs = '';
 //            $pastBean .= "%" . $z['dname'] . "%,";
             foreach ($data[$z['dname']] as $v => $k) {
-                if($hasCreated==false){
+                if ($hasCreated == false) {
                     $id = $k['id'];
-                }else{
+                } else {
                     $id = $k['sj_id'];
                 }
 
@@ -451,23 +536,22 @@ class SjObjectModel extends Model
                         $i = 0;
                         $pgs .= '</tr>';
                     }
-                    $pgs .= '<tr><td><a href="'.U('watchSjObject',array('id'=>$id)).'">' . $k['name'] . '</a></td>';
+                    $pgs .= '<tr><td><a href="' . U('watchSjObject', array('id' => $id)) . '">' . $k['name'] . '</a></td>';
                 } else {
-                    $pgs .= '<td><a href="'.U('watchSjObject',array('id'=>$id)).'">' . $k['name'] . '</a></td>';
+                    $pgs .= '<td><a href="' . U('watchSjObject', array('id' => $id)) . '">' . $k['name'] . '</a></td>';
                 }
                 $pastBean .= "" . $k['id'] . ",";
                 $i++;
             }
-            for($k=1;$k<=6-$i;$k++){
+            for ($k = 1; $k <= 6 - $i; $k++) {
                 $pgs .= '<td>&nbsp;</td>';
             }
             $pgg .= $pgs . '</tr>';
         }
-            $data['keys'] = $keys;
-            $data['list'] = $list;
-            $data['pg'] = $pgg;
-            return $data;
-        }
+        $data['keys'] = $keys;
+        $data['list'] = $list;
+        $data['pg'] = $pgg;
+        return $data;
     }
 
     /**
@@ -526,9 +610,9 @@ class SjObjectModel extends Model
             $pgs = '';
 //            $pastBean .= "%" . $z['dname'] . "%,";
             foreach ($data[$z['dname']] as $v => $k) {
-                if($hasCreated==false){
+                if ($hasCreated == false) {
                     $id = $k['id'];
-                }else{
+                } else {
                     $id = $k['sj_id'];
                 }
 
@@ -538,14 +622,14 @@ class SjObjectModel extends Model
                         $i = 0;
                         $pgs .= '</tr>';
                     }
-                    $pgs .= '<tr><td><a href="'.U('watchSjObject',array('id'=>$id)).'">' . $k['name'] . '</a></td>';
+                    $pgs .= '<tr><td><a href="' . U('watchSjObject', array('id' => $id)) . '">' . $k['name'] . '</a></td>';
                 } else {
-                    $pgs .= '<td><a href="'.U('watchSjObject',array('id'=>$id)).'">' . $k['name'] . '</a></td>';
+                    $pgs .= '<td><a href="' . U('watchSjObject', array('id' => $id)) . '">' . $k['name'] . '</a></td>';
                 }
                 $pastBean .= "" . $k['id'] . ",";
                 $i++;
             }
-            for($k=1;$k<=6-$i;$k++){
+            for ($k = 1; $k <= 6 - $i; $k++) {
                 $pgs .= '<td>&nbsp;</td>';
             }
             $pgg .= $pgs . '</tr>';

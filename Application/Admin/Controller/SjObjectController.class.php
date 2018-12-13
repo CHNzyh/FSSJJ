@@ -87,6 +87,19 @@ class SjObjectController extends CommonController
     }
 
     /**
+     * 验证法人代码是否重复
+     */
+    public function checkcode()//验证项目编号
+    {
+        $where['FRDWDM'] = I('post.pcode');
+        if (M('Sjobject')->where($where)->count() != 0) {
+            echo 'false';
+        } else {
+            echo 'true';
+        }
+    }
+
+    /**
      * 重置审计计划
      * 实现原理为删除审计计划表和历年审计计划表中当年的部分
      * 然后重新走生成流程
@@ -134,6 +147,31 @@ class SjObjectController extends CommonController
         $this->assign('page', $data['page']);
         $this->display('sjPlan');
     }
+
+    public function pastPlan(){
+        $year =  M('past_plan')->query("select sj_year from on_past_plan group by sj_year");
+        $i = 0;
+        foreach ($year[0] as $v) {
+            if($i==0){
+                $currentYear = $v;
+                $year['year'] .= '<option value="' . $v . '"' . "select" . '>' . $v . '</option>';
+            }else{
+                $year['year'] .= '<option value="' . $v . '"'  . '>' . $v . '</option>';
+            }
+
+            $i++;
+        }
+        $info['cstatus'] = 1;
+        $info = D('Config')->getConfigA('pid = 5');
+        $data = D('SjObject')->buildPastSJPlan($info,$currentYear);
+        $this->assign('year',$year);
+        $this->assign('list', $data['list']);
+        $this->assign('pg', $data['pg']);
+        $this->assign('keys', $data['keys']);
+        $this->assign('page', $data['page']);
+        $this->display('PastSjPlan');
+    }
+
 
     /**
      * 查看审计对象   适用于在审计计划界面跳转过来的
@@ -215,8 +253,31 @@ class SjObjectController extends CommonController
     {
         //1.初始化法人表
         $M = M('Situation');
-        $FRlist = $M->where("sjid=" . (int)$_GET['id'])->select();
+        if (IS_POST) {
+            $keys = I('post.');
 
+            $where = array($keys[field] => array('LIKE', '%' . $keys['keyword'] . '%'));
+
+            $startTime = $keys['startTime'];
+            $endTime = $keys['endTime'];
+//            if (!empty($startTime)&&empty($endTime)) {
+//                $where= array_merge(array('startTime' => array('EGT', '%' .strtotime($startTime). '%')),$where);
+////                $where['startTime'] = '>=' . strtotime($startTime);
+//            }else if(!empty($endTime)&&empty($startTime)){
+//                $where= array_merge(array('endTime' => array('ELT', '%' .strtotime($endTime). '%')),$where);
+//            }else{
+//                $where= array_merge(array('endTime' => array('ELT', '%' .strtotime($endTime). '%')),$where);
+//            }
+
+            if (!empty($startTime)) {
+                $where = array_merge(array('startTime' => array('LIKE', '%' . strtotime($startTime) . '%')), $where);
+            }
+            if (!empty($endTime)) {
+                $where = array_merge(array('endTime' => array('LIKE', '%' . strtotime($endTime) . '%')), $where);
+            }
+        }
+        $where['sjid'] = (int)$_GET['id'];
+        $FRlist = $M->where($where)->select();
         foreach ($FRlist as $num => $v) {
             $v['startTime'] = date('Y/m/d', $v['startTime']);
             $v['endTime'] = date('Y/m/d', $v['endTime']);
@@ -225,6 +286,7 @@ class SjObjectController extends CommonController
 
         $this->assign('title', '编辑历任法人');
         $this->assign('FRlist', $FRlist);
+        $this->assign('keys', $keys);
         $this->assign('name', $_GET['name']);
         $this->assign('info', (int)$_GET['id']);
 
@@ -316,6 +378,7 @@ class SjObjectController extends CommonController
             $detail = $M->where("id=" . (int)$_GET['id'])->find();
             $detail['startTime'] = date('Y/m/d', $detail['startTime']);
             $detail['endTime'] = date('Y/m/d', $detail['endTime']);
+            $detail['url'] = '/' . C('SITUATION_FILEPATH') . '/' . date('Y-m-d', time()) . '/';
             $this->assign('info', $detail);
             $this->display('editSituation');
         }
@@ -342,6 +405,15 @@ class SjObjectController extends CommonController
     {
         $M = M('Situation');
         $id = i('get.id');
+        $result = $M->where(array('id' => $id))->select();
+        $file = trim($result['uploadUrl']);
+        if ($file != '') {
+            $url = C('UPLOAD_PATH') . $file;
+            if (file_exists($url))
+                @unlink($url);
+        }
+
+
         if ($M->where(array('id' => $id))->delete()) {
             $this->success('审计情况删除成功！');
         } else {
@@ -358,6 +430,9 @@ class SjObjectController extends CommonController
             header('Content-Type:application/json; charset=utf-8');
             echo json_encode(D("SjObject")->addCorporation((int)$_GET['id']));
         } else {
+            $detail['startTime'] = date('Y/m/d');
+            $detail['endTime'] = date('Y/m/d',strtotime('+1month'));
+            $this->assign('info', $detail);
             $this->assign('id', (int)$_GET['id']);
             $this->display('addCorporation');
         }
@@ -372,6 +447,8 @@ class SjObjectController extends CommonController
             header('Content-Type:application/json; charset=utf-8');
             echo json_encode(D("SjObject")->addSituation((int)$_GET['id']));
         } else {
+            $info['startTime'] = date('Y/m/d');
+            $info['endTime'] = date('Y/m/d',strtotime('+1month'));
             $this->assign('id', (int)$_GET['id']);
             $info['url'] = '/' . C('SITUATION_FILEPATH') . '/' . date('Y-m-d', time()) . '/';
             $this->assign('info', $info);

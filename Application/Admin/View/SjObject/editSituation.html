@@ -13,6 +13,8 @@
 
     <js href="--PUBLIC--/Js/laydate.js"/>
     <js href="--PUBLIC--/Js/jquery-validate.js"/>
+    <css href="--PUBLIC--/uploadify/uploadify.css"/>
+    <js href="--PUBLIC--/uploadify/jquery.uploadify.min.js"/>
 </head>
 <body>
 <div class="wrap">
@@ -24,7 +26,7 @@
                 <div class="Item hr clearfix">
                     <div class="current">编辑审计情况</div>
                 </div>
-                <form action="" method="post">
+                <form action="" method="post" name="sharedata" id="sharedata">
                     <table width="80%" border="0" cellspacing="0" cellpadding="0" class="table1">
 
                         <tr>
@@ -44,9 +46,25 @@
                         </tr>
 
                         <tr>
-                            <th>审计情况：</th>
-                            <td><input type="text" name="situation" id="pffname" value="{$info.situation}" readonly="readonly" class="input" size="40" />
-                                <input type="button" value="上传" onclick="showupload()" />&nbsp;</td>
+                            <th>文件目录：</th>
+                            <td><input type="hidden" id="filepath_1" value="{$filepath}" />
+                                <input type="text" name="url" readonly="readonly" id="url" value="{$info.url}" class="input" size="40" />
+                                &nbsp;</td>
+                        </tr>
+
+                        <tr>
+                            <th>上传文件：</th>
+                            <td id="fileBox">
+                                <input id="upFile" type="file" multiple="true">
+                                <div class="clearfix"></div>
+                                <ul id="uploadImageList" class="clearfix">
+                                    <notempty name="info[uploadUrl]">
+                                        <li class="photo">{$info.uploadUrl}
+                                            <div class="imper">
+                                                <a class="delImg" imgurl="{$info.uploadUrl}" href="javascript:;"></a><a class="bigImg" href="/upload{$info.uploadUrl}"  target="_blank"></a></div>
+                                        </li>
+                                    </notempty>
+                                </ul>						    </td>
                         </tr>
 
                         <tr>
@@ -56,10 +74,12 @@
 
 
                     </table>
+                    <input type="hidden" name="uploadUrl" id="uploadUrl" value="{$info.uploadUrl}" />
                     <input type="hidden" name="id" value="{$info.id}"/>
                 </form>
                 <div class="commonBtnArea" >
                     <button class="btn submit" visiable = "false">确定</button>
+                    <input type="button" value="返回" class="btn" onclick="window.history.back();" />
                 </div>
 
             </div>
@@ -69,9 +89,17 @@
 <div class="clear"></div>
 <include file="Common:foot"/>
 <script type="text/javascript">
-    $(".submit").click(function () {
-        commonAjaxSubmit();
-    });
+
+    function showupload(){
+        top1 = document.body.scrollHeight/2-300;
+        left = document.body.clientWidth/2-350;
+        path = $("#filepath").val();
+        if(path!=''&& path!='/'){
+            window.open ('/webftp/index.php?path='+path,'newwindow','height=600,width=750,top='+top1+',left='+left+',toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no')
+        }else{
+            popup.error('请先选择文件类型再上传！');
+        }
+    }
 
     var start = {
         elem: '#startTime',
@@ -80,7 +108,7 @@
         max: '2099-06-16', //最大日期
         istime: false,
         istoday: false,
-        choose: function(datas){
+        choose: function (datas) {
             end.min = datas; //开始日选好后，重置结束日的最小日期
             end.start = datas //将结束日的初始值设定为开始日
         }
@@ -92,22 +120,130 @@
         max: '2099-06-16',
         istime: false,
         istoday: false,
-        choose: function(datas){
+        choose: function (datas) {
             start.max = datas; //结束日选好后，重置开始日的最大日期
         }
     };
-    function showupload(){
-        top1 = document.body.scrollHeight/2-300;
-        left = document.body.clientWidth/2-350;
-        path = $("#filepath").val();
-        if(path!=''&& path!='/'){
-            window.open ('/webftp/index.php?path='+path,'newwindow','height=600,width=750,top='+top1+',left='+left+',toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no')
-        }else{
-            popup.error('请先选择文件类型再上传！');
-        }
-    }
     laydate(start);
     laydate(end);
+</script>
+<script type="text/javascript">
+
+    var newsId = "{$info.id}";
+    $(function () {
+
+        //上传初始化变量
+        var uplode_url = '{:U("Upload/upAdvFile")}';//PHP处理脚本地址
+        var uplode_path = '__PUBLIC__'; //插件公共目录
+        var sid = '{:session_id()}';//sessionID
+        var upPathRoot = "{$upWholeUrl}"; //图片上传根目录完整路径
+        var uploadPath = "/upload/"; //文件上传根目录
+
+        // 链接图标上传
+        $('#upFile').uploadify({
+            swf: uplode_path + '/uploadify/uploadify.swf', //加载swf
+            uploader: uplode_url, //PHP处理脚本地址
+            width: 118,    //上传按钮宽度
+            height: 33,    //上传按钮高度
+            multi: false,      //是否允许同时上传多文件，可设定true或false。
+            fileTypeDesc: 'Image Files',                 //类型描述
+            'removeCompleted': true,    //是否自动消失
+
+            fileTypeExts: '*',     //允许选择类型
+            fileExt: '*',          //允许上传类型
+            fileSizeLimit: '50MB',       //允许上传最大值
+            buttonText: '<div class="btn up_but"><div class="up_but_ico"></div>上传文件</div>',  //按钮的文字
+            formData: {'session_id': sid, 'url': $('#url').val()},
+
+            onUploadSuccess: function (file, data, response) { //成功上传返回
+                eval('var data = ' + data);
+
+                if (data.status) {
+
+                    $('#fileBox #uploadImageList').remove();
+                    //插入到image标签内，显示图片的缩略图
+                    $('#fileBox').append('<div class="cuitclear"></div><ul id="uploadImageList" class="clearfix"><notempty name="info[picture]"><li class="photo">' + data.path + '<div class="imper"><a class="delImg" imgurl="' + data.path + '" href="javascript:;"></a><a class="bigImg" href="' + uploadPath + data.path + '"  target="_blank"></a></div></li></ul>');
+                    $('#uploadUrl').attr('value', data.path);
+                    popup.success(data.msg);
+                    setTimeout(function () {
+                        popup.close("asyncbox_success");
+                    }, 1000);
+                } else {
+                    popup.error(data.msg);
+                    setTimeout(function () {
+                        popup.close("asyncbox_success");
+                    }, 2000);
+                }
+
+            }
+        });
+        //链接图片上传_end
+        // 文章图片删除
+        var delUrl = "{:U('Sharedata/del_pic')}";
+        $(document).on("click", ".delImg", function () {
+            var delImgUrl = $(this).attr('imgurl');
+            var delDiv = $(this);
+            $.post(delUrl, {'id': newsId, 'imgUrl': delImgUrl}, function (data) {      //ajax后台
+                if (data.status) {
+                    delDiv.parents('.photo').fadeOut().remove();
+                    $('#uploadUrl').attr('value', '');
+                    popup.success(data.msg);
+                    setTimeout(function () {
+                        popup.close("asyncbox_success");
+                    }, 1000);
+                } else {
+                    alert(data.msg);
+                }
+            }, 'json');
+        });
+        // 文章片删除_end
+        $("#checkNewsTitle").click(function () {
+            $.getJSON("__URL__/checkNewsTitle", {title: $("#title").val(), id: "{$info.id}"}, function (json) {
+                $("#checkNewsTitle").css("color", json.status == 1 ? "#0f0" : "#f00").html(json.info);
+            });
+        });
+
+
+    });
+
+    //验证开始
+    $(function(){
+        $("#sharedata").validate({
+            //
+            submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form
+
+                commonAjaxSubmit();
+            },
+            rules : {
+                name: {
+                    required : true
+                },
+                startTime : {
+                    required : true
+                },
+                endTime : {
+                    required : true
+                }
+
+            },
+            messages : {
+                name: {
+                    required : '名称不能为空'
+                },
+                startTime : {
+                    required : '开始时间不能为空'
+                },
+                endTime : {
+                    required : '结束时间不能为空'
+                },
+
+            }
+        });
+
+    });
+
+
+    //验证结束
 </script>
 </body>
 </html>
