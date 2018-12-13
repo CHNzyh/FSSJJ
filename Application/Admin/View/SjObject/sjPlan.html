@@ -25,12 +25,15 @@
 
                 <div class="search">
                     <form action="{:U('buildSJPlanByCondition')}" method='post'>
+                        被审计单位分类：
+                        <select name="BSJDWFL" style="min-width: 80px;">{$option.BSJDWFL}</select>
+                        预算类别
+                        <select name="YSLB" style="min-width: 80px;">{$option.YSLB}</select>
+                        审计周期
+                        <select name="SJZQ" style="min-width: 80px;">{$option.SJZQ}</select>
                         搜索字段：
                         <select name="field">
                             <option value="name" <eq name="keys.field" value="name">selected="selected"</eq>>名称</option>
-                            <option value="BSJDWFL" <eq name="keys.field" value="BSJDWFL">selected="selected"</eq>>被审计单位分类</option>
-                            <option value="YSLB" <eq name="keys.field" value="YSLB">selected="selected"</eq>>预算类别</option>
-                            <option value="SJZQ" <eq name="keys.field" value="SJZQ">selected="selected"</eq>>审计周期</option>
                         </select>
                         &nbsp;&nbsp;关键字：
                         <input type="text" value="{$keys.keyword}" name="keyword" class="input"

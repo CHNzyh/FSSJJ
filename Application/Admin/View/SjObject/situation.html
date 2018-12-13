@@ -63,7 +63,7 @@
                         <td>
                             [ <a href="__URL__/editSituationDetail?id={$vo.id}">编辑</a> ]
                             [ <a href="__URL__/getfile?id={$vo.id}&url=<php>echo md5(session('my_info.aid').date("Y-m-d",time()).$vo["id"])</php>" target="_blank">下载</a> ]
-                            [ <a link="{:U('/test/deleteSituation/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.name}" class="del">删除 </a> ]
+                            [ <a link="{:U('/SjObject/deleteSituation/',array('id'=>$vo['id']))}" href="javascript:void(0)" name="{$vo.name}" class="del">删除 </a> ]
                         </td>
                     </tr>
                 </volist>

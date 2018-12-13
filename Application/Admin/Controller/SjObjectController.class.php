@@ -44,6 +44,15 @@ class SjObjectController extends CommonController
         }
 
         C('TOKEN_ON', false);
+        $option['SJZQ'] = $keys['SJZQ'];
+        $option['BSJDWFL'] = $keys['BSJDWFL'];
+        $option['YSLB'] = $keys['YSLB'];
+        $option = $this->getSearchOption($option, 'SJZQ', 'pid=5');
+        $option = $this->getSearchOption($option, 'BSJDWFL', 'pid=4');
+        $option = $this->getSearchOption($option, 'YSLB', 'pid=6');
+
+        $this->assign('option', $option);
+
         $this->assign('did', session('my_info.department'));
         $this->assign('dp', $dp);
         $this->assign('user', $user);
@@ -125,6 +134,14 @@ class SjObjectController extends CommonController
         $info = D('Config')->getConfigA('pid = 5');
         $data = D('SjObject')->buildSJPlan($info);
 
+        $option['SJZQ'] = $data['keys']['SJZQ'];
+        $option['BSJDWFL'] = $data['keys']['BSJDWFL'];
+        $option['YSLB'] = $data['keys']['YSLB'];
+        $option = $this->getSearchOption($option, 'SJZQ', 'pid=5');
+        $option = $this->getSearchOption($option, 'BSJDWFL', 'pid=4');
+        $option = $this->getSearchOption($option, 'YSLB', 'pid=6');
+
+        $this->assign('option', $option);
         $this->assign('list', $data['list']);
         $this->assign('pg', $data['pg']);
         $this->assign('keys', $data['keys']);
@@ -141,6 +158,15 @@ class SjObjectController extends CommonController
         $info = D('Config')->getConfigA('pid = 5');
         $data = D('SjObject')->buildSJPlanByCondition($info);
 
+        $option['SJZQ'] = $data['keys']['SJZQ'];
+        $option['BSJDWFL'] = $data['keys']['BSJDWFL'];
+        $option['YSLB'] = $data['keys']['YSLB'];
+        $option = $this->getSearchOption($option, 'SJZQ', 'pid=5');
+        $option = $this->getSearchOption($option, 'BSJDWFL', 'pid=4');
+        $option = $this->getSearchOption($option, 'YSLB', 'pid=6');
+
+        $this->assign('option', $option);
+
         $this->assign('list', $data['list']);
         $this->assign('pg', $data['pg']);
         $this->assign('keys', $data['keys']);
@@ -148,23 +174,33 @@ class SjObjectController extends CommonController
         $this->display('sjPlan');
     }
 
-    public function pastPlan(){
-        $year =  M('past_plan')->query("select sj_year from on_past_plan group by sj_year");
+    public function pastPlan()
+    {
+        $year = M('past_plan')->query("select sj_year from on_past_plan group by sj_year");
         $i = 0;
         foreach ($year[0] as $v) {
-            if($i==0){
+            if ($i == 0) {
                 $currentYear = $v;
                 $year['year'] .= '<option value="' . $v . '"' . "select" . '>' . $v . '</option>';
-            }else{
-                $year['year'] .= '<option value="' . $v . '"'  . '>' . $v . '</option>';
+            } else {
+                $year['year'] .= '<option value="' . $v . '"' . '>' . $v . '</option>';
             }
 
             $i++;
         }
         $info['cstatus'] = 1;
         $info = D('Config')->getConfigA('pid = 5');
-        $data = D('SjObject')->buildPastSJPlan($info,$currentYear);
-        $this->assign('year',$year);
+        $data = D('SjObject')->buildPastSJPlan($info, $currentYear);
+
+        $option['SJZQ'] = $data['keys']['SJZQ'];
+        $option['BSJDWFL'] = $data['keys']['BSJDWFL'];
+        $option['YSLB'] = $data['keys']['YSLB'];
+        $option = $this->getSearchOption($option, 'SJZQ', 'pid=5');
+        $option = $this->getSearchOption($option, 'BSJDWFL', 'pid=4');
+        $option = $this->getSearchOption($option, 'YSLB', 'pid=6');
+
+        $this->assign('option', $option);
+        $this->assign('year', $year);
         $this->assign('list', $data['list']);
         $this->assign('pg', $data['pg']);
         $this->assign('keys', $data['keys']);
@@ -431,7 +467,7 @@ class SjObjectController extends CommonController
             echo json_encode(D("SjObject")->addCorporation((int)$_GET['id']));
         } else {
             $detail['startTime'] = date('Y/m/d');
-            $detail['endTime'] = date('Y/m/d',strtotime('+1month'));
+            $detail['endTime'] = date('Y/m/d', strtotime('+1month'));
             $this->assign('info', $detail);
             $this->assign('id', (int)$_GET['id']);
             $this->display('addCorporation');
@@ -448,7 +484,7 @@ class SjObjectController extends CommonController
             echo json_encode(D("SjObject")->addSituation((int)$_GET['id']));
         } else {
             $info['startTime'] = date('Y/m/d');
-            $info['endTime'] = date('Y/m/d',strtotime('+1month'));
+            $info['endTime'] = date('Y/m/d', strtotime('+1month'));
             $this->assign('id', (int)$_GET['id']);
             $info['url'] = '/' . C('SITUATION_FILEPATH') . '/' . date('Y-m-d', time()) . '/';
             $this->assign('info', $info);
@@ -461,6 +497,18 @@ class SjObjectController extends CommonController
     {
         $result = D('Config')->getConfigA($condition);
         $ori = $info[$fieldname];
+        foreach ($result as $v) {
+            $selected = $v['dname'] == $ori ? ' selected="selected"' : "";
+            $info[$fieldname] .= '<option value="' . $v['dname'] . '"' . $selected . '>' . $v['dname'] . '</option>';
+        }
+        return $info;
+    }
+
+    private function getSearchOption($info, $fieldname, $condition)
+    {
+        $result = D('Config')->getConfigA($condition);
+        $ori = $info[$fieldname];
+        $info[$fieldname] .= '<option value="' . '"' . '>' . '</option>';
         foreach ($result as $v) {
             $selected = $v['dname'] == $ori ? ' selected="selected"' : "";
             $info[$fieldname] .= '<option value="' . $v['dname'] . '"' . $selected . '>' . $v['dname'] . '</option>';

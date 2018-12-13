@@ -353,12 +353,22 @@ class SjObjectModel extends Model
             $did = $keys['department'];
 
             if (!empty($did)) {
-                $where = array_merge(array('did=' . $keys['department']), $where);
+                $where = array_merge(array('did='."'" . $keys['department']."'"), $where);
             }
 
             $aid = $keys['user'];
             if (!empty($aid)) {
-                $where = array_merge(array('aid=' . $keys['user']), $where);
+                $where = array_merge(array('aid='."'" . $keys['user']."'"), $where);
+            }
+
+            if(!empty($keys['BSJDWFL'])){
+                $where = array_merge(array('BSJDWFL='."'" . $keys['BSJDWFL']."'"), $where);
+            }
+            if(!empty($keys['YSLB'])){
+                $where = array_merge(array('YSLB='."'" . $keys['YSLB']."'"), $where);
+            }
+            if(!empty($keys['SJZQ'])){
+                $where = array_merge(array('SJZQ='."'" . $keys['SJZQ']."'"), $where);
             }
         } else {
             /**
@@ -423,6 +433,16 @@ class SjObjectModel extends Model
                 $sql = substr($sql, 0, strlen($sql) - 1);
                 $sql .= ")";
                 $sql .= " AND " . $keys['field'] . " like '%" . $valus . "%' ";
+
+                if(!empty($keys['BSJDWFL'])){
+                    $sql.=" AND BSJDWFL = '".$keys['BSJDWFL']."'";
+                }
+                if(!empty($keys['YSLB'])){
+                    $sql.=" AND YSLB = '".$keys['YSLB']."'";
+                }
+                if(!empty($keys['SJZQ'])){
+                    $sql.=" AND SJZQ = '".$keys['SJZQ']."'";
+                }
                 $list = $M->query($sql);
             }
 
@@ -495,6 +515,15 @@ class SjObjectModel extends Model
             $sql = substr($sql, 0, strlen($sql) - 1);
             $sql .= ")";
             $sql .= " AND " . $keys['field'] . " like '%" . $valus . "%' ";
+            if(!empty($keys['BSJDWFL'])){
+                $sql.=" AND BSJDWFL = '".$keys['BSJDWFL']."'";
+            }
+            if(!empty($keys['YSLB'])){
+                $sql.=" AND YSLB = '".$keys['YSLB']."'";
+            }
+            if(!empty($keys['SJZQ'])){
+                $sql.=" AND SJZQ = '".$keys['SJZQ']."'";
+            }
             $list = $M->query($sql);
         } else {
             $keys = I('post.');
