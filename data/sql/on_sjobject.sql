@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.53)
-# Date: 2018-12-04 22:33:14
+# Date: 2018-12-13 21:49:23
 # Generator: MySQL-Front 5.3  (Build 4.234)
 
 /*!40101 SET NAMES utf8 */;
@@ -11,6 +11,7 @@
 CREATE TABLE `on_sjobject` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `did` varchar(255) DEFAULT NULL COMMENT '部门id',
+  `aid` varchar(255) DEFAULT NULL COMMENT '人员id',
   `modify_time` varchar(255) DEFAULT NULL COMMENT '最近一次修改的时间',
   `name` varchar(255) DEFAULT NULL COMMENT '名称',
   `department` varchar(255) DEFAULT NULL COMMENT '关联到所属部门',
@@ -34,4 +35,4 @@ CREATE TABLE `on_sjobject` (
   PRIMARY KEY (`id`),
   KEY `DQFDDBR` (`DQFDDBR`) COMMENT '根据当前法定代表人排序',
   KEY `department` (`department`) COMMENT '根据关联的部门进行排序'
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COMMENT='审计对象表';
+) ENGINE=MyISAM AUTO_INCREMENT=83 DEFAULT CHARSET=utf8 COMMENT='审计对象表';
